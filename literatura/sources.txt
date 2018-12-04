@@ -1,0 +1,83 @@
+ogólna literatura:
+
+Deep Learning
+Ian Goodfellow, Yoshua Bengio, Aaron Courville
+2016
+MIT Press
+http://www.deeplearningbook.org
+
+
+A Learning Algorithm for Continually Running Fully Recurrent Neural Networks
+Ronald J. Williams, David Zipser
+1989
+Neural Computation
+Vol 1 Issue 2
+
+
+Recurrent Neural Network Regularization
+Wojciech Zaremba, Ilya Sutskever, Oriol Vinyals
+2014
+https://arxiv.org/abs/1409.2329
+
+
+On the difficulty of training Recurrent Neural Networks
+Razvan Pascanu, Tomas Mikolov, Yoshua Bengio
+2013
+https://arxiv.org/abs/1211.5063
+
+
+Long Short-Term Memory
+Jurgen Schmidhuber, Sepp Hochreiter
+1997
+Neural Computation 9(8):1735{1780
+
+
+Gated Feedback Recurrent Neural Networks
+Junyoung Chung, Caglar Gulcehre, Kyunghyun Cho, Yoshua Bengio
+2015
+https://arxiv.org/abs/1502.02367
+
+
+Quasi-Recurrent Neural Networks
+James Bradbury, Stephen Merity, Caiming Xiong, Richard Socher
+2016
+https://arxiv.org/abs/1611.01576
+
+
+Comparative Study of CNN and RNN for Natural Language Processing
+Wenpeng Yin, Katharina Kann, Mo Yu, Hinrich Schütze
+2017
+https://arxiv.org/abs/1702.01923
+
+
+zastosowania:
+
+
+Speech Recognition with Deep Recurrent Neural Networks
+Alex Graves, Abdel-rahman Mohamed, Geoffrey Hinton
+2013
+https://arxiv.org/abs/1303.5778
+
+
+Show and Tell: A Neural Image Caption Generator
+Oriol Vinyals, Alexander Toshev, Samy Bengio, Dumitru Erhan
+2015
+https://arxiv.org/abs/1411.4555
+
+
+A Neural Conversational Model
+Oriol Vinyals, Quoc Le
+2015
+https://arxiv.org/abs/1506.05869
+
+
+Google's Neural Machine Translation System: Bridging the Gap between Human and Machine Translation
+Yonghui Wu, Mike Schuster, Zhifeng Chen, Quoc V. Le, Mohammad Norouzi, Wolfgang Macherey, Maxim Krikun, Yuan Cao, Qin Gao, Klaus Macherey, Jeff Klingner, Apurva Shah, Melvin Johnson, Xiaobing Liu, Łukasz Kaiser, Stephan Gouws, Yoshikiyo Kato, Taku Kudo, Hideto Kazawa, Keith Stevens, George Kurian, Nishant Patil, Wei Wang, Cliff Young, Jason Smith, Jason Riesa, Alex Rudnick, Oriol Vinyals, Greg Corrado, Macduff Hughes, Jeffrey Dean
+2016
+https://arxiv.org/abs/1609.08144
+
+
+A Long Short-Term Memory Model for Answer Sentence Selection in Question Answering
+Di Wang, Eric Nyberg
+2015
+Conference: Proceedings of the 53rd Annual Meeting of the Association for Computational Linguistics and the 7th International Joint Conference on Natural Language Processing
