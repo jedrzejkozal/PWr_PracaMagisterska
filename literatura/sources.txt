@@ -1,4 +1,4 @@
-ogólna literatura:
+teoria sieci rekurencyjnych:
 
 Deep Learning
 Ian Goodfellow, Yoshua Bengio, Aaron Courville
@@ -50,7 +50,7 @@ Wenpeng Yin, Katharina Kann, Mo Yu, Hinrich Schütze
 https://arxiv.org/abs/1702.01923
 
 
-zastosowania:
+zastosowania sieci rekurencyjnych:
 
 
 Speech Recognition with Deep Recurrent Neural Networks
