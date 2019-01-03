@@ -13,13 +13,17 @@ import argparse
 
 from KerasBatchGenerator import KerasBatchGenerator
 
+repo_path = os.path.dirname(os.path.realpath(__file__))
+data_path = repo_path + "/../datasets/simple-examples/data"
 
-data_path = "/home/jkozal/Dokumenty/PWr/magisterka/magisterka/experiments/datasets/simple-examples/data"
 
-parser = argparse.ArgumentParser()
-parser.add_argument('run_opt', type=int, default=1, help='An integer: 1 to train, 2 to test')
-parser.add_argument('--data_path', type=str, default=data_path, help='The full path of the training data')
-args = parser.parse_args()
+def parse_args():
+    parser = argparse.ArgumentParser()
+    parser.add_argument('run_opt', type=int, default=1, help='An integer: 1 to train, 2 to test')
+    parser.add_argument('--data_path', type=str, default=data_path, help='The full path of the training data')
+    return parser.parse_args()
+
+args = parse_args()
 if args.data_path:
     data_path = args.data_path
 
