@@ -25,19 +25,41 @@ def file_to_word_ids(filename, word_to_id):
     return [word_to_id[word] for word in data if word in word_to_id]
 
 
-def load_data(data_path):
-    # get the data paths
+def get_data_paths(data_path):
     train_path = os.path.join(data_path, "ptb.train.txt")
     valid_path = os.path.join(data_path, "ptb.valid.txt")
     test_path = os.path.join(data_path, "ptb.test.txt")
+    return train_path, valid_path, test_path
 
-    # build the complete vocabulary, then convert text data to list of integers
-    word_to_id = build_vocab(train_path)
+
+def convert_text_data_to_list_of_integers(word_to_id):
+    reversed_dictionary = dict(zip(word_to_id.values(), word_to_id.keys()))
+    return reversed_dictionary
+
+
+def read_data_as_ids(word_to_id, train_path, valid_path, test_path):
     train_data = file_to_word_ids(train_path, word_to_id)
     valid_data = file_to_word_ids(valid_path, word_to_id)
     test_data = file_to_word_ids(test_path, word_to_id)
+
+    return train_data, valid_data, test_data
+
+
+def build_complete_vocabulary(word_to_id, train_path, valid_path, test_path):
+    train_data, valid_data, test_data = read_data_as_ids(word_to_id,
+        train_path, valid_path, test_path)
     vocabulary = len(word_to_id)
-    reversed_dictionary = dict(zip(word_to_id.values(), word_to_id.keys()))
+    return train_data, valid_data, test_data, vocabulary
+
+
+def load_data(data_path):
+    train_path, valid_path, test_path = get_data_paths(data_path)
+    # build the complete vocabulary, then convert text data to list of integers
+    word_to_id = build_vocab(train_path)
+    train_data, valid_data, test_data, vocabulary = build_complete_vocabulary(word_to_id,
+        train_path, valid_path, test_path)
+    reversed_dictionary = convert_text_data_to_list_of_integers(word_to_id)
+
 
     #print(train_data[:5])
     #print(word_to_id)
