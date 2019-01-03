@@ -1,14 +1,6 @@
 import os
 import collections
 import tensorflow as tf
-import argparse
-
-
-def parse_args(data_path):
-    parser = argparse.ArgumentParser()
-    parser.add_argument('run_opt', type=int, default=1, help='An integer: 1 to train, 2 to test')
-    parser.add_argument('--data_path', type=str, default=data_path, help='The full path of the training data')
-    return parser.parse_args()
 
 
 def read_words(filename):
@@ -47,8 +39,8 @@ def load_data(data_path):
     vocabulary = len(word_to_id)
     reversed_dictionary = dict(zip(word_to_id.values(), word_to_id.keys()))
 
-    print(train_data[:5])
-    print(word_to_id)
-    print(vocabulary)
-    print(" ".join([reversed_dictionary[x] for x in train_data[:10]]))
+    #print(train_data[:5])
+    #print(word_to_id)
+    #print(vocabulary)
+    #print(" ".join([reversed_dictionary[x] for x in train_data[:10]]))
     return train_data, valid_data, test_data, vocabulary, reversed_dictionary
