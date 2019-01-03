@@ -53,7 +53,7 @@ if args.run_opt == 1:
                         validation_steps=len(valid_data)//(batch_size*num_steps), callbacks=[checkpointer])
     model.save(data_path + "final_model.hdf5")
 elif args.run_opt == 2:
-    model = load_model(data_path + "\model-40.hdf5")
+    model = load_model(data_path + "/model-08.hdf5")
     dummy_iters = 40
     example_training_generator = KerasBatchGenerator(train_data, num_steps, 1, vocabulary,
                                                      skip_step=1)
