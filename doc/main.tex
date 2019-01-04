@@ -31,22 +31,35 @@
 
 \section{Wprowadzenie}
 
+\subsection{Rekurencyjne sieci neuronowe}
+
+\subsection{Zastosowania rekurencyjnych sieci neuronowych}
+
+\subsection{Zadanie klasyfikacji}
+
 \cite{Goodfellow-et-al-2016}
 
 \section{Przegląd literatury}
 
 Sieci Rekurencyjne zostały oparte na pracy Rumelharta \cite{RNN}. Algorytm uczenia RNN - propagacja wsteczna w czasie (Back-Propagation Through Time - BPTT) zostały przedstawione w \cite{BPTT}.
 Udowodniono, że przy pewnych założeniach RNN mogą być kompletne w sensie Turinga \cite{turing-complete}.
-Wprowadzono wiele modyfikacji w zasadach działania i strukturze RNN. W \cite{bidirectional} wprowadzono sieci dwukierunkowe, przetwarzające sekwencje w dwóch kierunkach: od początku do końca sekwencji i od końca do początku. Ostateczna wartość dla n-tego elementu sekwencji jest obliczana na podstawie n-tego wyniku dla obu kierunków.
-RNN w swojej natywnej formie nie są w stanie nauczyć się długich zależności w ciągu uczącym. Problem ten jest w znacznej mierze spowodowany wybuchającymi lub znikającymi gradientami (exploding or vanishing gradients, \cite{vanishing_gradient_RNN}).
+
+Wprowadzono wiele modyfikacji w zasadach działania i strukturze RNN. 
+W \cite{bidirectional} wprowadzono sieci dwukierunkowe, przetwarzające sekwencje w dwóch kierunkach: od początku do końca sekwencji i od końca do początku. Ostateczna wartość dla n-tego elementu sekwencji jest obliczana na podstawie n-tego wyniku dla obu kierunków.
+
+RNN w swojej natywnej formie nie są w stanie nauczyć się długich zależności w ciągu uczącym. Problem ten jest w znacznej mierze spowodowany wybuchającymi lub znikającymi gradientami (exploding or vanishing gradients \cite{vanishing_gradient_RNN}). W celu zaadresowania tego problemu Hochreiter i Schmidhuber zaproponowali architekturę Long Short-Term Memory (LSTM) \cite{LSTM}. LSTM oprócz wewnętrznego stanu sieci posiada także komórkę pamięci, w której może przechowywać informacje przez długi czas. Bramki to dodatkowe elementy pozwalające na regulowanie aktualnych wartości zmiennych sieci. Ponieważ bramka to warstwa sieci z sigmoidalną funkcją aktywacji (sigmoidalna funkcja aktywacji posiada zakres wartości $(0,1)$) to sieć może się nauczyć w którym momencie i w jaki sposób uaktualniać swoją komórkę pamięci i swój wewnętrzny stan. Trzy bramki stosowane przez LSTM to forget gate, input gate, oraz output gate.  
+
+Modyfikacją architekutry LSTM jest Gated Recurrent Unit (GRU) \cite{DBLP:journals/corr/ChungGCB15}. Modyfikacja ta polega zmianie struktury sieci i zastosowanie dwóch zamiast trzech komórek, co powoduje zmniejszenie liczby parametrów. Mniejsza liczba parametrów przekłada się na zmniejszenie wymagań w zakresie mocy obliczeniowej potrzebnych do nauczenia modelu, co może mieć przełożenie na zwiększenie głębokości modelu lub zwiększenie ukrytych jednostek. Z drugiej strony zmniejszenie liczby bramek powoduje zmniejszenie mocy modelu. Z praktycznego punktu widzenia LSTM i GRU uzyskują porównywalne wyniki \cite{DBLP:journals/corr/ChungGCB14}.
+
+Jeśli pójdziemy dalej to dostaniemy neuronową maszynę turinga.
 
 Sieci Rekurencyjne znalazły wiele zastosowań w przetwarzaniu sekwencji. (opisać zastosowania) NLP: tłumaczenie, modele języka, naśladowanie stylu, przetwarzanie dźwięków: generowanie mowy, generowanie muzyki, sentiment analysis 
 
-Sieci rekurencyjne są także wykorzystywane w połączeniu z innymi modelami jak np. labelowanie imgages.
+Sieci rekurencyjne są także wykorzystywane w połączeniu z innymi modelami jak np. labelowanie images.
 
 W \cite{DBLP:journals/corr/VisinKCMCB15} wykorzystano sieć rekurencyjną do klasyfikacji obrazów i porównano uzyskane wyniki z rezultatami dla sieci konwolucyjnych. Proponowany model (ReNet) wykorzystywał RNN do czterotnego trawersowania fragmentów obrazu w celu ekstrakcji cech, jako alternatywę dla warstw konwolucyjnych z poolingiem. W \cite{DBLP:journals/corr/KalchbrennerDG15} przedstawiono GRID LSTM, które rozszerzało standardowy model sieci LSTM do N-wymiarowych komórek ze współdzielonymi wektorami stanu i pamięci.
 
-\chapter{Omówienie wybranych metod}
+\chapter{Omówienie wybranych zagadnień teoretycznych}
 
 \begin{figure}
 \centering
@@ -55,6 +68,25 @@ W \cite{DBLP:journals/corr/VisinKCMCB15} wykorzystano sieć rekurencyjną do kla
 	\label{fig:lstm}
 \end{figure}
 
+\chapter{Przyjęta metodyka badań}
+
+
+\section{Problem badawczy}
+
+
+\section{Opis eksperymentu}
+
+\subsection{Zbiór danych}
+
+\subsection{Wykorzystane narzędzia i hardware}
+
+\subsection{Dobór hiperparametrów modelu}
+
+
+\chapter{Wyniki}
+
+
+\chapter{Wnioski}
 
 \bibliography{bibliography}
 
