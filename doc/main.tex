@@ -35,9 +35,11 @@
 
 \section{Przegląd literatury}
 
-Sieci Rekurencyjne zostały oparte na pracy Rumelharta \cite{RNN}. 
+Sieci Rekurencyjne zostały oparte na pracy Rumelharta \cite{RNN}. Algorytm uczenia RNN - propagacja wsteczna w czasie (Back-Propagation Through Time - BPTT) zostały przedstawione w \cite{BPTT}.
 Udowodniono, że przy pewnych założeniach RNN mogą być kompletne w sensie Turinga \cite{turing-complete}.
-Wprowadzono wiele modyfikacji. W \cite{bidirectional} wprowadzono sieci dwukierunkowe, przetwarzające sekwencje w dwóch kierunkach: od początku do końca sekwencji i od końca do początku. Ostateczna wartość dla n-tego elementu sekwencji jest obliczana na podstawie n-tego wyniku dla obu kierunków.
+Wprowadzono wiele modyfikacji w zasadach działania i strukturze RNN. W \cite{bidirectional} wprowadzono sieci dwukierunkowe, przetwarzające sekwencje w dwóch kierunkach: od początku do końca sekwencji i od końca do początku. Ostateczna wartość dla n-tego elementu sekwencji jest obliczana na podstawie n-tego wyniku dla obu kierunków.
+RNN w swojej natywnej formie nie są w stanie nauczyć się długich zależności w ciągu uczącym. Problem ten jest w znacznej mierze spowodowany wybuchającymi lub znikającymi gradientami (exploding or vanishing gradients, \cite{vanishing_gradient_RNN}).
+
 Sieci Rekurencyjne znalazły wiele zastosowań w przetwarzaniu sekwencji. (opisać zastosowania) NLP: tłumaczenie, modele języka, naśladowanie stylu, przetwarzanie dźwięków: generowanie mowy, generowanie muzyki, sentiment analysis 
 
 Sieci rekurencyjne są także wykorzystywane w połączeniu z innymi modelami jak np. labelowanie imgages.
