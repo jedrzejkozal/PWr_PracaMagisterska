@@ -8,6 +8,7 @@ doc/main.pdf
 doc/main.synctex.gz
 doc/main.lof
 doc/main.toc
+doc/texput.log
 experiments/datasets/
 *.pyc
 *__pycache__
