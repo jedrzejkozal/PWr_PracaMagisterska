@@ -56,7 +56,7 @@ Sieci rekurencyjne są także wykorzystywane w połączeniu z innymi modelami np
 Wprowadzono wiele modyfikacji w zakresie zasad działania i strukturze RNN. 
 W \cite{bidirectional} wprowadzono sieci dwukierunkowe, przetwarzające sekwencje w dwóch kierunkach: od początku do końca sekwencji i od końca do początku. Ostateczna wartość dla n-tego elementu sekwencji jest obliczana na podstawie n-tego wyniku dla obu kierunków.
 
-RNN w swojej natywnej formie nie są w stanie nauczyć się długich zależności w ciągu uczącym. Problem ten jest w znacznej mierze spowodowany wybuchającymi lub znikającymi gradientami (exploding or vanishing gradients \cite{vanishing_gradient_RNN}). W celu zaadresowania tego problemu Hochreiter i Schmidhuber zaproponowali architekturę Long Short-Term Memory (LSTM) \cite{LSTM}. LSTM oprócz wewnętrznego stanu sieci posiada także komórkę pamięci, w której może przechowywać informacje przez długi czas. Bramki to dodatkowe elementy pozwalające na regulowanie aktualnych wartości zmiennych sieci. Ponieważ bramka to warstwa sieci z sigmoidalną funkcją aktywacji (sigmoidalna funkcja aktywacji posiada zakres wartości $(0,1)$) to sieć może się nauczyć w którym momencie i w jaki sposób uaktualniać swoją komórkę pamięci i swój wewnętrzny stan. Trzy bramki stosowane przez LSTM to forget gate, input gate, oraz output gate.  
+RNN w swojej natywnej formie nie są w stanie nauczyć się długich zależności w ciągu uczącym. Problem ten jest w znacznej mierze spowodowany wybuchającymi lub znikającymi gradientami (exploding or vanishing gradients \cite{vanishing_gradient_RNN}). W celu zaadresowania tego problemu Hochreiter i Schmidhuber zaproponowali architekturę Long Short-Term Memory (LSTM) \cite{LSTM}. Ze względu na swoją strukturę LSTM jest w stanie operować na danych z długimi zależnościami czasowymi. LSTM jest dokładniej opisane w późniejszej części pracy.  
 
 Gated Recurrent Unit (GRU) \cite{DBLP:journals/corr/ChungGCB15} jest modyfikacją LSTM. Podstawowa zasada działania modelu zostaje taka sama. Wprowadzone zmiany dotyczą struktury sieci i polegają na zastosowaniu dwóch zamiast trzech komórek, co powoduje zmniejszenie liczby parametrów. Mniejsza liczba parametrów przekłada się na zmniejszenie wymagań w zakresie mocy obliczeniowej potrzebnych do nauczenia modelu, co może mieć przełożenie na zwiększenie głębokości modelu lub zwiększenie ukrytych jednostek. Z drugiej strony zmniejszenie liczby bramek powoduje zmniejszenie mocy modelu. Z praktycznego punktu widzenia LSTM i GRU uzyskują porównywalne wyniki \cite{DBLP:journals/corr/ChungGCB14}.
 
@@ -66,7 +66,7 @@ W \cite{DBLP:journals/corr/VisinKCMCB15} wykorzystano sieć rekurencyjną do kla
 
 \chapter{Omówienie wybranych zagadnień teoretycznych}
 
-W tym rozdziale zostały omówione teoretyczne podstawy wybranych algorytmów i struktur sieci, które zostały wykorzystane w badaniach.
+W niniejszym rozdziale zostały omówione teoretyczne podstawy wybranych algorytmów i struktur sieci, które zostały wykorzystane w badaniach.
 
 \section{Rekurencyjna Sieć Neuronowa}
 
@@ -81,10 +81,27 @@ W tym rozdziale zostały omówione teoretyczne podstawy wybranych algorytmów i 
 	\label{fig:lstm}
 \end{figure}
 
+LSTM jest jedną z popularniejszych architektur RNN. Hochreiter i Schmidhuber zaproponowali architekturę Long Short-Term Memory (LSTM) \cite{LSTM} w 1997. Zwykła sieć RNN składa się jedynie ze stanu sieci $h$, oraz wejścia $x$, które są wejściem warstwy ukrytej sieci. Wyjście warstwy ukrytej jest wyjściem sieci. Struktura komórki LSTM jest bardziej skomplikowana i składa się z wektora stanu sieci $h$, komórki pamięci $C$, oraz czterech ukrytych warstw sieci. Schemat ze strukturą sieci został przedstawiony na rys. \ref{fig:lstm}.
+
+Warstwy sieci LSTM z sigmoidalnymi funkcjami aktywacji są nazywane bramkami multiplikatywnymi. Sigmoidalna funkcja aktywacji jest opisywana za pomocą wzoru:
+
+\begin{equation}
+	\sigma(x) = \frac{1}{e^{-x} + 1}
+\end{equation}
+
+i posiada zbiór wartości $(0, 1)$. Przemnożenie wyjścia tej warstwy z dowolną wartością powoduje jej przeskalowanie, przez co warstwy te służą do kontrolowania wartości zmiennych komórki LSTM. Dodatkowo bramki jako warstwy sieci posiadają wagi, które ulegają modyfikacji w trakcie uczenia, przez co LSTM w procesie uczenia zyskują informację o tym kiedy i w jaki sposób uaktualnić swój stan i komórkę pamięci na podstawie obecnie posiadanych informacji. Wyróżnia się 3 bramki. Pierwszą z nich jest forget gate. Jest ona odpowiedzialna za zmniejszanie wartości aktualnie znajdującej się w komórce pamięci.  
+
+\begin{equation}
+	f_t = \sigma( W_f [ h_{t-1}, x_t ] + b_f )
+\end{equation}
+
+
+
+LSTM oprócz wewnętrznego stanu sieci posiada także komórkę pamięci, w której może przechowywać informacje przez długi czas. Bramki to dodatkowe elementy pozwalające na regulowanie aktualnych wartości zmiennych sieci. Ponieważ bramka to warstwa sieci z sigmoidalną funkcją aktywacji (sigmoidalna funkcja aktywacji posiada zakres wartości $(0,1)$) to sieć może się nauczyć w którym momencie i w jaki sposób uaktualniać swoją komórkę pamięci i swój wewnętrzny stan. Trzy bramki stosowane przez LSTM to forget gate, input gate, oraz output gate.
+
 \begin{equation}
 \centering
 \begin{split}
-	f_t = \sigma( W_f [ h_{t-1}, x_t ] + b_f ) \\
 	i_t = \sigma( W_i [ h_{t-1}, x_t ] + b_i ) \\
 	\tilde{C}_t = tanh( W_c [ h_{t-1}, x_t ] + b_C ) \\
 	C_t = f_t \odot C_{t-1} + i_t \odot \tilde{C}_t \\
