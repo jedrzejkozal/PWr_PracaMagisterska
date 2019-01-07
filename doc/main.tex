@@ -39,11 +39,11 @@ Udowodniono, że przy pewnych założeniach RNN są kompletne w sensie Turinga \
 \subsection{Zastosowania rekurencyjnych sieci neuronowych}
 
 Sieci Rekurencyjne znalazły wiele zastosowań w przetwarzaniu sekwencji. 
-Jednym z takich zastosowań może być przetwarzanie języka naturalnego (natural language processing - NLP), gdzie RNN znalazły zastosowanie w rozpoznawaniu mowy \cite{DBLP:journals/corr/abs-1303-5778}, \cite{speech_recognition}, \cite{speech_recognition1}, tłumaczeniu \cite{translate}, \cite{DBLP:journals/corr/ChoMGBSB14}, \cite{DBLP:journals/corr/BahdanauCB14}, \cite{DBLP:journals/corr/WuSCLNMKCGMKSJL16}, modele języka, generowanie mowy, generowanie tekstu \cite{DBLP:journals/corr/Graves13}. 
-Innym polem jest rozpoznawanie pisma ręcznego \cite{handwriting_recognition}, \cite{handwriting_recognition2} lub jego generacja \cite{DBLP:journals/corr/Graves13}.
-RNN są także wykorzystywane do generowania obrazów \cite{DBLP:journals/corr/GregorDGW15}. Autorzy \cite{DBLP:journals/corr/VinyalsL15} zaproponowali system do przeprowadzania rozmóm zbudowany z wykorzystaniem RNN.
-
-naśladowanie stylu, generowanie muzyki, sentiment analysis 
+Jednym z takich zastosowań może być przetwarzanie języka naturalnego (natural language processing - NLP), gdzie RNN znalazły zastosowanie w rozpoznawaniu mowy \cite{DBLP:journals/corr/abs-1303-5778}, \cite{speech_recognition}, \cite{speech_recognition1}, tłumaczeniu \cite{translate}, \cite{DBLP:journals/corr/ChoMGBSB14}, \cite{DBLP:journals/corr/BahdanauCB14}, \cite{DBLP:journals/corr/WuSCLNMKCGMKSJL16}, modelowniu języka \cite{DBLP:journals/corr/ChoMGBSB14}, generowaniu mowy \cite{DBLP:journals/corr/MehriKGKJSCB16} i generowaniu tekstu \cite{DBLP:journals/corr/Graves13} \cite{karpathy_RNN_blog}. 
+Innym polem zastosowań RNN jest rozpoznawanie pisma ręcznego \cite{handwriting_recognition}, \cite{handwriting_recognition2} lub jego generacja \cite{DBLP:journals/corr/Graves13}.
+RNN są także wykorzystywane do generowania obrazów \cite{DBLP:journals/corr/GregorDGW15} i muzyki \cite{DBLP:journals/corr/abs-1804-07300}.
+Autorzy \cite{DBLP:journals/corr/VinyalsL15} zaproponowali system do przeprowadzania rozmóm zbudowany z wykorzystaniem RNN. 
+W \cite{sentiment_analysis} wykorzystano RNN do analizy sentymentu.
 
 Sieci rekurencyjne są także wykorzystywane w połączeniu z innymi modelami np. CNN w przypadku generowania podpisów dla obrazów \cite{DBLP:journals/corr/VinyalsTBE14}, gdzie CNN jest wykorzystywane do klasyfikacji obrazu i przygotowywania reprezentacji obrazu w architekturze encoder-decoder, a RNN generuje podpis obrazka.
 
@@ -89,28 +89,44 @@ Warstwy sieci LSTM z sigmoidalnymi funkcjami aktywacji są nazywane bramkami mul
 	\sigma(x) = \frac{1}{e^{-x} + 1}
 \end{equation}
 
-i posiada zbiór wartości $(0, 1)$. Przemnożenie wyjścia tej warstwy z dowolną wartością powoduje jej przeskalowanie, przez co warstwy te służą do kontrolowania wartości zmiennych komórki LSTM. Dodatkowo bramki jako warstwy sieci posiadają wagi, które ulegają modyfikacji w trakcie uczenia, przez co LSTM w procesie uczenia zyskują informację o tym kiedy i w jaki sposób uaktualnić swój stan i komórkę pamięci na podstawie obecnie posiadanych informacji. Wyróżnia się 3 bramki. Pierwszą z nich jest forget gate. Jest ona odpowiedzialna za zmniejszanie wartości aktualnie znajdującej się w komórce pamięci.  
+i posiada zbiór wartości $(0, 1)$. Przemnożenie wyjścia tej warstwy z dowolną wartością powoduje jej przeskalowanie, przez co warstwy te są wykorzystywane do kontrolowania wartości zmiennych komórki LSTM. Dodatkowo bramki jako warstwy sieci posiadają wagi, które ulegają modyfikacji w trakcie uczenia, przez co LSTM w procesie uczenia zyskują informację o tym kiedy i w jaki sposób uaktualnić swój stan i komórkę pamięci na podstawie obecnie posiadanych informacji. Wyróżnia się 3 bramki. Pierwszą z nich jest forget gate. Jest ona odpowiedzialna za zmniejszanie wartości aktualnie znajdującej się w komórce pamięci. Operacja realizowana przez forget gate jest opisywana wzorem: 
 
 \begin{equation}
 	f_t = \sigma( W_f [ h_{t-1}, x_t ] + b_f )
 \end{equation}
 
-
-
-LSTM oprócz wewnętrznego stanu sieci posiada także komórkę pamięci, w której może przechowywać informacje przez długi czas. Bramki to dodatkowe elementy pozwalające na regulowanie aktualnych wartości zmiennych sieci. Ponieważ bramka to warstwa sieci z sigmoidalną funkcją aktywacji (sigmoidalna funkcja aktywacji posiada zakres wartości $(0,1)$) to sieć może się nauczyć w którym momencie i w jaki sposób uaktualniać swoją komórkę pamięci i swój wewnętrzny stan. Trzy bramki stosowane przez LSTM to forget gate, input gate, oraz output gate.
+Gdzie $W_f$ i $b_f$ to odpowiednio wagi i bias warstwy, $h_{t-1}$ to stan komórki z poprzedniego kroku, a $x_t$ to aktualne wejście sieci. Kolejną bramką jest input gate. Realizowana operacja wyraża się analogicznym wzorem:
 
 \begin{equation}
-\centering
-\begin{split}
-	i_t = \sigma( W_i [ h_{t-1}, x_t ] + b_i ) \\
-	\tilde{C}_t = tanh( W_c [ h_{t-1}, x_t ] + b_C ) \\
-	C_t = f_t \odot C_{t-1} + i_t \odot \tilde{C}_t \\
-	o_t = \sigma( W_o [ h_{t-1}, x_t ] + b_o ) \\
-	h_t = o_t \odot tanh( C_t )
-\end{split}
+	i_t = \sigma( W_i [ h_{t-1}, x_t ] + b_i )
 \end{equation}
 
-Gdzie $\odot$ oznacza iloczyn Hadamarda (iloczyn wszystkich elementów wektora lub macierzy)
+Intuicyjnie jest ona odpowiedzialna za określanie w jakim stopniu należy zaktualizować komórkę pamięci sieci na podstawie aktualnego wejścia sieci $x_t$ i stanu z poprzedniego kroku $h_{t-1}$. Na podstawie $x_t$ i $h_{t-1}$ jest obliczana wartość $\tilde{C}_t$:
+
+\begin{equation}
+	\tilde{C}_t = tanh( W_c [ h_{t-1}, x_t ] + b_C )
+\end{equation}
+
+Wartość $\tilde{C}_t$ może być określona jako kandydat do zastąpienia stanu komórki z poprzedniego kroku $C_{t-1}$. Aktualna wartość $C_t$ jest zatem obliczana ze wzoru:
+
+\begin{equation}
+	C_t = f_t \odot C_{t-1} + i_t \odot \tilde{C}_t
+\end{equation}
+
+gdzie $\odot$ oznacza iloczyn Hadamarda (iloczyn wszystkich elementów wektora lub macierzy). Ostatnią bramką jest output gate. Realizowana operacja jest dana wzorem:
+
+\begin{equation}
+	o_t = \sigma( W_o [ h_{t-1}, x_t ] + b_o )
+\end{equation}
+
+Służy do określania, sposobu w jaki zostanie zaktualizowany stan $h$ w aktualnym kroku $t$, co wyraża się równaniem:
+
+\begin{equation}
+	h_t = o_t \odot tanh( C_t )
+\end{equation}
+
+Warto zwrócić uwagę, że w powyższym równaniu nie występują wagi ani bias, więc $tanh$ nie jest utożsamiony z warstwą sieci neuronowej.
+
 
 
 \section{GRU}
