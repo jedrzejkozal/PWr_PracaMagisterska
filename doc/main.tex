@@ -27,6 +27,8 @@
 
 \maketitle
 
+\tableofcontents
+
 \chapter{Wstęp}
 
 \section{Wprowadzenie}
@@ -35,6 +37,23 @@
 
 Sieci Rekurencyjne zostały oparte na pracy Rumelharta \cite{RNN}. Algorytm uczenia RNN - propagacja wsteczna w czasie (Back-Propagation Through Time - BPTT) zostały przedstawione w \cite{BPTT}.
 Udowodniono, że przy pewnych założeniach RNN są kompletne w sensie Turinga \cite{turing-complete}.
+
+\subsubsection{Sieci dwukierunkowe}
+
+Wprowadzono wiele modyfikacji w zakresie zasad działania i strukturze RNN. 
+W \cite{bidirectional} wprowadzono sieci dwukierunkowe, przetwarzające sekwencje w dwóch kierunkach: od początku do końca sekwencji i od końca do początku. Ostateczna wartość dla n-tego elementu sekwencji jest obliczana na podstawie n-tego wyniku dla obu kierunków.
+
+\subsubsection{LSTM}
+
+RNN w swojej natywnej formie nie są w stanie nauczyć się długich zależności w ciągu uczącym. Problem ten jest w znacznej mierze spowodowany wybuchającymi lub znikającymi gradientami (exploding or vanishing gradients \cite{vanishing_gradient_RNN}). W celu zaadresowania tego problemu Hochreiter i Schmidhuber zaproponowali architekturę Long Short-Term Memory (LSTM) \cite{LSTM}. Ze względu na swoją strukturę LSTM jest w stanie operować na danych z długimi zależnościami czasowymi. LSTM jest dokładniej opisane w późniejszej części pracy. 
+
+\subsubsection{GRU}
+
+Gated Recurrent Unit (GRU) \cite{DBLP:journals/corr/ChungGCB15} jest modyfikacją LSTM. Podstawowa zasada działania modelu zostaje taka sama. Wprowadzone zmiany dotyczą struktury sieci i polegają na zastosowaniu dwóch zamiast trzech komórek, co powoduje zmniejszenie liczby parametrów. Mniejsza liczba parametrów przekłada się na zmniejszenie wymagań w zakresie mocy obliczeniowej potrzebnych do nauczenia modelu, co może mieć przełożenie na zwiększenie głębokości modelu lub zwiększenie ukrytych jednostek. Z drugiej strony zmniejszenie liczby bramek powoduje zmniejszenie mocy modelu. Z praktycznego punktu widzenia LSTM i GRU uzyskują porównywalne wyniki \cite{DBLP:journals/corr/ChungGCB14}.
+
+\subsubsection{Neuronowe Maszyny Turinga}
+
+Rozwinięciem idei wykorzystania pamięci do usprawnienia działania sieci są Neuronowe Maszyny Turinga \cite{DBLP:journals/corr/GravesWD14}. Neuronowe Maszyny Turinga korzystają z mechanizmu uwagi do operacji na pamięci. Pamięć przypomina pamięć dostępną w komputerze i składa się z wielu wektorów, które można wykorzystać do odczytu lub przechowywania informacji. Neuronowa Maszyna Turinga posiada dwie głowice: do zapisu i odczytu. Adresowanie pamięci odbywa się na podstawie zawartości (content-base addressing) lub położenia (location-base addressing).
 
 \subsection{Zastosowania rekurencyjnych sieci neuronowych}
 
@@ -52,15 +71,6 @@ Sieci rekurencyjne są także wykorzystywane w połączeniu z innymi modelami np
 \cite{Goodfellow-et-al-2016}
 
 \section{Przegląd literatury}
-
-Wprowadzono wiele modyfikacji w zakresie zasad działania i strukturze RNN. 
-W \cite{bidirectional} wprowadzono sieci dwukierunkowe, przetwarzające sekwencje w dwóch kierunkach: od początku do końca sekwencji i od końca do początku. Ostateczna wartość dla n-tego elementu sekwencji jest obliczana na podstawie n-tego wyniku dla obu kierunków.
-
-RNN w swojej natywnej formie nie są w stanie nauczyć się długich zależności w ciągu uczącym. Problem ten jest w znacznej mierze spowodowany wybuchającymi lub znikającymi gradientami (exploding or vanishing gradients \cite{vanishing_gradient_RNN}). W celu zaadresowania tego problemu Hochreiter i Schmidhuber zaproponowali architekturę Long Short-Term Memory (LSTM) \cite{LSTM}. Ze względu na swoją strukturę LSTM jest w stanie operować na danych z długimi zależnościami czasowymi. LSTM jest dokładniej opisane w późniejszej części pracy.  
-
-Gated Recurrent Unit (GRU) \cite{DBLP:journals/corr/ChungGCB15} jest modyfikacją LSTM. Podstawowa zasada działania modelu zostaje taka sama. Wprowadzone zmiany dotyczą struktury sieci i polegają na zastosowaniu dwóch zamiast trzech komórek, co powoduje zmniejszenie liczby parametrów. Mniejsza liczba parametrów przekłada się na zmniejszenie wymagań w zakresie mocy obliczeniowej potrzebnych do nauczenia modelu, co może mieć przełożenie na zwiększenie głębokości modelu lub zwiększenie ukrytych jednostek. Z drugiej strony zmniejszenie liczby bramek powoduje zmniejszenie mocy modelu. Z praktycznego punktu widzenia LSTM i GRU uzyskują porównywalne wyniki \cite{DBLP:journals/corr/ChungGCB14}.
-
-Rozwinięciem idei wykorzystania pamięci do usprawnienia działania sieci są Neuronowe Maszyny Turinga \cite{DBLP:journals/corr/GravesWD14}. Neuronowe Maszyny Turinga korzystają z mechanizmu uwagi do operacji na pamięci. Pamięć przypomina pamięć dostępną w komputerze i składa się z wielu wektorów, które można wykorzystać do odczytu lub przechowywania informacji. Neuronowa Maszyna Turinga posiada dwie głowice: do zapisu i odczytu. Adresowanie pamięci odbywa się na podstawie zawartości (content-base addressing) lub położenia (location-base addressing).
 
 W \cite{DBLP:journals/corr/VisinKCMCB15} wykorzystano sieć rekurencyjną do klasyfikacji obrazów i porównano uzyskane wyniki z rezultatami dla sieci konwolucyjnych. Proponowany model (ReNet) wykorzystywał RNN do czterotnego trawersowania fragmentów obrazu w celu ekstrakcji cech, jako alternatywę dla warstw konwolucyjnych z poolingiem. W \cite{DBLP:journals/corr/KalchbrennerDG15} przedstawiono GRID LSTM, które rozszerzało standardowy model sieci LSTM do N-wymiarowych komórek ze współdzielonymi wektorami stanu i pamięci.
 
@@ -138,13 +148,20 @@ Warto zwrócić uwagę, że w powyższym równaniu nie występują wagi ani bias
 	\label{fig:gru}
 \end{figure}
 
+\chapter{Problem badawczy}
+
+\section{ReNet}
+
+\section{Wykorzystana architektura sieci}
+
+\section{Krzywe wypełniające przestrzeń}
+
+
+
+
 \chapter{Przeprowadzone badania}
 
-
-\section{Problem badawczy}
-
 \section{Metodyka badań}
-
 
 \section{Opis eksperymentu}
 
@@ -155,14 +172,13 @@ Warto zwrócić uwagę, że w powyższym równaniu nie występują wagi ani bias
 \subsection{Dobór hiperparametrów modelu}
 
 
+
 \chapter{Wyniki}
 
 
 \chapter{Wnioski}
 
 \bibliography{bibliography}
-
-\tableofcontents
 
 \listoffigures
 
