@@ -3,7 +3,6 @@ from keras.models import load_model
 from KerasBatchGenerator import KerasBatchGenerator
 import numpy as np
 
-
 model = load_model(data_path + "/model-08.hdf5")
 dummy_iters = 40
 example_training_generator = KerasBatchGenerator(train_data, num_steps, 1, vocabulary,
