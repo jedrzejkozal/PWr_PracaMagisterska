@@ -31,13 +31,44 @@
 
 \chapter{Wstęp}
 
+W niniejszym rozdziale zarysowano problematykę pracy i pokrótce omówiono zagadnienia, które będą wykorzystywane w dalszej części. Dokonano przeglądu literaturowego i opisano motywację stojącą za przeprowadzonymi badaniami.
+
 \section{Wprowadzenie}
 
 \subsection{Sieci neuronowe}
 
+\begin{figure}
+	\centering
+	\includegraphics[scale=0.7]{img/feed-forward-nn.png}
+	\caption{Schemat sieci neuronowej} Źródło: https://www.researchgate.net/profile/Ramon\_Quiza/publication/234055177/figure/fig1/\\AS:300092981563410@1448559150651/Sample\-of\-a\-feed\-forward-neural\-network.png
+	\label{feedforward-NN}
+\end{figure}
+
+Sieci neuronowe to szeroka klasa modeli wykorzystywana najczęściej do zadania uczenia nadzorowanego. W podstawowej formie sieć składa się z wielu warstw neuronów połączonych ze sobą (zob rys. \ref{feedforward-NN}). Warstwa wejściowa sieci odpowiada za przyjmowanie wektorów wejściowych. Neurony w warstwie ukrytej realizują funkcję nieliniową opisaną równaniem:
+
+\begin{equation}
+	x_i = f(w_i u_i)
+\end{equation}
+
+Gdzie $x_i$ jest wyjściem $i$-tego neuronu w warstwie (nazywanym również aktywacją neuronu), $f$ jest funkcją aktywacji w warstwie do której należy neuron, $w_i$ jest wektorem wag $i$-tego neuronu a $u_i$ jest wektorem wejść $i$-tego neuronu. Nieliniowość operacji jest powodowana przez nieliniową funkcję aktywacji. W procesie uczenia definiowana jest funkcja strat (loss function) $L$ opisująca w sposób ilościowy jak bardzo wyjście sieci neuronowej różni się od oczekiwanej wartości. Wartości funkcji strat są wykorzystywane do modyfikacji wag sieci neuronowej (algorytm wstecznej propagacji błędu), najczęściej z wykorzystaniem reguł gradientowych. Dzięki algorytmowi wstecznej propagacji możliwe jest uczenie wielowarstwowych sieci. Wyjście każdej warstwy stanowi zmodyfikowaną reprezentację oryginalnej przestrzeni. Dzięki nieliniowości i tworzeniu reprezentacji przestrzeni cech, sieci neuronowe potrafią generować bardzo złożone granice decyzyjne.
+
+Sieci neuronowe są starą klasą modeli. Pierwsze prace w zakresie reguł uczenia pojawiły się latach 40 XX wieku \cite{McCulloch-Pitts} \cite{Hebb}. Rosenblat \cite{Rosenblatt} skonstruował perceptron - maszynę wykazującą zdolność nauki. Uważa się, że publikacja w które zbadano ogarniczenia perpceptoronu i udowodniono, że podejedyncza wartswa sieci nie jest w stanie nauczyć się funkcji XOR \cite{Perceptrons} zaczpoątkowała okres nazwany zimą sztucznej inteligencji (AI Winter). Prawdziwym przełomem okazała się praca \cite{Rumelhart} w której zaproponowano algorytm wstecznej propagacji błędów. Po tej publikacji zainteresowanie głębokimi sieciami neuronowymi zaczęło wzrastać. W \cite{Conv} zaproponowano warstwy konwolucyjne, które pozwoliły na łatwiejsze przetwarzanie obrazów przez sieci neuronowe. 
+Gwałtowny wzrost popularności sieci neuronowych w ostatnich latach można przypisać kilku czynnikom \cite{Goodfellow-et-al-2016}. Pierwszym z nich jest zwiększenie mocy obliczeniowej dostępnej dla praktyków i badaczy uczenia maszynowego, co pozwoliło na zwiększenie rozmiarów modeli i skrócenie czasu uczenia. Drugim czynnikiem jest pojawienie wielu obszernych zbiorów danych, powodowane przez rozpowszechnienie się internetu i urządzeń elektronicznych w życiu codziennym ludzi. Oba te czynniki pozwalają na skuteczne trenowanie modeli o większych pojemnościach, do coraz bardziej złożonych zadań.
+
+Można dopatrywać się powiązań między sposobem działania ludzkiego mózgu a sieciami neuronowymi. Podobieństwo to może być widoczne przy sposobie działania synaps komórki nerowowej. Badacze podkreślają \cite{Goodfellow-et-al-2016}, że związek sieci neuronowych z biologią ma bardziej charakter luźnej inspiracji niż rzeczywistego modelu zjawisk zachodzących w ludzkim mózgu.
+
 \subsection{Rekurencyjne sieci neuronowe}
 
-Sieci Rekurencyjne zostały oparte na pracy Rumelharta \cite{RNN}. Algorytm uczenia RNN - propagacja wsteczna w czasie (Back-Propagation Through Time - BPTT) zostały przedstawione w \cite{BPTT}.
+\begin{figure}
+	\centering
+	\includegraphics[scale=1.0]{img/rnn.png}
+	\caption{Schemat sieci rekurencyjnej.} Źródło: http://www.wildml.com/2015/09/recurrent-neural-networks-tutorial-part-1-introduction-to-rnns/ (Lewo) sieci rekurencyjne można przedstawić jako jednostkę obliczeniową, która do realizacji obliczeń wykorzystuje wartości uzyskane dla poprzednich kroków. Na rysunku jest to widoczne w formie czarnego kwadratu, oznaczającego opóźnienie czasowe o jeden krok przy neuronie obok normalnych wejść i wyjść. (Prawo) rozwinięta wersja tego samego schematu, przedstawiająca w jaki sposób obliczenia są wykonywane w poszczególnych krokach. Reprezentacja ta pozwala na łatwiejszą analizę zachowań sieci i stosowanych algorytmów. 
+	\label{fig:rnn}
+\end{figure}
+
+Sieci feedforward posiadają stałą liczbę wejść i wyjść, przez co nie radzą sobie dobrze z przetwarzaniem danych występujących w ciągach (takich jak tekst, dźwięki czy ciągi czasowe). Istnieją podejścia umożliwiające przetwarzanie ciągów przez sieci feedforward, ale nie są one skuteczne. W celu zaadresowania tego problemu powstały sieci rekurencyjne (Recurrent Neural Networks - RNN).
+Sieci Rekurencyjne zostały oparte na pracy Rumelharta \cite{RNN}. RNN posiadają ukryty stan, będący warstwą ukrytą sieci, którego wartość jest obliczana nie tylko na podstawie aktualnego wejścia, ale też na podstawie poprzedniego stanu sieci (zob rys. \ref{fig:rnn}).
+Algorytm uczenia RNN - propagacja wsteczna w czasie (Back-Propagation Through Time - BPTT) zostały przedstawione w \cite{BPTT}.
 Udowodniono, że przy pewnych założeniach RNN są kompletne w sensie Turinga \cite{turing-complete}.
 
 \subsubsection{Sieci dwukierunkowe}
@@ -89,7 +120,7 @@ W niniejszym rozdziale zostały omówione teoretyczne podstawy wybranych algoryt
 \begin{figure}
 \centering
 	\includegraphics[width=0.90\textwidth]{img/lstm_colah.png}
-	\caption{Schemat komórki LSTM.\\ Źródło: http://colah.github.io/posts/2015-08-Understanding-LSTMs/}
+	\caption{Schemat komórki LSTM.} Źródło: http://colah.github.io/posts/2015-08-Understanding-LSTMs/
 	\label{fig:lstm}
 \end{figure}
 
@@ -140,7 +171,7 @@ Służy do określania, sposobu w jaki zostanie zaktualizowany stan $h$ w aktual
 \begin{figure}
 \centering
 	\includegraphics[width=0.90\textwidth]{img/LSTM3-C-line.png}
-	\caption{Schemat komórki LSTM z zaznaczoną komórką pamięci. W przypadku propagacji wstecznej przy cofaniu się przez graf obliczeniowy sieci węzły odpowiadające operacji dodawania propagują wartość błędu bez modyfikacji wartości. Węzły w grafie odpowiadające operacji mnożenia powodują przemnożenie wartości dotychczasowego błędu przez drugi argument. W tym przypadku realizowana operacja to $C_t = f_t \odot C_{t-1} + i_t \odot \tilde{C}_t$. W wyniku propagacji wstecznej uzyskujemy pochodną $\frac{\partial L}{\partial C_t}$. Opearcja dodawnia nie zmienia wartość błędu, więc $\frac{\partial L}{\partial (f_t \odot C_{t-1})} = \frac{\partial L}{\partial C_t}$. Przy operacji mnożenia pochodna cząstkowa względem $C_{t-1}$ wynosi $\frac{\partial C_t}{\partial C_{t-1}} = f_t$. Błąd propagowany przez komórkę pamięci ma ostateczną wartość: $\frac{\partial L}{\partial C_{t-1}} = \frac{\partial L}{\partial C_t} f_t$. Ze względu na zbiór wartości funkcji sigmoidalnej $f_t \in (0, 1)$ wartość propagowanego błędu nadal jest pomniejszana w każdym kroku. Intuicyjnie wartość błędu jest zmniejszana w takim samym stopniu jak wartość sygnału przy normalnym przejściu przez forget gate (decyzja w jakim stopniu informacje nie są istotne w aktualnym kontekście). Zaproponowana architektura unika jednakże obliczania pochodnej względem funkcji aktywacji sigmoidalnej (pochodna funkcji sigmoidalnej: $\frac{d \sigma}{dx} = \sigma (x)(1 - \sigma (x)$) przy propagacji wstecznej błędu, co powoduje wolniejsze zmniejszanie wartości sygnału błędu.  \\ Źródło: http://colah.github.io/posts/2015-08-Understanding-LSTMs/}
+	\caption{Schemat komórki LSTM z zaznaczoną komórką pamięci.} Źródło: http://colah.github.io/posts/2015-08-Understanding-LSTMs/. W przypadku propagacji wstecznej przy cofaniu się przez graf obliczeniowy sieci węzły odpowiadające operacji dodawania propagują wartość błędu bez modyfikacji wartości. Węzły w grafie odpowiadające operacji mnożenia powodują przemnożenie wartości dotychczasowego błędu przez drugi argument. W tym przypadku realizowana operacja to $C_t = f_t \odot C_{t-1} + i_t \odot \tilde{C}_t$. W wyniku propagacji wstecznej uzyskujemy pochodną $\frac{\partial L}{\partial C_t}$. Opearcja dodawnia nie zmienia wartość błędu, więc $\frac{\partial L}{\partial (f_t \odot C_{t-1})} = \frac{\partial L}{\partial C_t}$. Przy operacji mnożenia pochodna cząstkowa względem $C_{t-1}$ wynosi $\frac{\partial C_t}{\partial C_{t-1}} = f_t$. Błąd propagowany przez komórkę pamięci ma ostateczną wartość: $\frac{\partial L}{\partial C_{t-1}} = \frac{\partial L}{\partial C_t} f_t$. Ze względu na zbiór wartości funkcji sigmoidalnej $f_t \in (0, 1)$ wartość propagowanego błędu nadal jest pomniejszana w każdym kroku. Intuicyjnie wartość błędu jest zmniejszana w takim samym stopniu jak wartość sygnału przy normalnym przejściu przez forget gate (decyzja w jakim stopniu informacje nie są istotne w aktualnym kontekście). Zaproponowana architektura unika jednakże obliczania pochodnej względem funkcji aktywacji sigmoidalnej (pochodna funkcji sigmoidalnej: $\frac{d \sigma}{dx} = \sigma (x)(1 - \sigma (x)$) przy propagacji wstecznej błędu, co powoduje wolniejsze zmniejszanie wartości sygnału błędu. 
 	\label{fig:lstm-mem-cell}
 \end{figure}
 
@@ -153,7 +184,7 @@ W swojej pracy \cite{LSTM} Hochreiter i Schmidhuber odnoszą się do wcześniejs
 \begin{figure}
 \centering
 	\includegraphics[width=0.5\textwidth]{img/LSTM3-var-GRU.png}
-	\caption{Schemat komórki GRU.\\ Źródło: http://colah.github.io/posts/2015-08-Understanding-LSTMs/}
+	\caption{Schemat komórki GRU.} Źródło: http://colah.github.io/posts/2015-08-Understanding-LSTMs/
 	\label{fig:gru}
 \end{figure}
 
