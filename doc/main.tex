@@ -31,7 +31,7 @@
 
 \chapter{Wstęp}
 
-W niniejszym rozdziale zarysowano problematykę pracy i pokrótce omówiono zagadnienia, które będą wykorzystywane w dalszej części. Dokonano przeglądu literaturowego i opisano motywację stojącą za przeprowadzonymi badaniami.
+W niniejszym rozdziale zarysowano problematykę pracy i pokrótce omówiono zagadnienia, które będą wykorzystywane w dalszej części. Dokonano przeglądu literaturowego i opisano plan badań.
 
 \section{Wprowadzenie}
 
@@ -101,11 +101,21 @@ Sieci rekurencyjne są także wykorzystywane w połączeniu z innymi modelami np
 
 \subsection{Zadanie klasyfikacji}
 
-\cite{Goodfellow-et-al-2016}
+\cite{introduction-to-machine-learning}
+
+Zadanie uczenia nadzorowanego można rozpatrywać w dwóch kategoriach: Bayes max-likelihood
+
+Silne-słabe eytkietowanie (strong-weak labeling)
+
+Algorytmy klasyfikacji dostosowane dla sieci rekurencyjnych zostały podane w \cite{graves-phd}
 
 \section{Przegląd literatury}
 
 W \cite{DBLP:journals/corr/VisinKCMCB15} wykorzystano sieć rekurencyjną do klasyfikacji obrazów i porównano uzyskane wyniki z rezultatami dla sieci konwolucyjnych. Proponowany model (ReNet) wykorzystywał RNN do czterotnego trawersowania fragmentów obrazu w celu ekstrakcji cech, jako alternatywę dla warstw konwolucyjnych z poolingiem. W \cite{DBLP:journals/corr/KalchbrennerDG15} przedstawiono GRID LSTM, które rozszerzało standardowy model sieci LSTM do N-wymiarowych komórek ze współdzielonymi wektorami stanu i pamięci.
+
+\section{Cel pracy}
+
+Celem pracy jest zbadanie skuteczności klasyfikacji zmodyfikowanej architektury sieci ReNet. Proponowana modyfikacja polega na zastąpieniu czterech sieci rekurencyjnych jedną dwukierunkową siecią rekurencyjną analizącą obraz jednowymiarowy ciąg otrzymany z wykorzystaniem krzywych wypełniającej przestrzeń (ang. space-filling curves). Wyniki klasyfikacji wybranego zbioru danych zostaną porównane z oryginalną architekturą oraz wynikami osiąganymi dla sieci konwolucyjnych. Wykorzystanie jednej sieci rekurencyjnej powinno pozwolić na zmniejszenie liczby parametrów modelu, co może przekładać się na krótszy czas szkolenia. W zakres badań będzie wchodziło również wpływ wyboru krzywej wypełniającej przestrzeń oraz różnych architektur sieci rekurencyjnych na uzyskiwane wyniki. Ze względu na ograniczoną dostępną moc obliczeniową hiperparametry modeli zostaną dobrane z wykorzystaniem podziału zbioru danych na zbiór uczący i zbiór testowy oraz wykorzystaniem algorytmu wyszukiwania sieciowego (ang. grid search). Dokładność klasyfikacji zostanie zmierzona z wykorzystaniem dokładności (accuracy)
 
 \chapter{Omówienie wybranych zagadnień teoretycznych}
 
