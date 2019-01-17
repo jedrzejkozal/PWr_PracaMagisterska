@@ -33,6 +33,8 @@
 
 \section{Wprowadzenie}
 
+\subsection{Sieci neuronowe}
+
 \subsection{Rekurencyjne sieci neuronowe}
 
 Sieci Rekurencyjne zostały oparte na pracy Rumelharta \cite{RNN}. Algorytm uczenia RNN - propagacja wsteczna w czasie (Back-Propagation Through Time - BPTT) zostały przedstawione w \cite{BPTT}.
@@ -135,9 +137,16 @@ Służy do określania, sposobu w jaki zostanie zaktualizowany stan $h$ w aktual
 	h_t = o_t \odot tanh( C_t )
 \end{equation}
 
+\begin{figure}
+\centering
+	\includegraphics[width=0.90\textwidth]{img/LSTM3-C-line.png}
+	\caption{Schemat komórki LSTM z zaznaczoną komórką pamięci. W przypadku propagacji wstecznej przy cofaniu się przez graf obliczeniowy sieci węzły odpowiadające operacji dodawania propagują wartość błędu bez modyfikacji wartości. Węzły w grafie odpowiadające operacji mnożenia powodują przemnożenie wartości dotychczasowego błędu przez drugi argument. W tym przypadku realizowana operacja to $C_t = f_t \odot C_{t-1} + i_t \odot \tilde{C}_t$. W wyniku propagacji wstecznej uzyskujemy pochodną $\frac{\partial L}{\partial C_t}$. Opearcja dodawnia nie zmienia wartość błędu, więc $\frac{\partial L}{\partial (f_t \odot C_{t-1})} = \frac{\partial L}{\partial C_t}$. Przy operacji mnożenia pochodna cząstkowa względem $C_{t-1}$ wynosi $\frac{\partial C_t}{\partial C_{t-1}} = f_t$. Błąd propagowany przez komórkę pamięci ma ostateczną wartość: $\frac{\partial L}{\partial C_{t-1}} = \frac{\partial L}{\partial C_t} f_t$. Ze względu na zbiór wartości funkcji sigmoidalnej $f_t \in (0, 1)$ wartość propagowanego błędu nadal jest pomniejszana w każdym kroku. Intuicyjnie wartość błędu jest zmniejszana w takim samym stopniu jak wartość sygnału przy normalnym przejściu przez forget gate (decyzja w jakim stopniu informacje nie są istotne w aktualnym kontekście). Zaproponowana architektura unika jednakże obliczania pochodnej względem funkcji aktywacji sigmoidalnej (pochodna funkcji sigmoidalnej: $\frac{d \sigma}{dx} = \sigma (x)(1 - \sigma (x)$) przy propagacji wstecznej błędu, co powoduje wolniejsze zmniejszanie wartości sygnału błędu.  \\ Źródło: http://colah.github.io/posts/2015-08-Understanding-LSTMs/}
+	\label{fig:lstm-mem-cell}
+\end{figure}
+
 Warto zwrócić uwagę, że w powyższym równaniu nie występują wagi ani bias, więc $tanh$ nie jest utożsamiony z warstwą sieci neuronowej.
 
-
+W swojej pracy \cite{LSTM} Hochreiter i Schmidhuber odnoszą się do wcześniejszej pracy \cite{vanishing_gradient_RNN}, gdzie zostały przeanalizowane źródła problemów związanych ze znikającymi gradientami. Jako główny problem został wskazany gradient względem dowolnej zmiennej w grafie $a$ obliczeniowym $|\frac{\partial L}{\partial a}| > 1.0$ powodujący wybuchanie wag, lub $|\frac{\partial L}{\partial a}| < 1.0$ powodujący znikanie wag. W strukturze LSTM komórka pamięci jest sposobem zapobiegania temu problemowi. Komórka pamięci przy propagacji wstecznej pozwala na swobodniejszą propagację błędu wiele kroków wstecz, dzięki czemu sieć w procesie uczenia jest w stanie uwzględnić długie zależności czasowe (zob rys. \ref{fig:lstm-mem-cell}). Kolejnym problemem związanym z uczeniem zwykłych RNN jest otrzymywanie sprzecznych sygnałów przy aktualizacji wag. W przypadku gdzie ta sama warstwa sieci neuronowej jest odpowiedzialna za określenie w jakim stopniu stan sieci z poprzedniego kroku jest nadal istotny, oraz w jakim stopniu można wykorzystać aktualną wartość stanu sieci, uczenie sieci może być trudne. W LSTM ten problem został rozwiązany przez wyodrębnienie warstw odpowiedzialnych za osobne operacje.  
 
 \section{GRU}
 
