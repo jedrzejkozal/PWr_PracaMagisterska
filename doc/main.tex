@@ -88,17 +88,6 @@ Gated Recurrent Unit (GRU) \cite{DBLP:journals/corr/ChungGCB15} jest modyfikacj�
 
 Rozwinięciem idei wykorzystania pamięci do usprawnienia działania sieci są Neuronowe Maszyny Turinga \cite{DBLP:journals/corr/GravesWD14}. Neuronowe Maszyny Turinga korzystają z mechanizmu uwagi do operacji na pamięci. Pamięć przypomina pamięć dostępną w komputerze i składa się z wielu wektorów, które można wykorzystać do odczytu lub przechowywania informacji. Neuronowa Maszyna Turinga posiada dwie głowice: do zapisu i odczytu. Adresowanie pamięci odbywa się na podstawie zawartości (content-base addressing) lub położenia (location-base addressing).
 
-\subsection{Zastosowania rekurencyjnych sieci neuronowych}
-
-Sieci Rekurencyjne znalazły wiele zastosowań w przetwarzaniu sekwencji. 
-Jednym z takich zastosowań może być przetwarzanie języka naturalnego (natural language processing - NLP), gdzie RNN znalazły zastosowanie w rozpoznawaniu mowy \cite{DBLP:journals/corr/abs-1303-5778}, \cite{speech_recognition}, \cite{speech_recognition1}, tłumaczeniu \cite{translate}, \cite{DBLP:journals/corr/ChoMGBSB14}, \cite{DBLP:journals/corr/BahdanauCB14}, \cite{DBLP:journals/corr/WuSCLNMKCGMKSJL16}, modelowniu języka \cite{DBLP:journals/corr/ChoMGBSB14}, generowaniu mowy \cite{DBLP:journals/corr/MehriKGKJSCB16} i generowaniu tekstu \cite{DBLP:journals/corr/Graves13} \cite{karpathy_RNN_blog}. 
-Innym polem zastosowań RNN jest rozpoznawanie pisma ręcznego \cite{handwriting_recognition}, \cite{handwriting_recognition2} lub jego generacja \cite{DBLP:journals/corr/Graves13}.
-RNN są także wykorzystywane do generowania obrazów \cite{DBLP:journals/corr/GregorDGW15} i muzyki \cite{DBLP:journals/corr/abs-1804-07300}.
-Autorzy \cite{DBLP:journals/corr/VinyalsL15} zaproponowali system do przeprowadzania rozmóm zbudowany z wykorzystaniem RNN. 
-W \cite{sentiment_analysis} wykorzystano RNN do analizy sentymentu.
-
-Sieci rekurencyjne są także wykorzystywane w połączeniu z innymi modelami np. CNN w przypadku generowania podpisów dla obrazów \cite{DBLP:journals/corr/VinyalsTBE14}, gdzie CNN jest wykorzystywane do klasyfikacji obrazu i przygotowywania reprezentacji obrazu w architekturze encoder-decoder, a RNN generuje podpis obrazka.
-
 \subsection{Zadanie klasyfikacji}
 
 Uczenie nadzorowane (ang. supervised learning) to dział uczenia maszyn w którym zbiór uczący składa się z par $\{x, d\}_{i=1}^N$, gdzie $x$ to wektor cech, $d$ to etykieta, a $N$ to liczność zbioru uczącego. W przypadku gdy każdej cechy istnieje osobna etykieta mówimy o silnym etykietowaniu. Gdy jedna etykieta opisuje wszystkie cechy z przykładu uczącego mówimy o słabym etykietowaniu. Przykładowo jeśli zadanie polega na rozpoznaniu, że na zdjęciu znajduje się samochód mówimy o słabym etykietowaniu. Jeśli zadanie polega na zaznaczeniu wszystkich pikseli przedstawiających samochód na zdjęciu, mówimy o silnym etykietowaniu. Aby określić jakość działania algorytmu wprowadza się funkcję straty dla całego zbioru:
@@ -113,21 +102,43 @@ Zadanie klasyfikacji opiera się na przypisaniu przykładu uczącego $x$ do odpo
 	E(x, d) = \sum_{i=1}^N 1(h(x_i) \neq d_i )
 \end{equation}
 
-gdzie $1(x)$ jest równe 1, gdy x jest prawdziwe i 0 gdy x nie jest prawdziwe. Inna często stosowana funkcja strat to entropia krzyżowa (ang cross entropy):
+gdzie $1(x)$ jest równe 1, gdy x jest prawdziwe i 0 gdy x nie jest prawdziwe. 0-1 funkcja strat może być stosowana, gdy na wyjściu klasyfikatora znajduje się etykieta klasy. W przypadku gdy na wyjściu modelu znajduje się prawdopodobieństwo przynależności do klasy często stosowana jest entropia krzyżowa (ang cross entropy):
 
 \begin{equation}
-	
+	H(h,d) = - \sum h(x) log(d)
 \end{equation}
 
-Zadanie uczenia nadzorowanego można rozpatrywać w dwóch kategoriach: Bayes max-likelihood
+Reguła decyzyjna w takim przypadku opiera się na wyborze najbardziej prawdopodobnej klasy:
 
-Silne-słabe eytkietowanie (strong-weak labeling)
+\begin{equation}
+	h(x) = arg \; \stackunder{max}{k} \; p(C_k | x)
+\end{equation}
 
-Algorytmy klasyfikacji dostosowane dla sieci rekurencyjnych zostały podane w \cite{graves-phd}
+gdzie $x_i$ to $i$-ty element wektora, będącego argumentem funkcji softmax.
+
+W przypadku sieci neuronowych często stosowaną mechaniką jest wykorzystywanie funkcji softmax w warstwie wyjściowej sieci. Funkcja softmax pozwala na konwertowanie wyjść sieci na prawdopodobieństwa i jest dana wzorem:
+
+\begin{equation}
+	softmax(x)_i = \frac{e^{x_i}}{\sum_{k=1}^{K} e^{x_k}}
+\end{equation}
+
+Algorytmy klasyfikacji dostosowane dla sieci rekurencyjnych takie jak Connectionist Temporal
+Classification zostały szczegółowo omówione w \cite{graves-phd}. W przypadku tej pracy ich wymaganie nie będzie wskazane, ze względu na charakter wykorzystanej architektury sieci.
 
 \section{Przegląd literatury}
 
 W \cite{DBLP:journals/corr/VisinKCMCB15} wykorzystano sieć rekurencyjną do klasyfikacji obrazów i porównano uzyskane wyniki z rezultatami dla sieci konwolucyjnych. Proponowany model (ReNet) wykorzystywał RNN do czterotnego trawersowania fragmentów obrazu w celu ekstrakcji cech, jako alternatywę dla warstw konwolucyjnych z poolingiem. W \cite{DBLP:journals/corr/KalchbrennerDG15} przedstawiono GRID LSTM, które rozszerzało standardowy model sieci LSTM do N-wymiarowych komórek ze współdzielonymi wektorami stanu i pamięci.
+
+\subsection{Zastosowania rekurencyjnych sieci neuronowych}
+
+Sieci Rekurencyjne znalazły wiele zastosowań w przetwarzaniu sekwencji. 
+Jednym z takich zastosowań może być przetwarzanie języka naturalnego (natural language processing - NLP), gdzie RNN znalazły zastosowanie w rozpoznawaniu mowy \cite{DBLP:journals/corr/abs-1303-5778}, \cite{speech_recognition}, \cite{speech_recognition1}, tłumaczeniu \cite{translate}, \cite{DBLP:journals/corr/ChoMGBSB14}, \cite{DBLP:journals/corr/BahdanauCB14}, \cite{DBLP:journals/corr/WuSCLNMKCGMKSJL16}, modelowniu języka \cite{DBLP:journals/corr/ChoMGBSB14}, generowaniu mowy \cite{DBLP:journals/corr/MehriKGKJSCB16} i generowaniu tekstu \cite{DBLP:journals/corr/Graves13} \cite{karpathy_RNN_blog}. 
+Innym polem zastosowań RNN jest rozpoznawanie pisma ręcznego \cite{handwriting_recognition}, \cite{handwriting_recognition2} lub jego generacja \cite{DBLP:journals/corr/Graves13}.
+RNN są także wykorzystywane do generowania obrazów \cite{DBLP:journals/corr/GregorDGW15} i muzyki \cite{DBLP:journals/corr/abs-1804-07300}.
+Autorzy \cite{DBLP:journals/corr/VinyalsL15} zaproponowali system do przeprowadzania rozmóm zbudowany z wykorzystaniem RNN. 
+W \cite{sentiment_analysis} wykorzystano RNN do analizy sentymentu.
+
+Sieci rekurencyjne są także wykorzystywane w połączeniu z innymi modelami np. CNN w przypadku generowania podpisów dla obrazów \cite{DBLP:journals/corr/VinyalsTBE14}, gdzie CNN jest wykorzystywane do klasyfikacji obrazu i przygotowywania reprezentacji obrazu w architekturze encoder-decoder, a RNN generuje podpis obrazka.
 
 \section{Cel pracy}
 
