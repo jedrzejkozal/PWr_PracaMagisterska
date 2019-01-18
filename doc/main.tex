@@ -101,7 +101,23 @@ Sieci rekurencyjne są także wykorzystywane w połączeniu z innymi modelami np
 
 \subsection{Zadanie klasyfikacji}
 
-\cite{introduction-to-machine-learning}
+Uczenie nadzorowane (ang. supervised learning) to dział uczenia maszyn w którym zbiór uczący składa się z par $\{x, d\}_{i=1}^N$, gdzie $x$ to wektor cech, $d$ to etykieta, a $N$ to liczność zbioru uczącego. W przypadku gdy każdej cechy istnieje osobna etykieta mówimy o silnym etykietowaniu. Gdy jedna etykieta opisuje wszystkie cechy z przykładu uczącego mówimy o słabym etykietowaniu. Przykładowo jeśli zadanie polega na rozpoznaniu, że na zdjęciu znajduje się samochód mówimy o słabym etykietowaniu. Jeśli zadanie polega na zaznaczeniu wszystkich pikseli przedstawiających samochód na zdjęciu, mówimy o silnym etykietowaniu. Aby określić jakość działania algorytmu wprowadza się funkcję straty dla całego zbioru:
+
+\begin{equation}
+	\mathcal{L} = \sum_{i=1}^N L_i
+\end{equation}
+
+Zadanie klasyfikacji opiera się na przypisaniu przykładu uczącego $x$ do odpowiedniej klasy $k$. W procesie uczenia wybieramy hipotezę z przestrzeni hipotez $h \in \mathcal{H}$, która minimalizuje liczbę błędnie zaklasyfikowanych przykładów \cite{introduction-to-machine-learning}. Można to zapisać za pomocą 0-1 funkcji strat:
+
+\begin{equation}
+	E(x, d) = \sum_{i=1}^N 1(h(x_i) \neq d_i )
+\end{equation}
+
+gdzie $1(x)$ jest równe 1, gdy x jest prawdziwe i 0 gdy x nie jest prawdziwe. Inna często stosowana funkcja strat to entropia krzyżowa (ang cross entropy):
+
+\begin{equation}
+	
+\end{equation}
 
 Zadanie uczenia nadzorowanego można rozpatrywać w dwóch kategoriach: Bayes max-likelihood
 
