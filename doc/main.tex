@@ -127,7 +127,7 @@ Classification zostały szczegółowo omówione w \cite{graves-phd}. W przypadku
 
 \section{Przegląd literatury}
 
-W \cite{DBLP:journals/corr/VisinKCMCB15} wykorzystano sieć rekurencyjną do klasyfikacji obrazów i porównano uzyskane wyniki z rezultatami dla sieci konwolucyjnych. Proponowany model (ReNet) wykorzystywał RNN do czterotnego trawersowania fragmentów obrazu w celu ekstrakcji cech, jako alternatywę dla warstw konwolucyjnych z poolingiem. W \cite{DBLP:journals/corr/KalchbrennerDG15} przedstawiono GRID LSTM, które rozszerzało standardowy model sieci LSTM do N-wymiarowych komórek ze współdzielonymi wektorami stanu i pamięci.
+W tej sekcji dokonano przeglądu typowych zastosowań sieci rekurencyjnych oraz omówiono prace w których dokonywano klasyfikacji obrazów za pomocą RNN.
 
 \subsection{Zastosowania rekurencyjnych sieci neuronowych}
 
@@ -140,9 +140,13 @@ W \cite{sentiment_analysis} wykorzystano RNN do analizy sentymentu.
 
 Sieci rekurencyjne są także wykorzystywane w połączeniu z innymi modelami np. CNN w przypadku generowania podpisów dla obrazów \cite{DBLP:journals/corr/VinyalsTBE14}, gdzie CNN jest wykorzystywane do klasyfikacji obrazu i przygotowywania reprezentacji obrazu w architekturze encoder-decoder, a RNN generuje podpis obrazka.
 
+\subsection{Zastosowanie sieci rekurencyjnych do klasyfikacji obrazów}
+
+W \cite{DBLP:journals/corr/VisinKCMCB15} wykorzystano sieć rekurencyjną do klasyfikacji obrazów i porównano uzyskane wyniki z rezultatami dla sieci konwolucyjnych. Proponowany model (ReNet) wykorzystywał RNN do czterotnego trawersowania fragmentów obrazu w celu ekstrakcji cech, jako alternatywę dla warstw konwolucyjnych z poolingiem. W \cite{DBLP:journals/corr/abs-0705-2011} wprowadzono wielowymiarowe sieci rekurencyjne, które obliczały aktywację w danej komórce nie tylko na podstawie aktywacji z poprzedniej iteracji, ale także na podstawie wartości aktywacji sąsiadujących komórek w aktualnym kroku czasowym. Model wielowymiarowych RNN został wykorzystany w przypadku tej pracy do przeprowadzenia segmentacji obrazu. Idea ta została rozwinięta w \cite{DBLP:journals/corr/KalchbrennerDG15}, gdzie przedstawiono Grid LSTM, które rozszerzało standardowy model sieci LSTM do N-wymiarowych komórek ze współdzielonymi wektorami stanu i pamięci. Wielowymiarowe sieci rekurencyjne stanowią ciekawą klasę modeli, jednakże mogą wymagać znaczących zasobów mocy obliczeniowej do przeprowadzenia procesu uczenia.
+
 \section{Cel pracy}
 
-Celem pracy jest zbadanie skuteczności klasyfikacji zmodyfikowanej architektury sieci ReNet. Proponowana modyfikacja polega na zastąpieniu czterech sieci rekurencyjnych jedną dwukierunkową siecią rekurencyjną analizącą obraz jednowymiarowy ciąg otrzymany z wykorzystaniem krzywych wypełniającej przestrzeń (ang. space-filling curves). Wyniki klasyfikacji wybranego zbioru danych zostaną porównane z oryginalną architekturą oraz wynikami osiąganymi dla sieci konwolucyjnych. Wykorzystanie jednej sieci rekurencyjnej powinno pozwolić na zmniejszenie liczby parametrów modelu, co może przekładać się na krótszy czas szkolenia. W zakres badań będzie wchodziło również wpływ wyboru krzywej wypełniającej przestrzeń oraz różnych architektur sieci rekurencyjnych na uzyskiwane wyniki. Ze względu na ograniczoną dostępną moc obliczeniową hiperparametry modeli zostaną dobrane z wykorzystaniem podziału zbioru danych na zbiór uczący i zbiór testowy oraz wykorzystaniem algorytmu wyszukiwania sieciowego (ang. grid search). Dokładność klasyfikacji zostanie zmierzona z wykorzystaniem dokładności (accuracy)
+Celem pracy jest zbadanie skuteczności klasyfikacji zmodyfikowanej architektury sieci ReNet. Proponowana modyfikacja polega na zastąpieniu czterech sieci rekurencyjnych jedną dwukierunkową siecią rekurencyjną analizącą obraz jednowymiarowy ciąg otrzymany z wykorzystaniem krzywych wypełniającej przestrzeń (ang. space-filling curves). Wyniki klasyfikacji wybranego zbioru danych zostaną porównane z oryginalną architekturą oraz wynikami osiąganymi dla sieci konwolucyjnych. Wykorzystanie jednej sieci rekurencyjnej powinno pozwolić na zmniejszenie liczby parametrów modelu, co może przekładać się na krótszy czas szkolenia. W zakres badań będzie wchodziło również wpływ wyboru krzywej wypełniającej przestrzeń oraz różnych architektur sieci rekurencyjnych na uzyskiwane wyniki. Ze względu na ograniczoną dostępną moc obliczeniową hiperparametry modeli zostaną dobrane z wykorzystaniem podziału zbioru danych na zbiór uczący i zbiór testowy oraz wykorzystaniem algorytmu wyszukiwania sieciowego (ang. grid search). Dokładność klasyfikacji zostanie zmierzona z wykorzystaniem dokładności (ang. accuracy).
 
 \chapter{Omówienie wybranych zagadnień teoretycznych}
 
