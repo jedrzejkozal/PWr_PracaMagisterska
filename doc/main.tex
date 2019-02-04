@@ -231,7 +231,57 @@ W swojej pracy \cite{LSTM} Hochreiter i Schmidhuber odnoszą się do wcześniejs
 
 \chapter{Problem badawczy}
 
+W niniejszym rozdziale omówiono architekturę sieci ReNet i modyfikacje jakie zostały wprowadzone.
+
 \section{ReNet}
+
+\begin{figure}
+\centering
+	\includegraphics[width=0.5\textwidth]{img/ReNet.png}
+	\caption{Schemat działania warstwy sieci ReNet.} Źródło: https://arxiv.org/abs/1505.00393
+	\label{fig:ReNet-single-layer}
+\end{figure}
+
+Sieci ReNet \cite{DBLP:journals/corr/VisinKCMCB15} są alternatywą dla sieci konwolucyjnych w zadaniu rozpoznawania obrazów z wykorzystaniem sieci neuronowych. Warstwy konwolucyjne realizują operację nakładania maski na tensor wejściowy, przez co informacje na wyjściu warstwy mają charakter lokalny. Sieć konwolucyjna nie jest w stanie wykorzystać w pojedynczej warstwie informacji na temat całego obrazu. ReNet jest sposobem na zaadresowanie tej kwestii poprzez wykorzystanie sieci rekurencyjnej do obliczania aktywacji warstwy sieci z wykorzystaniem informacji zawartej w całym obrazie.
+
+Każda warstwa ReNet składa się z czterech sieci rekurencyjnych, które skanują obraz w czterech kierunkach: z góry na dół, od dołu do góry, z lewej do prawej oraz z prawej do lewej (rys. \ref{fig:ReNet-single-layer}). Wejściem każdej z sieci jest zbiór pikseli o niewielkich rozmiarach rozmiarach (ang. patch). W każdym kroku aktywacja warstwy ReNet jest obliczana na podstawie poprzedniego stanu sieci i aktualnie analizowanego zbioru pikseli. 
+
+Obraz wejściowy można zdefiniować jako:
+
+\begin{equation}
+	X = \{x_{i,j}\},\qquad X \in \mathbb{R}^{w \textrm{x} h \textrm{x} c}
+\end{equation}
+
+gdzie $w, h$ to rozmiary obrazu, a $c$ to liczba kanałów dla każdego piksela obrazu. Liczbę patchy w pojedynczym wierszu i kolumnie obrazu wejściowego można zatem zapisać jako:
+
+\begin{gather}
+	I=\frac{w}{w_p} \\
+	J=\frac{h}{h_p} \nonumber
+\end{gather}
+
+gdzie $w_p$ i $h_p$ to wysokość i szerokość patha. Zbiór wszystkich patchy obrazu wejściowego jest dany jako: $P = \{p_{i,j}\}, P \in \mathbb{R}^{w_p \textrm{x} h_p \textrm{x} c}$. Pionowe przejście sieci po wszystkich patchach obrazu można zapisać jako funkcję aktywacji sieci rekurencyjnej:
+
+\begin{gather}
+    v_{i,j}^{F} = f_{VFWD} (v_{i,j-1}^F, p_{i,j}), \\
+    v_{i,j}^{R} = f_{VREV} (v_{i,j+1}^R, p_{i,j}), \nonumber
+\end{gather}
+
+gdzie $f_{VFWD} (v_{i,j-1}^F, p_{i,j})$ to aktywacja sieci rekurencyjnej lub aktywacja komórki LSTM lub GRU. Wyjście po przejściu pionowym stanowi tensor $V = \{v_{i,j}\}_{i=1,...,I}^{j=1,...,J}$, będący mapą cech. Każdy element wyjścia $v_{i,j} \in \mathbb{R}^{2d}$ stanowi konkatenację aktywacji przejścia z góry na dół i z dołu na górę, gdzie $d$ to liczba jednostek rekurencyjnych wykorzystanych dla jednego patcha. Tensor $V$ jest wejściem dla drugiego elementu warstwy sieci realizującego przejście poziome. Operacja przejścia poziomego jest zdefiniowana analogicznie przez obliczenie aktywacji $f_{HFWD}, f_{HREV}$. Wynikiem tej operacji jest tensor $H = \{h_{i,j}\}$. 
+
+Ostatecznie przekształcenie $\Phi$ realizowane przez całą warstwę sieci może zostać zapisane z wykorzystaniem wprowadzonych oznaczeń jako:
+
+\begin{equation}
+	\Phi: X \rightarrow V \rightarrow H
+\end{equation}
+
+\begin{figure}
+\centering
+	\includegraphics[width=0.9\textwidth]{img/ReNetArch.png}
+	\caption{Schemat przepływu informacji w sieci ReNet.} Sieć ta została wykorzystana przez twórców architektury dla zbioru SVHN. Powyższy schemat przedstawia sieć z trzema warstwami ReNet, dwoma w pełni połączonymi warstwami oraz warstwą softmax. Każda warstwa ReNet składa się z dwóch etapów: sieci skanujących obraz w kierunku góra-dół, dół-góra oraz lewo-prawo, prawo-lewo. Rozmiar patchy sieci w każdej warstwie wynosi 2x2. Warto zauważyć, że rozmiar patchy przy skanowaniu sieci w kierunku poziomym musi wynosić 1, aby aktwacje obliczane przy przejściu poziomym dotyczyły tej samej części obrazu co przy przejściu pionowym (patch o rozmiarze 2x2xc zostaje zamieniony na aktywacje sieci 1x1xd, gdzie d to liczba neuronów w warstwie). Liczba neuronów sieci rekurencyjnego dla pojedynczego przejścia wynosi 256, więc wyjście po dwóch przejściach jest tensorem o rozmiarach $I,J,2d$. Zmniejszenie rozmiarów tensora dla każdej warstwy powoduje brak konieczności stosowania poolingu po warstwie ReNet. Warstwy w pełni połączone zawierają 4096 neuronów i wykorzystują funkcję aktywacji ReLu. Źródło: https://arxiv.org/abs/1505.00393
+	\label{fig:ReNet}
+\end{figure}
+
+Każda kolejna warstwa sieci ReNet korzysta z wyjścia poprzedniej warstwy. Schemat działania sieci dla przykładowego zbioru danych, wraz z omówieniem realizowanych operacji został przedstawiony na rysunku \ref{fig:ReNet}.
 
 \section{Proponowana architektura sieci}
 
