@@ -1,10 +1,12 @@
 import keras
+import tensorflow as tf
 from keras.layers import LSTM, Dense, Input
 
-class SimpleRNN(keras.Model):
+class SimpleReNet(keras.Model):
 
     def __init__(self, size_of_patches, reNet_hidden_size, fully_conn_hidden_size):
         super().__init__()
+
 
         self.size_of_patches = size_of_patches
         self.w_p = size_of_patches[0][0]
@@ -33,8 +35,8 @@ class SimpleRNN(keras.Model):
             yield i, inputs[:, :, i]
 
 
-    def __get_patch(self, vec, patch_size):
-        for i in range(0, vec.shape[1], patch_size):
+    def __get_vert_patch(self, vec):
+        for i in range(0, vec.shape[1], self.h_p):
             print("__get_patch vec: ", )
             yield vec[:, i:i+patch_size]
 
@@ -51,7 +53,7 @@ class SimpleRNN(keras.Model):
 
         for col_index, col in self.__get_columns(input):
             print("col: ", col)
-            for patch_index, patch in self.__get_patch(col, self.h_p):
+            for patch_index, patch in tf.map_fn(self.__get_vert_patch, col):
 
                 up_down_activation = self.LSTM_up_down(patch)
                 down_up_activation = self.LSTM_down_up(patch)

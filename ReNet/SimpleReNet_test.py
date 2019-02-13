@@ -3,11 +3,11 @@ import numpy as np
 from main import *
 
 
-class TestSimpleRNN(object):
+class TestSimpleReNet(object):
 
     @pytest.fixture
     def get_sut(self):
-        model = SimpleRNN([[2,2]], 1, 1)
+        model = SimpleReNet([[2,2]], 1, 1)
         model.compile(loss='categorical_crossentropy', optimizer='adam',
                 metrics=['categorical_accuracy'])
         return model
