@@ -1,8 +1,9 @@
-import keras
 import tensorflow as tf
-from keras.layers import LSTM, Dense, Input
+from keras import Model
+from keras.layers import LSTM, Dense, Input, concatenate
+from keras.preprocessing.sequence import pad_sequences
 
-class SimpleReNet(keras.Model):
+class SimpleReNet(Model):
 
     def __init__(self, size_of_patches, reNet_hidden_size, fully_conn_hidden_size):
         super().__init__()
@@ -53,19 +54,20 @@ class SimpleReNet(keras.Model):
 
         for col_index, col in self.__get_columns(input):
             print("col: ", col)
-            for patch_index, patch in tf.map_fn(self.__get_vert_patch, col):
+            #for patch_index, patch in tf.map_fn(self.__get_vert_patch, col):
 
-                up_down_activation = self.LSTM_up_down(patch)
-                down_up_activation = self.LSTM_down_up(patch)
+            patch_LSTM_input = pad_sequences(patch)
+
+            up_down_activation = self.LSTM_up_down(patch_LSTM_input)
+            down_up_activation = self.LSTM_down_up(patch)
+
+            merged_vector = concatenate([up_down_activation,
+                    down_up_activation], axis=2)
+            print("merged_vector shape:", merged_vector.shape)
 
 
-                merged_vector = keras.layers.concatenate([up_down_activation,
-                        down_up_activation], axis=2)
-                print("merged_vector shape:", merged_vector.shape)
-
-
-                horizontal_sweep_input = keras.layers.concatenate([horizontal_sweep_input,
-                        merged_vector], axis=1)
+            horizontal_sweep_input = concatenate([horizontal_sweep_input,
+                    merged_vector], axis=1)
 
 
         return 1

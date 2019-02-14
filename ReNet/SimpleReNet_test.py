@@ -6,7 +6,7 @@ from main import *
 class TestSimpleReNet(object):
 
     @pytest.fixture
-    def get_sut(self):
+    def sut(self):
         model = SimpleReNet([[2,2]], 1, 1)
         model.compile(loss='categorical_crossentropy', optimizer='adam',
                 metrics=['categorical_accuracy'])
@@ -14,18 +14,22 @@ class TestSimpleReNet(object):
 
 
     @pytest.fixture
-    def get_simple_data(self):
+    def simple_data_x(self):
         num_samples = 2
         x = np.zeros((num_samples, 10, 10), dtype=np.uint8)
         x[1] = np.ones((10, 10))
-        y = np.array([0, 1], dtype=np.uint8)
         print(x)
+        return x
+
+
+    @pytest.fixture
+    def simple_data_y(self):
+        y = np.array([0, 1], dtype=np.uint8)
         print(y)
-        return x, y
+        return y
 
 
-    def test_model_output_for_2_classes_is_0_or_1(self):
-        sut = self.get_sut()
-        x, y = self.get_simple_data()
-        sut.fit(x, y, epochs=1, shuffle=False)
+    def test_model_output_for_2_classes_is_0_or_1(self, sut, simple_data_x,
+            simple_data_y):
+        sut.fit(simple_data_x, simple_data_y, epochs=1, shuffle=False)
         assert True == True
