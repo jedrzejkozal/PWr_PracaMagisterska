@@ -18,7 +18,7 @@ class TestSimpleReNet(object):
         num_samples = 2
         x = np.zeros((num_samples, 10, 10), dtype=np.uint8)
         x[1] = np.ones((10, 10))
-        print(x)
+        #print(x)
         return x
 
 

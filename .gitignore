@@ -17,3 +17,4 @@ experiments/datasets/
 */.pytest_cache
 */.cache/
 ReNet/experiments/lstm-on-Yelp-review-data/review.json
+*.csv
