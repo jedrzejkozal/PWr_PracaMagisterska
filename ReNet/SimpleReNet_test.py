@@ -13,16 +13,16 @@ class TestSimpleReNet(object):
 
     @pytest.fixture
     def simple_data_x(self):
-        num_samples = 2
+        num_samples = 60
         x = np.zeros((num_samples, 10, 10, 1), dtype=np.uint8)
-        x[1] = np.ones((10, 10, 1))
+        x[30:] = np.ones((10, 10, 1))
         return x
 
 
     @pytest.fixture
     def simple_data_y(self):
-        y = np.zeros((2), dtype=np.uint8)
-        y[1] = 1
+        y = np.zeros((60), dtype=np.uint8)
+        y[30:] = 1
         print(y)
         return y
 
