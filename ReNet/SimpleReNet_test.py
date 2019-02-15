@@ -8,6 +8,8 @@ class TestSimpleReNet(object):
     @pytest.fixture
     def sut(self):
         model = SimpleReNet([[2,2]], 1, 1, 2)
+        model.compile(loss='categorical_crossentropy', optimizer='adam',
+                metrics=['categorical_accuracy'])
         return model
 
 
@@ -29,7 +31,5 @@ class TestSimpleReNet(object):
 
     def test_model_output_for_2_classes_is_0_or_1(self, sut, simple_data_x,
             simple_data_y):
-        sut.compile(loss='categorical_crossentropy', optimizer='adam',
-                metrics=['categorical_accuracy'])
         sut.fit(simple_data_x, simple_data_y, epochs=1, shuffle=False)
-        assert True == True
+        assert sut.predict(simple_data_x).all() == 0 or sut.predict(simple_data_x).all() == 1
