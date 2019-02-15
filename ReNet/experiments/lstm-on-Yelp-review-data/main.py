@@ -65,6 +65,10 @@ X_train, X_valid, Y_train, Y_valid = train_test_split(X,Y, test_size = 0.20, ran
 
 #Here we train the Network.
 
+print("X_train shape: ", X_train.shape)
+print("X_train:")
+print(X_train)
+
 model.fit(X_train, Y_train, batch_size =batch_size, nb_epoch = 1,  verbose = 5)
 
 # Measuring score and accuracy on validation set
