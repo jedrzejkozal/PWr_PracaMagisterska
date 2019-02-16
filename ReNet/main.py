@@ -39,7 +39,7 @@ class SimpleReNet(Model):
             yield inputs[:, :, i:i+self.h_p, :]
 
 
-    def __get_vert_patches(self, column):
+    def get_vert_patches(self, column):
         print("__get_patch vec: column:", column)
         reshape = Reshape((self.J, self.w_p * self.h_p * int(column.shape[3])))
         permute = Permute((2, 1))
@@ -60,7 +60,7 @@ class SimpleReNet(Model):
 
         for col in self.get_columns(inputs):
             print("col: ", col)
-            patches = self.__get_vert_patches(col)
+            patches = self.get_vert_patches(col)
             print("patches: ", patches)
 
             up_down_activation = self.LSTM_up_down(patches)
