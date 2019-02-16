@@ -25,13 +25,21 @@ class SimpleReNet(Model):
         self.softmax = Dense(num_classes, activation='softmax')
 
 
-    def __get_columns(self, inputs):
-        print("__get_columns vec: inputs:", inputs)
+    def __check_for_even_number_of_columns(self, inputs):
+        if inputs.shape[2] % self.h_p != 0:
+            raise ValueError(
+                "invalid patches size ({}) "
+                "for current image size ({}). "
+                "Please resizie image ".format(self.size_of_patches, inputs.shape[1:]))
+
+
+    def get_columns(self, inputs):
+        self.__check_for_even_number_of_columns(inputs)
         for i in range(0, inputs.shape[2], self.h_p):
-            yield i, inputs[:, :, i:i+self.h_p, :]
+            yield inputs[:, :, i:i+self.h_p, :]
 
 
-    def __get_vert_patches(self, column, column_index):
+    def __get_vert_patches(self, column):
         print("__get_patch vec: column:", column)
         reshape = Reshape((self.J, self.w_p * self.h_p * int(column.shape[3])))
         permute = Permute((2, 1))
@@ -50,9 +58,9 @@ class SimpleReNet(Model):
         #horizontal_sweep_input = Input(shape=(self.I, self.J, 2*self.reNet_hidden_size))
         horizontal_sweep_input = placeholder()
 
-        for col_index, col in self.__get_columns(inputs):
+        for col in self.get_columns(inputs):
             print("col: ", col)
-            patches = self.__get_vert_patches(col, col_index)
+            patches = self.__get_vert_patches(col)
             print("patches: ", patches)
 
             up_down_activation = self.LSTM_up_down(patches)

@@ -1,5 +1,7 @@
 import pytest
 import numpy as np
+from keras.layers import Input
+
 from main import *
 
 
@@ -33,3 +35,32 @@ class TestSimpleReNet(object):
             simple_data_y):
         sut.fit(simple_data_x, simple_data_y, epochs=1, shuffle=False)
         assert sut.predict(simple_data_x).all() == 0 or sut.predict(simple_data_x).all() == 1
+
+
+    def test_get_columns_outputs_valid_columns_shape(self, sut):
+        arg = Input((10, 10, 1))
+
+        for result in sut.get_columns(arg):
+            assert result.shape[1] == 10
+            assert result.shape[2] == 2
+            assert result.shape[3] == 1
+
+
+    def test_get_columns_generates_5_columns(self, sut):
+        arg = Input((10, 10, 1))
+
+        number_of_col = 0
+        for result in sut.get_columns(arg):
+            number_of_col += 1
+
+        assert number_of_col == 5 # Y / h_p
+
+
+    def test_get_columns_not_even_number_of_columns_for_patches_exception_raised(self, sut):
+        arg = Input((10, 11, 1))
+
+        with pytest.raises(ValueError) as err:
+            for result in sut.get_columns(arg):
+                assert result is None
+
+        assert "invalid patches size" in str(err.value)
