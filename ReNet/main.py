@@ -1,7 +1,7 @@
 import tensorflow as tf
 from keras import Model
 from keras.layers import LSTM, Dense, Flatten
-from keras.layers import Input, Reshape, Permute, concatenate
+from keras.layers import Input, Reshape, concatenate
 from keras.preprocessing.sequence import pad_sequences
 from keras.backend import placeholder
 
@@ -25,7 +25,7 @@ class SimpleReNet(Model):
         self.softmax = Dense(num_classes, activation='softmax')
 
 
-    def __check_for_even_number_of_columns(self, inputs):
+    def __validate_patch_size(self, inputs):
         if inputs.shape[2] % self.h_p != 0:
             raise ValueError(
                 "invalid patches size ({}) "
@@ -34,7 +34,7 @@ class SimpleReNet(Model):
 
 
     def get_columns(self, inputs):
-        self.__check_for_even_number_of_columns(inputs)
+        self.__validate_patch_size(inputs)
         for i in range(0, inputs.shape[2], self.h_p):
             yield inputs[:, :, i:i+self.h_p, :]
 
@@ -42,19 +42,17 @@ class SimpleReNet(Model):
     def get_vert_patches(self, column):
         print("__get_patch vec: column:", column)
         reshape = Reshape((self.J, self.w_p * self.h_p * int(column.shape[3])))
-        permute = Permute((2, 1))
 
         flatten = reshape(column)
-        patches = permute(flatten)
 
-        return patches
+        return flatten
 
 
     def call(self, inputs):
         print("inputs: ", inputs)
 
-        self.I = int(int(inputs.shape[1]) / self.w_p)
-        self.J = int(int(inputs.shape[2]) / self.h_p)
+        self.I = int(inputs.shape[1]) // self.w_p
+        self.J = int(inputs.shape[2]) // self.h_p
         #horizontal_sweep_input = Input(shape=(self.I, self.J, 2*self.reNet_hidden_size))
         horizontal_sweep_input = placeholder()
 

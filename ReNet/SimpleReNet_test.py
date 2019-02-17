@@ -78,4 +78,4 @@ class TestSimpleReNet(object):
 
         result = sut.get_vert_patches(arg)
         result_shape = list(map(lambda x: int(x), result.shape[1:]))
-        assert result_shape == [self.h_p*self.w_p*self.number_of_channels, sut.J]
+        assert result_shape == [sut.J, self.h_p*self.w_p*self.number_of_channels]
