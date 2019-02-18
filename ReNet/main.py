@@ -20,6 +20,8 @@ class SimpleReNet(Model):
         self.LSTM_left_right = LSTM(reNet_hidden_size, return_sequences=True)
         self.LSTM_right_left = LSTM(reNet_hidden_size, return_sequences=True)
 
+        self.vertical_single_columns_activations_permutarion = Permute((1, 3, 2))
+
         self.flatten = Flatten()
         self.dense = Dense(fully_conn_hidden_size, activation='relu')
         self.softmax = Dense(num_classes, activation='softmax')
@@ -63,10 +65,8 @@ class SimpleReNet(Model):
 
         self.I = int(inputs.shape[1]) // self.w_p
         self.J = int(inputs.shape[2]) // self.h_p
-        vertical_sweep_output = Input(shape=(self.I, self.J, 2*self.reNet_hidden_size))
-        #vertical_sweep_output = placeholder()
+
         LSTM_outputs = []
-        p = Permute((1, 3, 2))
 
         for col in self.get_columns(inputs):
             print("col: ", col)
@@ -81,17 +81,19 @@ class SimpleReNet(Model):
                     [tf.keras.backend.expand_dims(up_down_activation),
                     tf.keras.backend.expand_dims(down_up_activation)], axis=2)
             print("merged_vector shape:", merged_vector.shape)
-            merged_vector_permuted = p(merged_vector)
+            merged_vector_permuted = self.vertical_single_columns_activations_permutarion(merged_vector)
             print("merged_vector permuted shape:", merged_vector_permuted.shape)
 
             LSTM_outputs.append(merged_vector_permuted)
 
             print("\n\n")
 
-        r = Reshape((5, 2, 1))
-        merged_vector = r(merged_vector)
+        vertical_sweep_output = self.merge_LSTM_activations(LSTM_outputs)
 
-        x = self.flatten(merged_vector)
+        r = Reshape((self.J, 5, 2))
+        output = r(vertical_sweep_output)
+
+        x = self.flatten(output)
         x = self.dense(x)
         x = self.softmax(x)
 
