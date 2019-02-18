@@ -60,12 +60,7 @@ class SimpleReNet(Model):
         return merged
 
 
-    def call(self, inputs):
-        print("inputs: ", inputs)
-
-        self.I = int(inputs.shape[1]) // self.w_p
-        self.J = int(inputs.shape[2]) // self.h_p
-
+    def vertical_sweep(self, inputs):
         LSTM_outputs = []
 
         for col in self.get_columns(inputs):
@@ -88,12 +83,23 @@ class SimpleReNet(Model):
 
             print("\n\n")
 
-        vertical_sweep_output = self.merge_LSTM_activations(LSTM_outputs)
+        merged = self.merge_LSTM_activations(LSTM_outputs)
 
-        r = Reshape((self.J, 5, 2))
-        output = r(vertical_sweep_output)
+        precise_tensor_shape = Reshape((self.J, 5, 2))
+        vertical_sweep_output = precise_tensor_shape(merged)
 
-        x = self.flatten(output)
+        return vertical_sweep_output
+
+
+    def call(self, inputs):
+        print("\n\ninputs: ", inputs)
+
+        self.I = int(inputs.shape[1]) // self.w_p
+        self.J = int(inputs.shape[2]) // self.h_p
+
+        vertical_sweep_output = self.vertical_sweep(inputs)
+
+        x = self.flatten(vertical_sweep_output)
         x = self.dense(x)
         x = self.softmax(x)
 

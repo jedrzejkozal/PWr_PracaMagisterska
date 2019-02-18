@@ -41,6 +41,10 @@ class TestSimpleReNet(object):
         return y
 
 
+    def get_result_shape(self, result):
+        return list(map(lambda x: int(x), result.shape[1:]))
+
+
     def test_model_output_for_2_classes_shape_is_num_samples_x_2(self, sut, simple_data_x,
             simple_data_y):
         sut.fit(simple_data_x, simple_data_y, epochs=1, shuffle=False)
@@ -48,11 +52,22 @@ class TestSimpleReNet(object):
         assert result.shape == (self.num_samples, 2)
 
 
+    def test_vertical_sweep_output_shape_is_J_5_2(self, sut, simple_data_x):
+        arg = Input((10, 10, 1))
+        sut.I = self.img_width // self.w_p
+        sut.J = self.img_height // self.h_p
+
+        result = sut.vertical_sweep(arg)
+        result_shape = self.get_result_shape(result)
+
+        assert result_shape == [sut.J, 5, 2]
+
+
     def test_get_columns_outputs_returns_columns_with_valid_shape(self, sut):
         arg = Input((10, 10, 1))
 
         for result in sut.get_columns(arg):
-            result_shape = list(map(lambda x: int(x), result.shape[1:]))
+            result_shape = self.get_result_shape(result)
             assert result_shape == [10, 2, 1]
 
 
@@ -81,7 +96,7 @@ class TestSimpleReNet(object):
         sut.J = self.img_height // self.h_p
 
         result = sut.get_vert_patches(arg)
-        result_shape = list(map(lambda x: int(x), result.shape[1:]))
+        result_shape = self.get_result_shape(result)
         assert result_shape == [sut.J, self.h_p*self.w_p*self.number_of_channels]
 
 
@@ -90,7 +105,7 @@ class TestSimpleReNet(object):
         arg = [Input((J, 1, 2))] * 2
 
         result = sut.merge_LSTM_activations(arg)
-        result_shape = list(map(lambda x: int(x), result.shape[1:]))
+        result_shape = self.get_result_shape(result)
 
         assert result_shape == [J, 2, 2]
 
@@ -100,6 +115,6 @@ class TestSimpleReNet(object):
         arg = [Input((J, 1, 2))] * 3
 
         result = sut.merge_LSTM_activations(arg)
-        result_shape = list(map(lambda x: int(x), result.shape[1:]))
+        result_shape = self.get_result_shape(result)
 
         assert result_shape == [J, 3, 2]
