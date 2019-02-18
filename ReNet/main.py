@@ -53,8 +53,8 @@ class SimpleReNet(Model):
 
         self.I = int(inputs.shape[1]) // self.w_p
         self.J = int(inputs.shape[2]) // self.h_p
-        #horizontal_sweep_input = Input(shape=(self.I, self.J, 2*self.reNet_hidden_size))
-        horizontal_sweep_input = placeholder()
+        vertical_sweep_output = Input(shape=(self.I, self.J, 2*self.reNet_hidden_size))
+        #vertical_sweep_output = placeholder()
 
         for col in self.get_columns(inputs):
             print("col: ", col)
@@ -62,20 +62,23 @@ class SimpleReNet(Model):
             print("patches: ", patches)
 
             up_down_activation = self.LSTM_up_down(patches)
-            #down_up_activation = self.LSTM_down_up(patches)
+            down_up_activation = self.LSTM_down_up(patches) #FIXME: down up should have reversed patches
             print("up_down_activation: ", up_down_activation)
 
-            #merged_vector = concatenate(
-            #        [tf.keras.backend.expand_dims(up_down_activation),
-            #        tf.keras.backend.expand_dims(down_up_activation)], axis=3) #axis should be 3
-            #print("merged_vector shape:", merged_vector.shape)
+            merged_vector = concatenate(
+                    [tf.keras.backend.expand_dims(up_down_activation),
+                    tf.keras.backend.expand_dims(down_up_activation)], axis=2)
+            print("merged_vector shape:", merged_vector.shape)
 
-            #horizontal_sweep_input = concatenate([horizontal_sweep_input,
+            #vertical_sweep_output = concatenate([vertical_sweep_output,
             #        merged_vector], axis=1)
 
             print("\n\n")
 
-        x = self.flatten(up_down_activation)
+        r = Reshape((5, 2, 1))
+        merged_vector = r(merged_vector)
+
+        x = self.flatten(merged_vector)
         x = self.dense(x)
         x = self.softmax(x)
 

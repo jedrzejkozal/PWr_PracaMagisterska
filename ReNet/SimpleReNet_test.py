@@ -11,7 +11,11 @@ class TestSimpleReNet(object):
     def sut(self):
         self.w_p = 2
         self.h_p = 2
-        model = SimpleReNet([[self.w_p, self.h_p]], 1, 1, 2)
+        reNet_hidden_size = 1
+        fully_conn_hidden_size = 1
+        num_classes = 2
+        model = SimpleReNet([[self.w_p, self.h_p]],
+                reNet_hidden_size, fully_conn_hidden_size, num_classes)
         model.compile(loss='categorical_crossentropy', optimizer='adam',
                 metrics=['categorical_accuracy'])
         return model
