@@ -1,7 +1,7 @@
 import tensorflow as tf
 from keras import Model
 from keras.layers import LSTM, Dense, Flatten
-from keras.layers import Input, Reshape, concatenate
+from keras.layers import Input, Reshape, Permute, concatenate
 from keras.preprocessing.sequence import pad_sequences
 from keras.backend import placeholder
 
@@ -48,6 +48,16 @@ class SimpleReNet(Model):
         return flatten
 
 
+    def merge_LSTM_activations(self, activations):
+        merged = concatenate([activations[0], activations[1]], axis=2)
+
+        if len(activations) != 2:
+            for tensor in activations[2:]:
+                merged = concatenate([merged, tensor], axis=2)
+
+        return merged
+
+
     def call(self, inputs):
         print("inputs: ", inputs)
 
@@ -55,6 +65,8 @@ class SimpleReNet(Model):
         self.J = int(inputs.shape[2]) // self.h_p
         vertical_sweep_output = Input(shape=(self.I, self.J, 2*self.reNet_hidden_size))
         #vertical_sweep_output = placeholder()
+        LSTM_outputs = []
+        p = Permute((1, 3, 2))
 
         for col in self.get_columns(inputs):
             print("col: ", col)
@@ -69,9 +81,10 @@ class SimpleReNet(Model):
                     [tf.keras.backend.expand_dims(up_down_activation),
                     tf.keras.backend.expand_dims(down_up_activation)], axis=2)
             print("merged_vector shape:", merged_vector.shape)
+            merged_vector_permuted = p(merged_vector)
+            print("merged_vector permuted shape:", merged_vector_permuted.shape)
 
-            #vertical_sweep_output = concatenate([vertical_sweep_output,
-            #        merged_vector], axis=1)
+            LSTM_outputs.append(merged_vector_permuted)
 
             print("\n\n")
 

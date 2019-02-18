@@ -83,3 +83,23 @@ class TestSimpleReNet(object):
         result = sut.get_vert_patches(arg)
         result_shape = list(map(lambda x: int(x), result.shape[1:]))
         assert result_shape == [sut.J, self.h_p*self.w_p*self.number_of_channels]
+
+
+    def test_merge_LSTM_activations_for_2_tensors_returns_valid_shape(self, sut, simple_data_x):
+        J = self.img_height // self.h_p
+        arg = [Input((J, 1, 2))] * 2
+
+        result = sut.merge_LSTM_activations(arg)
+        result_shape = list(map(lambda x: int(x), result.shape[1:]))
+
+        assert result_shape == [J, 2, 2]
+
+
+    def test_merge_LSTM_activations_for_3_tensors_returns_valid_shape(self, sut, simple_data_x):
+        J = self.img_height // self.h_p
+        arg = [Input((J, 1, 2))] * 3
+
+        result = sut.merge_LSTM_activations(arg)
+        result_shape = list(map(lambda x: int(x), result.shape[1:]))
+
+        assert result_shape == [J, 3, 2]
