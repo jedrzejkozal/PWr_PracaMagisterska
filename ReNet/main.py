@@ -46,14 +46,16 @@ class SimpleReNet(Model):
             yield inputs[:, :, j:j+self.h_p, :]
 
 
-    #def get_hor_patches(self, row):
-    #    reshape = Reshape()
+    def get_hor_patches(self, row):
+        permute = Permute((2, 3, 1))
+        permuted = permute(row)
+
+        return permuted
 
 
     def get_vert_patches(self, column):
         print("__get_patch vec: column:", column)
         reshape = Reshape((self.J, self.w_p * self.h_p * int(column.shape[3])))
-
         flatten = reshape(column)
 
         return flatten
@@ -83,7 +85,7 @@ class SimpleReNet(Model):
 
             merged_vector = concatenate(
                     [tf.keras.backend.expand_dims(up_down_activation),
-                    tf.keras.backend.expand_dims(down_up_activation)], axis=2)
+                     tf.keras.backend.expand_dims(down_up_activation)], axis=2)
             print("merged_vector shape:", merged_vector.shape)
             merged_vector_permuted = self.vertical_single_columns_activations_permutarion(merged_vector)
             print("merged_vector permuted shape:", merged_vector_permuted.shape)
@@ -94,7 +96,7 @@ class SimpleReNet(Model):
 
         merged = self.merge_LSTM_activations(LSTM_outputs)
 
-        precise_tensor_shape = Reshape((self.J, 5, 2))
+        precise_tensor_shape = Reshape((self.J, self.I, int(merged.shape[3])))
         vertical_sweep_output = precise_tensor_shape(merged)
 
         return vertical_sweep_output
@@ -105,6 +107,25 @@ class SimpleReNet(Model):
 
         for row in self.get_rows(inputs):
             patches = self.get_hor_patches(row)
+            patches = tf.squeeze(patches, axis=3)
+
+            left_right_activations = self.LSTM_left_right(patches)
+            right_left_activations = self.LSTM_right_left(patches)
+
+            merged_vector = concatenate(
+                    [tf.keras.backend.expand_dims(left_right_activations),
+                     tf.keras.backend.expand_dims(right_left_activations)], axis=2)
+
+            merged_vector_permuted = self.vertical_single_columns_activations_permutarion(merged_vector)
+            LSTM_outputs.append(merged_vector_permuted)
+
+        merged = self.merge_LSTM_activations(LSTM_outputs)
+
+        precise_tensor_shape = Reshape((self.J, self.I, int(merged.shape[3])))
+        horizontal_sweep_output = precise_tensor_shape(merged)
+
+        return horizontal_sweep_output
+
 
 
     def call(self, inputs):

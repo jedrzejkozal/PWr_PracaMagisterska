@@ -148,7 +148,18 @@ class TestSimpleReNet(object):
 
         assert number_of_col == 5
 
-    """
+
+    def test_get_hor_patches_returns_patches_with_valid_shape(self, sut, simple_data_x):
+        arg = Input((1, 5, 2))
+        sut.I = self.img_width // self.w_p
+        sut.J = self.img_height // self.h_p
+
+        result = sut.get_hor_patches(arg)
+        result_shape = self.get_result_shape(result)
+        assert result_shape == [sut.I, 2, 1]
+
+
+
     def test_horizontal_sweep_output_shape_is_J_I_2(self, sut, simple_data_x):
         sut.I = self.img_width // self.w_p
         sut.J = self.img_height // self.h_p
@@ -158,4 +169,4 @@ class TestSimpleReNet(object):
         result_shape = self.get_result_shape(result)
 
         assert result_shape == [sut.J, sut.I, 2]
-    """
+    
