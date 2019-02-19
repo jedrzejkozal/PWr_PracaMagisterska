@@ -28,17 +28,26 @@ class SimpleReNet(Model):
 
 
     def __validate_patch_size(self, inputs):
-        if inputs.shape[2] % self.h_p != 0:
+        if inputs.shape[2] % self.h_p != 0 or inputs.shape[1] % self.w_p != 0:
             raise ValueError(
                 "invalid patches size ({}) "
                 "for current image size ({}). "
                 "Please resizie image ".format(self.size_of_patches, inputs.shape[1:]))
 
 
+    def get_rows(self, inputs):
+        for i in range(0, inputs.shape[1]):
+            yield inputs[:, i:i+1, :]
+
+
     def get_columns(self, inputs):
         self.__validate_patch_size(inputs)
-        for i in range(0, inputs.shape[2], self.h_p):
-            yield inputs[:, :, i:i+self.h_p, :]
+        for j in range(0, inputs.shape[2], self.h_p):
+            yield inputs[:, :, j:j+self.h_p, :]
+
+
+    #def get_hor_patches(self, row):
+    #    reshape = Reshape()
 
 
     def get_vert_patches(self, column):
@@ -91,6 +100,13 @@ class SimpleReNet(Model):
         return vertical_sweep_output
 
 
+    def horizontal_sweep(self, inputs):
+        LSTM_outputs = []
+
+        for row in self.get_rows(inputs):
+            patches = self.get_hor_patches(row)
+
+
     def call(self, inputs):
         print("\n\ninputs: ", inputs)
 
@@ -98,6 +114,7 @@ class SimpleReNet(Model):
         self.J = int(inputs.shape[2]) // self.h_p
 
         vertical_sweep_output = self.vertical_sweep(inputs)
+        #horizontal_sweep_output = self.horizontal_sweep(vertical_sweep_output)
 
         x = self.flatten(vertical_sweep_output)
         x = self.dense(x)
