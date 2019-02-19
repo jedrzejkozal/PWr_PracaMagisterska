@@ -4,7 +4,6 @@ from keras.layers import LSTM, Dense, Flatten
 from keras.layers import Input, Reshape, Permute, concatenate
 from keras.layers import Layer
 from keras.preprocessing.sequence import pad_sequences
-#from keras.backend import placeholder
 from keras import backend as K
 
 
@@ -87,7 +86,7 @@ class ReNetLayer(Layer):
             print("patches: ", patches)
 
             up_down_activation = self.LSTM_up_down(patches)
-            down_up_activation = self.LSTM_down_up(patches) #FIXME: down up should have reversed patches
+            down_up_activation = self.LSTM_down_up(tf.reverse(patches, [-2]))
             print("up_down_activation: ", up_down_activation)
 
             merged_vector = concatenate(
@@ -117,7 +116,7 @@ class ReNetLayer(Layer):
             patches = tf.squeeze(patches, axis=3)
 
             left_right_activations = self.LSTM_left_right(patches)
-            right_left_activations = self.LSTM_right_left(patches)
+            right_left_activations = self.LSTM_right_left(tf.reverse(patches, [-2]))
 
             merged_vector = concatenate(
                     [tf.keras.backend.expand_dims(left_right_activations),
