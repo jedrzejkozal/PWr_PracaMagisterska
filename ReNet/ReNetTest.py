@@ -10,7 +10,7 @@ class ReNetTest(object):
     @pytest.fixture
     def sut(self):
         self.__class__.setup()
-        model = SimpleReNet([[self.w_p, self.h_p]],
+        model = self.SUT_class([[self.w_p, self.h_p]],
                 self.reNet_hidden_size, self.fully_conn_hidden_size, self.num_classes)
         model.compile(loss='categorical_crossentropy', optimizer='adam',
                 metrics=['categorical_accuracy'])

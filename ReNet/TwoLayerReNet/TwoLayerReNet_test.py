@@ -1,5 +1,5 @@
 from ReNetTest import *
-from SimpleReNet import *
+from TwoLayerReNet import *
 
 
 class TestSimpleReNet(ReNetTest):
@@ -18,8 +18,8 @@ class TestSimpleReNet(ReNetTest):
     @classmethod
     def setup(cls):
         cls.num_samples = 60
-        cls.img_width = 10
-        cls.img_height = 10
+        cls.img_width = 20
+        cls.img_height = 20
         cls.number_of_channels = 1
         cls.setup_model_params()
-        cls.SUT_class = SimpleReNet
+        cls.SUT_class = TwoLayerReNet

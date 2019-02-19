@@ -22,3 +22,4 @@ class Test3ChannelsReNet(ReNetTest):
         cls.img_height = 12
         cls.number_of_channels = 3
         cls.setup_model_params()
+        cls.SUT_class = SimpleReNet

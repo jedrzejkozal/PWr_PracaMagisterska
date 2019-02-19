@@ -22,3 +22,4 @@ class TestRectangularPatchReNet(ReNetTest):
         cls.img_height = 12
         cls.number_of_channels = 1
         cls.setup_model_params()
+        cls.SUT_class = SimpleReNet
