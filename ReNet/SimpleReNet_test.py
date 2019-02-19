@@ -147,40 +147,40 @@ class TestSimpleReNet(object):
 
 
     def test_get_rows_outputs_returns_rows_with_valid_shape(self, sut):
-        arg = Input((5, 5, 2))
+        arg = Input((self.J, self.I, 2*self.reNet_hidden_size)) #5, 5, 2
 
         for result in sut.get_rows(arg):
             result_shape = self.get_result_shape(result)
-            assert result_shape == [1, 5, 2]
+            assert result_shape == [1, self.I, 2*self.reNet_hidden_size]
 
 
     def test_get_rows_generates_5_rows(self, sut):
-        arg = Input((5, 5, 2))
+        arg = Input((self.J, self.I, 2*self.reNet_hidden_size)) #5, 5, 2
 
         number_of_col = 0
         for result in sut.get_rows(arg):
             number_of_col += 1
 
-        assert number_of_col == 5
+        assert number_of_col == self.J
 
 
     def test_get_hor_patches_returns_patches_with_valid_shape(self, sut, simple_data_x):
-        arg = Input((1, 5, 2))
-        sut.I = self.img_width // self.w_p
-        sut.J = self.img_height // self.h_p
+        arg = Input((1, self.I, 2*self.reNet_hidden_size))
+        sut.I = self.I
+        sut.J = self.J
 
         result = sut.get_hor_patches(arg)
         result_shape = self.get_result_shape(result)
-        assert result_shape == [sut.I, 2, 1]
+        assert result_shape == [self.I, 2*self.reNet_hidden_size, 1]
 
 
 
     def test_horizontal_sweep_output_shape_is_J_I_2(self, sut, simple_data_x):
-        sut.I = self.img_width // self.w_p
-        sut.J = self.img_height // self.h_p
-        arg = Input((sut.I, sut.J, 1))
+        sut.I = self.I
+        sut.J = self.J
+        arg = Input((self.I, self.J, 2*self.reNet_hidden_size))
 
         result = sut.horizontal_sweep(arg)
         result_shape = self.get_result_shape(result)
 
-        assert result_shape == [sut.J, sut.I, 2]
+        assert result_shape == [self.J, self.I, 2*self.reNet_hidden_size]
