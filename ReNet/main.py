@@ -42,8 +42,8 @@ class SimpleReNet(Model):
 
     def get_columns(self, inputs):
         self.__validate_patch_size(inputs)
-        for j in range(0, inputs.shape[2], self.h_p):
-            yield inputs[:, :, j:j+self.h_p, :]
+        for j in range(0, inputs.shape[2], self.w_p):
+            yield inputs[:, :, j:j+self.w_p, :]
 
 
     def get_hor_patches(self, row):
@@ -135,9 +135,9 @@ class SimpleReNet(Model):
         self.J = int(inputs.shape[2]) // self.h_p
 
         vertical_sweep_output = self.vertical_sweep(inputs)
-        #horizontal_sweep_output = self.horizontal_sweep(vertical_sweep_output)
+        horizontal_sweep_output = self.horizontal_sweep(vertical_sweep_output)
 
-        x = self.flatten(vertical_sweep_output)
+        x = self.flatten(horizontal_sweep_output)
         x = self.dense(x)
         x = self.softmax(x)
 
