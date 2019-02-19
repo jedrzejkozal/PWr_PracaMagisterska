@@ -6,28 +6,14 @@ from keras.layers import Input
 from ReNetLayer import *
 
 
-class TestReNetLayet(object):
-
-    @classmethod
-    def setup(cls):
-        cls.num_samples = 60
-        cls.img_width = 10
-        cls.img_height = 10
-        cls.number_of_channels = 1
+class ReNetLayerTest(object):
 
     @pytest.fixture
     def sut(self):
         self.__class__.setup()
-        self.w_p = 2
-        self.h_p = 2
-        self.I = self.img_width // self.w_p
-        self.J = self.img_height // self.h_p
-        self.reNet_hidden_size = 1
-        fully_conn_hidden_size = 1
-        num_classes = 2
-        layer = ReNetLayer([[self.w_p, self.h_p]],
-                self.reNet_hidden_size, fully_conn_hidden_size, num_classes)
-        return layer
+
+        return ReNetLayer([[self.w_p, self.h_p]],
+                self.reNet_hidden_size, self.fully_conn_hidden_size, self.num_classes)
 
 
     @pytest.fixture

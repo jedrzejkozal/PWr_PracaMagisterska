@@ -1,8 +1,7 @@
-from ReNetTest import *
-from SimpleReNet import *
+from ReNetLayerTest import *
 
 
-class Test11HiddenNeuronsReNet(ReNetTest):
+class TestSimpleReNetLayer(ReNetLayerTest):
 
     @classmethod
     def setup_model_params(cls):
