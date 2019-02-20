@@ -12,7 +12,7 @@ class ReNetLayerTest(object):
     def sut(self):
         self.__class__.setup()
 
-        return ReNetLayer([[self.w_p, self.h_p]], self.reNet_hidden_size)
+        return ReNetLayer([[self.w_p, self.h_p]], self.hidden_size)
 
 
     @pytest.fixture
@@ -108,24 +108,24 @@ class ReNetLayerTest(object):
         sut.I = self.I
         sut.J = self.J
         sut.vert_patches_reshape = Reshape((self.J, self.w_p * self.h_p * self.number_of_channels))
-        sut.precise_tensor_shape = Reshape((self.J, self.I, int(2*self.reNet_hidden_size)))
+        sut.precise_tensor_shape = Reshape((self.J, self.I, int(2*self.hidden_size)))
 
         result = sut.vertical_sweep(arg)
         result_shape = self.get_result_shape(result)
 
-        assert result_shape == [self.J, self.I, 2*self.reNet_hidden_size]
+        assert result_shape == [self.J, self.I, 2*self.hidden_size]
 
 
     def test_get_rows_outputs_returns_rows_with_valid_shape(self, sut):
-        arg = Input((self.J, self.I, 2*self.reNet_hidden_size)) #5, 5, 2
+        arg = Input((self.J, self.I, 2*self.hidden_size)) #5, 5, 2
 
         for result in sut.get_rows(arg):
             result_shape = self.get_result_shape(result)
-            assert result_shape == [1, self.I, 2*self.reNet_hidden_size]
+            assert result_shape == [1, self.I, 2*self.hidden_size]
 
 
     def test_get_rows_generates_5_rows(self, sut):
-        arg = Input((self.J, self.I, 2*self.reNet_hidden_size)) #5, 5, 2
+        arg = Input((self.J, self.I, 2*self.hidden_size)) #5, 5, 2
 
         number_of_col = 0
         for result in sut.get_rows(arg):
@@ -135,7 +135,7 @@ class ReNetLayerTest(object):
 
 
     def test_get_hor_patches_returns_patches_with_valid_shape(self, sut, simple_data_x):
-        arg = Input((1, self.I, 2*self.reNet_hidden_size))
+        arg = Input((1, self.I, 2*self.hidden_size))
         sut.I = self.I
         sut.J = self.J
         sut.hor_patch_permute = Permute((2, 3, 1))
@@ -143,18 +143,18 @@ class ReNetLayerTest(object):
         sut.get_hor_patches(arg)
         result = sut.patches
         result_shape = self.get_result_shape(result)
-        assert result_shape == [self.I, 2*self.reNet_hidden_size]
+        assert result_shape == [self.I, 2*self.hidden_size]
 
 
 
     def test_horizontal_sweep_output_shape_is_J_I_2(self, sut, simple_data_x):
-        arg = Input((self.I, self.J, 2*self.reNet_hidden_size))
+        arg = Input((self.I, self.J, 2*self.hidden_size))
         sut.I = self.I
         sut.J = self.J
         sut.hor_patch_permute = Permute((2, 3, 1))
-        sut.precise_tensor_shape = Reshape((self.J, self.I, int(2*self.reNet_hidden_size)))
+        sut.precise_tensor_shape = Reshape((self.J, self.I, int(2*self.hidden_size)))
 
         result = sut.horizontal_sweep(arg)
         result_shape = self.get_result_shape(result)
 
-        assert result_shape == [self.J, self.I, 2*self.reNet_hidden_size]
+        assert result_shape == [self.J, self.I, 2*self.hidden_size]
