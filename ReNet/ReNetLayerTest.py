@@ -12,8 +12,7 @@ class ReNetLayerTest(object):
     def sut(self):
         self.__class__.setup()
 
-        return ReNetLayer([[self.w_p, self.h_p]],
-                self.reNet_hidden_size, self.fully_conn_hidden_size, self.num_classes)
+        return ReNetLayer([[self.w_p, self.h_p]], self.reNet_hidden_size)
 
 
     @pytest.fixture

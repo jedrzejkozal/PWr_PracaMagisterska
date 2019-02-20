@@ -10,9 +10,7 @@ from keras import backend as K
 class ReNetLayer(Layer):
 
 
-    def __init__(self, size_of_patches, reNet_hidden_size, fully_conn_hidden_size,
-                    num_classes):
-        self.num_classes = num_classes
+    def __init__(self, size_of_patches, reNet_hidden_size):
         super().__init__()
 
         self.size_of_patches = size_of_patches

@@ -10,8 +10,6 @@ class Test3ChannelsReNetLayer(ReNetLayerTest):
         cls.I = cls.img_width // cls.w_p
         cls.J = cls.img_height // cls.h_p
         cls.reNet_hidden_size = 1
-        cls.fully_conn_hidden_size = 1
-        cls.num_classes = 2
 
 
     @classmethod

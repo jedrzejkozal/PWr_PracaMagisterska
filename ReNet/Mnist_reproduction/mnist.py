@@ -1,0 +1,48 @@
+import numpy as np
+from keras.utils import to_categorical
+from keras.datasets import mnist
+from keras.preprocessing.image import ImageDataGenerator
+
+from MnistReproduction import *
+
+
+#model hyperparmeters:
+w_p = 2
+h_p = 2
+reNet_hidden_size = 1
+fully_conn_hidden_size = 1
+num_classes = 2
+
+
+#image parameters:
+num_classes = 10
+img_rows, img_cols = 28, 28
+(x_train, y_train), (x_test, y_test) = mnist.load_data()
+
+x_train = x_train.reshape(x_train.shape[0], img_rows, img_cols, 1)
+x_test = x_test.reshape(x_test.shape[0], img_rows, img_cols, 1)
+input_shape = (img_rows, img_cols, 1)
+
+x_train = x_train.astype('float32')
+x_test = x_test.astype('float32')
+x_train /= 255
+x_test /= 255
+
+# convert class vectors to binary class matrices
+y_train = to_categorical(y_train, num_classes)
+y_test = to_categorical(y_test, num_classes)
+
+
+shift = 0.2
+datagen = ImageDataGenerator(width_shift_range=shift, height_shift_range=shift)
+datagen.fit(X_train)
+
+
+model = MnistReproduction()
+model.compile(loss='categorical_crossentropy', optimizer='adam',
+        metrics=['categorical_accuracy'])
+model.fit_generator(datagen.flow(x_train, y_train, batch_size=32),
+                epochs=1,
+                validation_data=(x_test, y_test),
+                callbacks=[EarlyStopping(monitor='val_loss', patience=5, verbose=1)]
+            )
