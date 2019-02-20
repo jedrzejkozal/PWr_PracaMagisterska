@@ -56,30 +56,20 @@ class ReNetLayerTest(object):
         assert number_of_col == self.I
 
 
-    def test_get_columns_not_even_number_of_columns_for_patches_exception_raised(self, sut):
+    def get_tensor_with_invalid_shape(self):
         if self.img_width % self.w_p == 0:
             width = self.img_width + 1
         else:
             width = self.img_width
-        arg = Input((self.img_height, width, self.number_of_channels)) #10, 11, 1
+        return Input((self.img_height, width, self.number_of_channels)) #10, 11, 1
+
+
+    def test_call_not_even_number_of_columns_for_patches_exception_raised(self, sut):
+        arg = self.get_tensor_with_invalid_shape()
 
         with pytest.raises(ValueError) as err:
-            for result in sut.get_columns(arg):
-                assert result is None
-
-        assert "invalid patches size" in str(err.value)
-
-
-    def test_get_columns_not_even_number_of_rows_for_patches_exception_raised(self, sut):
-        if self.img_height % self.h_p == 0:
-            height = self.img_height + 1
-        else:
-            height = self.img_height
-        arg = Input((height, self.img_width, self.number_of_channels)) #11, 10, 1
-
-        with pytest.raises(ValueError) as err:
-            for result in sut.get_columns(arg):
-                assert result is None
+            result = sut.call(arg)
+            assert result is None
 
         assert "invalid patches size" in str(err.value)
 
@@ -87,25 +77,27 @@ class ReNetLayerTest(object):
     def test_get_vert_patches_returns_patches_with_valid_shape(self, sut, simple_data_x):
         arg = Input((self.img_height, self.w_p, self.number_of_channels))
         sut.J = self.J
+        sut.vert_patches_reshape = Reshape((self.J, self.w_p * self.h_p * self.number_of_channels))
 
-        result = sut.get_vert_patches(arg)
+        sut.get_vert_patches(arg)
+        result = sut.patches
         result_shape = self.get_result_shape(result)
         assert result_shape == [self.J, self.h_p*self.w_p*self.number_of_channels]
 
 
-    def test_merge_LSTM_activations_for_2_tensors_returns_valid_shape(self, sut, simple_data_x):
+    def test_merge_all_LSTM_activations_for_2_tensors_returns_valid_shape(self, sut, simple_data_x):
         arg = [Input((self.J, 1, 2))] * 2
 
-        result = sut.merge_LSTM_activations(arg)
+        result = sut.merge_all_LSTM_activations(arg)
         result_shape = self.get_result_shape(result)
 
         assert result_shape == [self.J, 2, 2]
 
 
-    def test_merge_LSTM_activations_for_3_tensors_returns_valid_shape(self, sut, simple_data_x):
+    def test_merge_all_LSTM_activations_for_3_tensors_returns_valid_shape(self, sut, simple_data_x):
         arg = [Input((self.J, 1, 2))] * 3
 
-        result = sut.merge_LSTM_activations(arg)
+        result = sut.merge_all_LSTM_activations(arg)
         result_shape = self.get_result_shape(result)
 
         assert result_shape == [self.J, 3, 2]
@@ -115,6 +107,8 @@ class ReNetLayerTest(object):
         arg = Input((self.img_height, self.img_width, self.number_of_channels))
         sut.I = self.I
         sut.J = self.J
+        sut.vert_patches_reshape = Reshape((self.J, self.w_p * self.h_p * self.number_of_channels))
+        sut.precise_tensor_shape = Reshape((self.J, self.I, int(2*self.reNet_hidden_size)))
 
         result = sut.vertical_sweep(arg)
         result_shape = self.get_result_shape(result)
@@ -144,17 +138,21 @@ class ReNetLayerTest(object):
         arg = Input((1, self.I, 2*self.reNet_hidden_size))
         sut.I = self.I
         sut.J = self.J
+        sut.hor_patch_permute = Permute((2, 3, 1))
 
-        result = sut.get_hor_patches(arg)
+        sut.get_hor_patches(arg)
+        result = sut.patches
         result_shape = self.get_result_shape(result)
-        assert result_shape == [self.I, 2*self.reNet_hidden_size, 1]
+        assert result_shape == [self.I, 2*self.reNet_hidden_size]
 
 
 
     def test_horizontal_sweep_output_shape_is_J_I_2(self, sut, simple_data_x):
+        arg = Input((self.I, self.J, 2*self.reNet_hidden_size))
         sut.I = self.I
         sut.J = self.J
-        arg = Input((self.I, self.J, 2*self.reNet_hidden_size))
+        sut.hor_patch_permute = Permute((2, 3, 1))
+        sut.precise_tensor_shape = Reshape((self.J, self.I, int(2*self.reNet_hidden_size)))
 
         result = sut.horizontal_sweep(arg)
         result_shape = self.get_result_shape(result)

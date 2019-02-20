@@ -23,7 +23,7 @@ class ReNetLayer(Layer):
         self.LSTM_left_right = LSTM(reNet_hidden_size, return_sequences=True)
         self.LSTM_right_left = LSTM(reNet_hidden_size, return_sequences=True)
 
-        self.vertical_single_columns_activations_permutarion = Permute((1, 3, 2))
+        self.LSTM_activations_permutarion = Permute((1, 3, 2))
 
 
     def build(self, input_shape):
@@ -45,27 +45,27 @@ class ReNetLayer(Layer):
 
 
     def get_columns(self, inputs):
-        self.__validate_patch_size(inputs)
         for j in range(0, inputs.shape[2], self.w_p):
             yield inputs[:, :, j:j+self.w_p, :]
 
 
     def get_hor_patches(self, row):
-        permute = Permute((2, 3, 1))
-        permuted = permute(row)
-
-        return permuted
+        self.patches = self.hor_patch_permute(row)
+        self.patches = tf.squeeze(self.patches, axis=3)
 
 
     def get_vert_patches(self, column):
-        print("__get_patch vec: column:", column)
-        reshape = Reshape((self.J, self.w_p * self.h_p * int(column.shape[3])))
-        flatten = reshape(column)
-
-        return flatten
+        self.patches = self.vert_patches_reshape(column)
 
 
-    def merge_LSTM_activations(self, activations):
+    def merge_single_LSTM_activations(self, first_tensor, second_tensor):
+        merged_vector = concatenate(
+                [tf.keras.backend.expand_dims(first_tensor),
+                 tf.keras.backend.expand_dims(second_tensor)], axis=2)
+        return self.LSTM_activations_permutarion(merged_vector)
+
+
+    def merge_all_LSTM_activations(self, activations):
         merged = concatenate([activations[0], activations[1]], axis=2)
 
         if len(activations) != 2:
@@ -79,29 +79,16 @@ class ReNetLayer(Layer):
         LSTM_outputs = []
 
         for col in self.get_columns(inputs):
-            print("col: ", col)
-            patches = self.get_vert_patches(col)
-            print("patches: ", patches)
+            self.get_vert_patches(col)
 
-            up_down_activation = self.LSTM_up_down(patches)
-            down_up_activation = self.LSTM_down_up(tf.reverse(patches, [-2]))
-            print("up_down_activation: ", up_down_activation)
+            up_down_activation = self.LSTM_up_down(self.patches)
+            down_up_activation = self.LSTM_down_up(tf.reverse(self.patches, [-2]))
 
-            merged_vector = concatenate(
-                    [tf.keras.backend.expand_dims(up_down_activation),
-                     tf.keras.backend.expand_dims(down_up_activation)], axis=2)
-            print("merged_vector shape:", merged_vector.shape)
-            merged_vector_permuted = self.vertical_single_columns_activations_permutarion(merged_vector)
-            print("merged_vector permuted shape:", merged_vector_permuted.shape)
+            merged_tensor = self.merge_single_LSTM_activations(up_down_activation, down_up_activation)
+            LSTM_outputs.append(merged_tensor)
 
-            LSTM_outputs.append(merged_vector_permuted)
-
-            print("\n\n")
-
-        merged = self.merge_LSTM_activations(LSTM_outputs)
-
-        precise_tensor_shape = Reshape((self.J, self.I, int(merged.shape[3])))
-        vertical_sweep_output = precise_tensor_shape(merged)
+        merged = self.merge_all_LSTM_activations(LSTM_outputs)
+        vertical_sweep_output = self.precise_tensor_shape(merged)
 
         return vertical_sweep_output
 
@@ -110,32 +97,29 @@ class ReNetLayer(Layer):
         LSTM_outputs = []
 
         for row in self.get_rows(inputs):
-            patches = self.get_hor_patches(row)
-            patches = tf.squeeze(patches, axis=3)
+            self.get_hor_patches(row)
 
-            left_right_activations = self.LSTM_left_right(patches)
-            right_left_activations = self.LSTM_right_left(tf.reverse(patches, [-2]))
+            left_right_activations = self.LSTM_left_right(self.patches)
+            right_left_activations = self.LSTM_right_left(tf.reverse(self.patches, [-2]))
 
-            merged_vector = concatenate(
-                    [tf.keras.backend.expand_dims(left_right_activations),
-                     tf.keras.backend.expand_dims(right_left_activations)], axis=2)
+            merged_tensor = self.merge_single_LSTM_activations(left_right_activations, right_left_activations)
+            LSTM_outputs.append(merged_tensor)
 
-            merged_vector_permuted = self.vertical_single_columns_activations_permutarion(merged_vector)
-            LSTM_outputs.append(merged_vector_permuted)
-
-        merged = self.merge_LSTM_activations(LSTM_outputs)
-
-        precise_tensor_shape = Reshape((self.J, self.I, int(merged.shape[3])))
-        horizontal_sweep_output = precise_tensor_shape(merged)
+        merged = self.merge_all_LSTM_activations(LSTM_outputs)
+        horizontal_sweep_output = self.precise_tensor_shape(merged)
 
         return horizontal_sweep_output
 
 
     def call(self, inputs):
-        print("\n\ninputs: ", inputs)
+        self.__validate_patch_size(inputs)
 
         self.I = int(inputs.shape[1]) // self.w_p
         self.J = int(inputs.shape[2]) // self.h_p
+
+        self.vert_patches_reshape = Reshape((self.J, self.w_p * self.h_p * int(inputs.shape[3])))
+        self.hor_patch_permute = Permute((2, 3, 1))
+        self.precise_tensor_shape = Reshape((self.J, self.I, int(2*self.reNet_hidden_size)))
 
         vertical_sweep_output = self.vertical_sweep(inputs)
         horizontal_sweep_output = self.horizontal_sweep(vertical_sweep_output)
