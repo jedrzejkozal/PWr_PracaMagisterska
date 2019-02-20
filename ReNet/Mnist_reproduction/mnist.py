@@ -2,6 +2,7 @@ import numpy as np
 from keras.utils import to_categorical
 from keras.datasets import mnist
 from keras.preprocessing.image import ImageDataGenerator
+from keras.callbacks import EarlyStopping
 
 from MnistReproduction import *
 
@@ -32,17 +33,32 @@ x_test /= 255
 y_train = to_categorical(y_train, num_classes)
 y_test = to_categorical(y_test, num_classes)
 
+print("x_train: ", x_train.shape)
+print("x_train_single: ", x_train[0:1].shape)
+print("y_train: ", y_train.shape)
+print("y_train_single:", y_train[0:1].shape)
+
+x_train_single_ex = x_train[0:1]
+y_train_single_ex = y_train[0:1]
 
 shift = 0.2
 datagen = ImageDataGenerator(width_shift_range=shift, height_shift_range=shift)
-datagen.fit(X_train)
+datagen.fit(x_train)
 
 
 model = MnistReproduction()
 model.compile(loss='categorical_crossentropy', optimizer='adam',
         metrics=['categorical_accuracy'])
+
+model.fit(x_train_single_ex, y_train_single_ex,
+                epochs=1,
+                validation_data=(x_test, y_test),
+                callbacks=[EarlyStopping(monitor='val_loss', patience=5, verbose=1)]
+            )
+"""
 model.fit_generator(datagen.flow(x_train, y_train, batch_size=32),
                 epochs=1,
                 validation_data=(x_test, y_test),
                 callbacks=[EarlyStopping(monitor='val_loss', patience=5, verbose=1)]
             )
+"""
