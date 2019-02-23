@@ -23,7 +23,8 @@ class ReNetLayer(Layer):
         self.LSTM_left_right = LSTM(hidden_size, return_sequences=True)
         self.LSTM_right_left = LSTM(hidden_size, return_sequences=True)
 
-        self.LSTM_activations_permutarion = Permute((1, 3, 2))
+        self.vert_LSTM_activations_permutarion = Permute((1, 3, 2))
+        self.hor_LSTM_activations_permutarion = Permute((3, 1, 2))
 
 
     def build(self, input_shape):
@@ -42,6 +43,7 @@ class ReNetLayer(Layer):
     def get_rows(self, inputs):
         for i in range(0, inputs.shape[1]):
             yield inputs[:, i:i+1, :]
+        self.vert_LSTM_activations_permutarion = Permute((1, 3, 2))
 
 
     def get_columns(self, inputs):
@@ -62,8 +64,7 @@ class ReNetLayer(Layer):
         merged_vector = concatenate(
                 [tf.keras.backend.expand_dims(first_tensor),
                  tf.keras.backend.expand_dims(second_tensor)], axis=2)
-        return self.LSTM_activations_permutarion(merged_vector)
-
+        return merged_vector
 
     def merge_all_LSTM_activations(self, activations):
         return concatenate(activations, axis=2)
@@ -79,9 +80,10 @@ class ReNetLayer(Layer):
             down_up_activation = self.LSTM_down_up(tf.reverse(self.patches, [-2]))
 
             merged_tensor = self.merge_single_LSTM_activations(up_down_activation, down_up_activation)
+            merged_tensor = self.vert_LSTM_activations_permutarion(merged_tensor)
             LSTM_outputs.append(merged_tensor)
 
-        merged = self.merge_all_LSTM_activations(LSTM_outputs)
+        merged = concatenate(LSTM_outputs, axis=2)
         vertical_sweep_output = self.precise_tensor_shape(merged)
 
         return vertical_sweep_output
@@ -97,9 +99,10 @@ class ReNetLayer(Layer):
             right_left_activations = self.LSTM_right_left(tf.reverse(self.patches, [-2]))
 
             merged_tensor = self.merge_single_LSTM_activations(left_right_activations, right_left_activations)
+            merged_tensor = self.hor_LSTM_activations_permutarion(merged_tensor)
             LSTM_outputs.append(merged_tensor)
 
-        merged = self.merge_all_LSTM_activations(LSTM_outputs)
+        merged = concatenate(LSTM_outputs, axis=0)
         horizontal_sweep_output = self.precise_tensor_shape(merged)
 
         return horizontal_sweep_output
