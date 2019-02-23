@@ -66,9 +66,6 @@ class ReNetLayer(Layer):
                  tf.keras.backend.expand_dims(second_tensor)], axis=2)
         return merged_vector
 
-    def merge_all_LSTM_activations(self, activations):
-        return concatenate(activations, axis=2)
-
 
     def vertical_sweep(self, inputs):
         LSTM_outputs = []

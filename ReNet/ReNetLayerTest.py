@@ -85,24 +85,6 @@ class ReNetLayerTest(object):
         assert result_shape == [self.J, self.h_p*self.w_p*self.number_of_channels]
 
 
-    def test_merge_all_LSTM_activations_for_2_tensors_returns_valid_shape(self, sut, simple_data_x):
-        arg = [Input((self.J, 1, 2))] * 2
-
-        result = sut.merge_all_LSTM_activations(arg)
-        result_shape = self.get_result_shape(result)
-
-        assert result_shape == [self.J, 2, 2]
-
-
-    def test_merge_all_LSTM_activations_for_3_tensors_returns_valid_shape(self, sut, simple_data_x):
-        arg = [Input((self.J, 1, 2))] * 3
-
-        result = sut.merge_all_LSTM_activations(arg)
-        result_shape = self.get_result_shape(result)
-
-        assert result_shape == [self.J, 3, 2]
-
-
     def test_vertical_sweep_output_shape_is_J_I_2(self, sut, simple_data_x):
         arg = Input((self.img_height, self.img_width, self.number_of_channels))
         sut.I = self.I
