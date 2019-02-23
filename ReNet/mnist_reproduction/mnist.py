@@ -1,8 +1,12 @@
+import os
 import numpy as np
 from keras.utils import to_categorical
 from keras.datasets import mnist
 from keras.preprocessing.image import ImageDataGenerator
 from keras.callbacks import EarlyStopping
+import sys
+sys.path.append('../Utils')
+from SaveResults import *
 
 from MnistReproduction import *
 
@@ -58,9 +62,14 @@ model.fit(x_train_single_ex, y_train_single_ex,
                 callbacks=[EarlyStopping(monitor='val_loss', patience=5, verbose=1)]
             )
 
-model.fit_generator(datagen.flow(x_train, y_train, batch_size=32),
+history = model.fit_generator(datagen.flow(x_train, y_train, batch_size=32),
                 epochs=20,
                 steps_per_epoch=20,
                 validation_data=(x_test, y_test),
                 callbacks=[EarlyStopping(monitor='val_loss', patience=5, verbose=1)]
             )
+
+
+path = os.path.dirname(os.path.realpath(__file__))
+print("path: ", path)
+save = SaveResults(history, path)
