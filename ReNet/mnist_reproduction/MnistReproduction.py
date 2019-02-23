@@ -7,10 +7,10 @@ class MnistReproduction(Model):
     def __init__(self):
         super().__init__()
 
-        self.first_reNetLayer = ReNetLayer([[2, 2]], 256)
-        self.second_reNetLayer = ReNetLayer([[2, 2]], 256)
+        self.first_reNetLayer = ReNetLayer([[2, 2]], 128) #256)
+        self.second_reNetLayer = ReNetLayer([[2, 2]], 128) #256)
         self.flatten = Flatten()
-        fully_conn_hidden_size = 4096
+        fully_conn_hidden_size = 2048 #4096
         self.first_dense = Dense(fully_conn_hidden_size, activation='relu')
         self.second_dense = Dense(fully_conn_hidden_size, activation='relu')
         num_classes = 10

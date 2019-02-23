@@ -50,15 +50,17 @@ model = MnistReproduction()
 model.compile(loss='categorical_crossentropy', optimizer='adam',
         metrics=['categorical_accuracy'])
 
+#just for model to figure out what is the shape of input tensors
+#workaround for how keras fit_generator works
 model.fit(x_train_single_ex, y_train_single_ex,
                 epochs=1,
                 validation_data=(x_test, y_test),
                 callbacks=[EarlyStopping(monitor='val_loss', patience=5, verbose=1)]
             )
-"""
+
 model.fit_generator(datagen.flow(x_train, y_train, batch_size=32),
-                epochs=1,
+                epochs=20,
+                steps_per_epoch=20,
                 validation_data=(x_test, y_test),
                 callbacks=[EarlyStopping(monitor='val_loss', patience=5, verbose=1)]
             )
-"""
