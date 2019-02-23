@@ -102,7 +102,7 @@ class ReNetLayer(Layer):
             merged_tensor = self.hor_LSTM_activations_permutarion(merged_tensor)
             LSTM_outputs.append(merged_tensor)
 
-        merged = concatenate(LSTM_outputs, axis=0)
+        merged = concatenate(LSTM_outputs, axis=1)
         horizontal_sweep_output = self.precise_tensor_shape(merged)
 
         return horizontal_sweep_output
