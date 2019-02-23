@@ -66,13 +66,7 @@ class ReNetLayer(Layer):
 
 
     def merge_all_LSTM_activations(self, activations):
-        merged = concatenate([activations[0], activations[1]], axis=2)
-
-        if len(activations) != 2:
-            for tensor in activations[2:]:
-                merged = concatenate([merged, tensor], axis=2)
-
-        return merged
+        return concatenate(activations, axis=2)
 
 
     def vertical_sweep(self, inputs):
@@ -96,8 +90,7 @@ class ReNetLayer(Layer):
     def horizontal_sweep(self, inputs):
         LSTM_outputs = []
 
-        horizontal_sweep_output = Input((self.J, self.I, int(2*self.hidden_size)))
-        for row in self.get_rows(inputs):
+        for i, row in enumerate(self.get_rows(inputs)):
             self.get_hor_patches(row)
 
             left_right_activations = self.LSTM_left_right(self.patches)
