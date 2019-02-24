@@ -1,14 +1,15 @@
 import tensorflow as tf
 from keras.layers import LSTM, Dense, Flatten
 from keras.layers import Input, Reshape, Permute, concatenate
-from keras.layers import Layer
+from keras.layers import Layer, Dropout
 from keras.preprocessing.sequence import pad_sequences
 from keras import backend as K
 
 
 class ReNetLayer(Layer):
 
-    def __init__(self, size_of_patches, hidden_size):
+    def __init__(self, size_of_patches, hidden_size,
+                    use_dropout=False, dropout_rate=None):
         super().__init__()
 
         self.size_of_patches = size_of_patches
@@ -20,6 +21,13 @@ class ReNetLayer(Layer):
         self.LSTM_down_up = LSTM(hidden_size, return_sequences=True)
         self.LSTM_left_right = LSTM(hidden_size, return_sequences=True)
         self.LSTM_right_left = LSTM(hidden_size, return_sequences=True)
+
+        self.use_dropout = use_dropout
+        if use_dropout:
+            self.dropout_up_down = Dropout(dropout_rate)
+            self.dropout_down_up = Dropout(dropout_rate)
+            self.dropout_left_right = Dropout(dropout_rate)
+            self.dropout_right_left = Dropout(dropout_rate)
 
         self.vert_LSTM_activations_permutarion = Permute((1, 3, 2))
         self.hor_LSTM_activations_permutarion = Permute((3, 1, 2))
@@ -74,6 +82,10 @@ class ReNetLayer(Layer):
             up_down_activation = self.LSTM_up_down(self.patches)
             down_up_activation = self.LSTM_down_up(tf.reverse(self.patches, [-2]))
 
+            if self.use_dropout:
+                up_down_activation = self.dropout_up_down(up_down_activation)
+                down_up_activation = self.dropout_down_up(down_up_activation)
+
             merged_tensor = self.merge_single_LSTM_activations(up_down_activation, down_up_activation)
             merged_tensor = self.vert_LSTM_activations_permutarion(merged_tensor)
             LSTM_outputs.append(merged_tensor)
@@ -92,6 +104,10 @@ class ReNetLayer(Layer):
 
             left_right_activations = self.LSTM_left_right(self.patches)
             right_left_activations = self.LSTM_right_left(tf.reverse(self.patches, [-2]))
+
+            if self.use_dropout:
+                left_right_activations = self.dropout_left_right(left_right_activations)
+                right_left_activations = self.dropout_right_left(right_left_activations)
 
             merged_tensor = self.merge_single_LSTM_activations(left_right_activations, right_left_activations)
             merged_tensor = self.hor_LSTM_activations_permutarion(merged_tensor)
