@@ -23,3 +23,13 @@ class TestSimpleReNet(ReNetTest):
         cls.number_of_channels = 1
         cls.setup_model_params()
         cls.SUT_class = SimpleReNet
+
+
+    @pytest.fixture
+    def sut(self):
+        self.__class__.setup()
+        model = self.SUT_class([[self.w_p, self.h_p]],
+                self.reNet_hidden_size, self.fully_conn_hidden_size, self.num_classes)
+        model.compile(loss='categorical_crossentropy', optimizer='adam',
+                metrics=['categorical_accuracy'])
+        return model
