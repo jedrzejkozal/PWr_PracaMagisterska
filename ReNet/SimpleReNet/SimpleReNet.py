@@ -1,3 +1,5 @@
+from keras import Model
+
 from ReNetLayer import *
 
 class SimpleReNet(Model):

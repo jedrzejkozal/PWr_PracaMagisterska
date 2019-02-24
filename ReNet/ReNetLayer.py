@@ -1,5 +1,4 @@
 import tensorflow as tf
-from keras import Model
 from keras.layers import LSTM, Dense, Flatten
 from keras.layers import Input, Reshape, Permute, concatenate
 from keras.layers import Layer
@@ -8,7 +7,6 @@ from keras import backend as K
 
 
 class ReNetLayer(Layer):
-
 
     def __init__(self, size_of_patches, hidden_size):
         super().__init__()
