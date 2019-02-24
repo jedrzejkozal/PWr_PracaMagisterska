@@ -45,7 +45,7 @@ print("y_train_single:", y_train[0:1].shape)
 x_train_single_ex = x_train[0:1]
 y_train_single_ex = y_train[0:1]
 
-shift = 0.2
+shift = 3
 datagen = ImageDataGenerator(width_shift_range=shift, height_shift_range=shift)
 datagen.fit(x_train)
 
@@ -64,7 +64,7 @@ model.fit(x_train_single_ex, y_train_single_ex,
 
 history = model.fit_generator(datagen.flow(x_train, y_train, batch_size=32),
                 epochs=20,
-                steps_per_epoch=20,
+                steps_per_epoch=60,
                 validation_data=(x_test, y_test),
                 callbacks=[EarlyStopping(monitor='val_loss', patience=5, verbose=1)]
             )
