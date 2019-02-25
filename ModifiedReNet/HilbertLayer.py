@@ -21,8 +21,6 @@ class HilbertLayer(Layer):
 
     def call(self, inputs):
         self.side_length = int(inputs.shape[1])
-        self.inputs_shape = inputs.shape[1:3]
-
         self.reshape = Reshape((1, 1, int(inputs.shape[3])))
 
         indexes = self.hilbert_curve.get_indexes_vec(self.side_length)
