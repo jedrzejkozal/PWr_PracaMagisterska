@@ -77,9 +77,9 @@ class ReNetLayerTest(object):
     def test_get_vert_patches_returns_patches_with_valid_shape(self, sut, simple_data_x):
         arg = Input((self.img_height, self.w_p, self.number_of_channels))
         sut.J = self.J
-        sut.vert_patches_reshape = Reshape((self.J, self.w_p * self.h_p * self.number_of_channels))
+        sut.layer_vertical_patches_reshape = Reshape((self.J, self.w_p * self.h_p * self.number_of_channels))
 
-        sut.get_vert_patches(arg)
+        sut.get_vertical_patches(arg)
         result = sut.patches
         result_shape = self.get_result_shape(result)
         assert result_shape == [self.J, self.h_p*self.w_p*self.number_of_channels]
@@ -89,8 +89,8 @@ class ReNetLayerTest(object):
         arg = Input((self.img_height, self.img_width, self.number_of_channels))
         sut.I = self.I
         sut.J = self.J
-        sut.vert_patches_reshape = Reshape((self.J, self.w_p * self.h_p * self.number_of_channels))
-        sut.precise_tensor_shape = Reshape((self.J, self.I, int(2*self.hidden_size)))
+        sut.layer_vertical_patches_reshape = Reshape((self.J, self.w_p * self.h_p * self.number_of_channels))
+        sut.layer_precise_tensor_shape = Reshape((self.J, self.I, int(2*self.hidden_size)))
 
         result = sut.vertical_sweep(arg)
         result_shape = self.get_result_shape(result)
@@ -120,7 +120,7 @@ class ReNetLayerTest(object):
         arg = Input((1, self.I, 2*self.hidden_size))
         sut.I = self.I
         sut.J = self.J
-        sut.hor_patch_permute = Permute((2, 3, 1))
+        sut.layer_horizontal_patches_permute = Permute((2, 3, 1))
 
         sut.get_hor_patches(arg)
         result = sut.patches
@@ -133,8 +133,8 @@ class ReNetLayerTest(object):
         arg = Input((self.I, self.J, 2*self.hidden_size))
         sut.I = self.I
         sut.J = self.J
-        sut.hor_patch_permute = Permute((2, 3, 1))
-        sut.precise_tensor_shape = Reshape((self.J, self.I, int(2*self.hidden_size)))
+        sut.layer_horizontal_patches_permute = Permute((2, 3, 1))
+        sut.layer_precise_tensor_shape = Reshape((self.J, self.I, int(2*self.hidden_size)))
 
         result = sut.horizontal_sweep(arg)
         result_shape = self.get_result_shape(result)
