@@ -9,11 +9,12 @@ class TestHilbertCurve(object):
     def sut(self):
         return HilbertCurve()
 
+
     def test_img_4x5_ValueError_raised(self, sut):
         arg = np.zeros((4,5))
 
         with pytest.raises(ValueError) as e:
-            result = sut.hilbert_curve(arg)
+            result = sut.convert_2D_to_1D(arg)
             assert result == None
 
         assert "Invalid img shape" in str(e.value)
@@ -23,7 +24,7 @@ class TestHilbertCurve(object):
         arg = np.zeros((5,5))
 
         with pytest.raises(ValueError) as e:
-            result = sut.hilbert_curve(arg)
+            result = sut.convert_2D_to_1D(arg)
             assert result == None
 
         assert "Invalid img shape" in str(e.value)
@@ -32,30 +33,15 @@ class TestHilbertCurve(object):
     def test_img_4x4_is_converted_to_16x1(self, sut):
         arg = np.zeros((4, 4))
 
-        result = sut.hilbert_curve(arg)
+        result = sut.convert_2D_to_1D(arg)
         assert result.shape == (16, 1)
-
-
-    def test_generate_commands_for_deegre_1_generates_A(self, sut):
-        result = sut.generate_commands(1)
-        assert result == ["left", "F", "right", "F", "right", "F", "left"]
-
-
-    def test_generate_commands_for_deegre_2_generates_right_sequence(self, sut):
-        result = sut.generate_commands(2)
-        expected = ["left", "right", "F", "left", "F", "left", "F", "right", "F", "right",
-                    "left", "F", "right", "F", "right", "F", "left", "F",
-                    "left", "F", "right", "F", "right", "F", "left", "right", "F",
-                    "right", "F", "left", "F", "left", "F", "right", "left"]
-
-        assert result == expected
 
 
     def test_all_items_of_img_4x4_are_converted_properly(self, sut):
         arg = np.array(list(range(16)))
         arg = arg.reshape((4, 4))
 
-        result = sut.hilbert_curve(arg)
+        result = sut.convert_2D_to_1D(arg)
         expected = np.array([12, 13, 9, 8,
                             4, 0, 1, 5,
                             6, 2, 3, 7,
@@ -69,7 +55,7 @@ class TestHilbertCurve(object):
         arg = np.array(list(range(64)))
         arg = arg.reshape((8, 8))
 
-        result = sut.hilbert_curve(arg)
+        result = sut.convert_2D_to_1D(arg)
         expected = np.array([56, 48, 49, 57, 58, 59, 51, 50,
                             42, 43, 35, 34, 33, 41, 40, 32,
                             24, 25, 17, 16, 8, 0, 1, 9,

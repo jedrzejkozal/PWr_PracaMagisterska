@@ -1,6 +1,6 @@
 import numpy as np
 
-from GenerateCommands import *
+from CommandsGenerator import *
 
 class HilbertCurve(object):
 
@@ -8,7 +8,29 @@ class HilbertCurve(object):
         self.left_rotation_matrix = np.array([[0, -1], [1, 0]])
         self.right_rotation_matrix = np.array([[0, 1], [-1, 0]])
 
-    def hilbert_curve(self, img):
+
+    def convert_2D_to_1D(self, img):
+        vec = self.traverse_img(img)
+        return np.array(vec)
+
+
+    def get_indexes_vec(self, side_length):
+        dummy_img = self.get_dummy_img(side_length)
+        return self.traverse_img(dummy_img)
+
+
+    def get_dummy_img(self, side_length):
+        result = []
+
+        for i in range(side_length):
+            for j in range(side_length):
+                result.append([i, j])
+
+        result_matrix = np.array(result)
+        return result_matrix.reshape((side_length, side_length, 2))
+
+
+    def traverse_img(self, img):
         self.check_shape(img)
 
         side_length = img.shape[0]
@@ -27,11 +49,11 @@ class HilbertCurve(object):
                 self.rotate_left()
             elif command is "right":
                 self.rotate_right()
-            else: #"F"
+            else: # "F"
                 self.move_forward()
                 result.append(img[self.curr_position[1], self.curr_position[0]])
 
-        return np.array(result)
+        return result
 
 
     def check_shape(self, img):
@@ -44,7 +66,7 @@ class HilbertCurve(object):
 
 
     def generate_commands(self, deegre):
-        g = GenerateCommands()
+        g = CommandsGenerator()
         return g.generate_commands(deegre)
 
 
