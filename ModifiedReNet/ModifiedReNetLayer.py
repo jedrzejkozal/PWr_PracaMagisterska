@@ -2,12 +2,15 @@ import tensorflow as tf
 from keras.layers import LSTM, Reshape, Permute
 from keras.layers import Layer
 from keras.layers import concatenate
+from keras import backend as K
 
 from HilbertLayer import *
 
 class ModifiedReNetLayer(Layer):
 
     def __init__(self, patch_size, hidden_size):
+        super().__init__()
+        
         self.patch_size = patch_size
         self.hidden_size = hidden_size
 

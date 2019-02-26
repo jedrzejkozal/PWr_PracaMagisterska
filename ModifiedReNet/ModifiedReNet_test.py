@@ -27,7 +27,7 @@ class TestModifiedReNet(object):
     def sut(self):
         self.__class__.setup()
         model = ModifiedReNet(self.patch_size, self.reNet_hidden_size,
-                self.fully_conn_hidden_size)
+                self.fully_conn_hidden_size, self.num_classes)
         model.compile(loss='categorical_crossentropy', optimizer='adam',
                 metrics=['categorical_accuracy'])
         return model
@@ -53,12 +53,12 @@ class TestModifiedReNet(object):
 
 
     def get_result_shape(self, result):
-        return list(map(lambda x: int(x), result.shape[1:]))
+        return list(map(lambda x: int(x), result.shape))#result.shape[1:]))
 
 
     #"""
-    def test_model_output_for_2_classes_shape_is_num_samples_x_2(self, sut, simple_data_x,
-            simple_data_y):
+    def test_model_output_for_2_classes_shape_is_num_samples_x_2(self, sut,
+            simple_data_x, simple_data_y):
         sut.fit(simple_data_x, simple_data_y, epochs=1, shuffle=False)
         result = sut.predict(simple_data_x)
         assert result.shape == (self.num_samples, 2)
