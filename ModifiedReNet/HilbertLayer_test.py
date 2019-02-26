@@ -4,7 +4,7 @@ from keras.layers import Input
 from HilbertLayer import *
 
 
-class TestHilberLayer(object):
+class TestHilbertLayer(object):
 
     @pytest.fixture
     def sut(self):
@@ -12,7 +12,6 @@ class TestHilberLayer(object):
 
     def get_result_shape(self, result):
         return list(map(lambda x: int(x), result.shape[1:]))
-
 
     def test_compute_output_shape_for_8x8x3_returns_64x3(self, sut):
         arg = (None, 8, 8, 3)
