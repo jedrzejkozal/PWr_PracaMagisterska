@@ -10,7 +10,7 @@ class ModifiedReNetLayer(Layer):
 
     def __init__(self, patch_size, hidden_size):
         super().__init__()
-        
+
         self.patch_size = patch_size
         self.hidden_size = hidden_size
 
@@ -27,8 +27,8 @@ class ModifiedReNetLayer(Layer):
 
     def compute_output_shape(self, input_shape):
         return (input_shape[0],
-                input_shape[1] * input_shape[2] // self.patch_size,
-                self.hidden_size)
+                input_shape[1] // self.patch_size,
+                2*self.hidden_size)
 
 
     def call(self, inputs):

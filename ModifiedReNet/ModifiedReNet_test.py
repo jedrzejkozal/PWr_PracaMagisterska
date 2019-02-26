@@ -9,15 +9,15 @@ class TestModifiedReNet(object):
     @classmethod
     def setup_model_params(cls):
         cls.patch_size = 4
-        cls.reNet_hidden_size = 10
-        cls.fully_conn_hidden_size = 50
+        cls.reNet_hidden_size = 3
+        cls.fully_conn_hidden_size = 5
 
 
     @classmethod
     def setup(cls):
-        cls.num_samples = 60
-        cls.img_width = 16
-        cls.img_height = 16
+        cls.num_samples = 10 #60
+        cls.img_width = 8
+        cls.img_height = 8
         cls.number_of_channels = 3
         cls.num_classes = 2
         cls.setup_model_params()
@@ -53,10 +53,9 @@ class TestModifiedReNet(object):
 
 
     def get_result_shape(self, result):
-        return list(map(lambda x: int(x), result.shape))#result.shape[1:]))
+        return list(map(lambda x: int(x), result.shape[1:]))
 
 
-    #"""
     def test_model_output_for_2_classes_shape_is_num_samples_x_2(self, sut,
             simple_data_x, simple_data_y):
         sut.fit(simple_data_x, simple_data_y, epochs=1, shuffle=False)

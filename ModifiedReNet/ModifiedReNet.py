@@ -19,17 +19,11 @@ class ModifiedReNet(Model):
 
 
     def call(self, inputs):
-        print("\n\ninputs: ", inputs)
         flat_imgs = self.hilbert_layer(inputs)
-        print("flatted: ", flat_imgs.shape)
         reNet_output = self.reNet(flat_imgs)
-        print("reNet_output: ", reNet_output.shape)
 
         x = self.flatten(reNet_output)
-        print("flatten: ", x.shape)
-        #x = self.dense(x)
-        #print("dense: ", x.shape)
-        #x = self.softmax(x)
-        #print("softmax: ", x.shape)
+        x = self.dense(x)
+        x = self.softmax(x)
 
         return x
