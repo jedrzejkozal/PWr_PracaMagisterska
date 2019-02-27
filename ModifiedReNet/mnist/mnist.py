@@ -75,8 +75,8 @@ model.fit(x_train_single_ex, y_train_single_ex,
             )
 
 history = model.fit_generator(datagen.flow(x_train, y_train, batch_size=32),
-                epochs=1,#1000,
-                steps_per_epoch=1,#80,
+                epochs=1000,
+                steps_per_epoch=80,
                 validation_data=(x_test, y_test),
                 callbacks=[EarlyStopping(monitor='val_loss', patience=5, verbose=1)]
             )
