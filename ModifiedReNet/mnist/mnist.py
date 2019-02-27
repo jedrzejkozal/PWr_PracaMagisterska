@@ -4,7 +4,7 @@ from keras.utils import to_categorical
 from keras.datasets import mnist
 from keras.preprocessing.image import ImageDataGenerator
 from keras.callbacks import EarlyStopping
-from scipy.misc import imresize
+from PIL import Image
 import sys
 sys.path.append('../Utils')
 #from SaveResults import *
@@ -33,11 +33,10 @@ x_train_reshaped = np.zeros((x_train.shape[0], 32, 32, 1))
 x_test_reshaped = np.zeros((x_test.shape[0], 32, 32, 1))
 
 for i in range(x_train.shape[0]):
-    #print("x_train[i].shape: ", x_train[i, :, :, 0].shape)
-    x_train_reshaped[i, :, :, 0] = imresize(x_train[i, :, :, 0], (32,32))
+    x_train_reshaped[i, :, :, 0] = np.array(Image.fromarray(x_train[i, :, :, 0]).resize((32, 32)))
 
 for i in range(x_test.shape[0]):
-    x_test_reshaped[i, :, :, 0] = imresize(x_test[i, :, :, 0], (32,32))
+    x_test_reshaped[i, :, :, 0] = np.array(Image.fromarray(x_test[i, :, :, 0]).resize((32, 32)))
 
 x_train, x_test = x_train_reshaped, x_test_reshaped
 
@@ -76,8 +75,8 @@ model.fit(x_train_single_ex, y_train_single_ex,
             )
 
 history = model.fit_generator(datagen.flow(x_train, y_train, batch_size=32),
-                epochs=1000,
-                steps_per_epoch=80,
+                epochs=1,#1000,
+                steps_per_epoch=1,#80,
                 validation_data=(x_test, y_test),
                 callbacks=[EarlyStopping(monitor='val_loss', patience=5, verbose=1)]
             )
