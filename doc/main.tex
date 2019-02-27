@@ -300,6 +300,28 @@ Każda kolejna warstwa sieci ReNet korzysta z wyjścia poprzedniej warstwy. Sche
 
 \section{Metodyka badań}
 
+\section{Reprodukcja wyników architektury ReNet}
+
+Pierwszym eksperymentem jaki wykonano było zreprodukowanie wyników z \cite{DBLP:journals/corr/VisinKCMCB15}. Celem reprodukcji było potwierdzenie przesłanki do badań oraz sprawdzenie poprawności przygotowanej implementacji ReNet. W niniejszej sekcji podano krótki opis stosowanej metodyki i uzyskane wyniki.
+
+\subsection{Statystyczna ewaluacja wyników}
+
+Reprodukcja badań nie stanowi zasadniczej części badań. Z tego względu uproszczono proces zbierania wyników. Podane rezultaty są wynikiem pojedynczego procesu uczenia, bez powtarzania prób. W \cite{tom-mitchell-machine-learning} podano sposób analizy błędu pojedynczego pomiaru skuteczności algorytmu.
+
+Dysponując zbiorem danych $d$ wylosowanym z pewnego nieznanego rozkładu $\mathcal{D}$ chcemy oszacować rzeczywisty błąd $err_{\mathcal{D}}$ popełniany przy przez hipotezę $h$ dla dowolnego datasetu wylosowanego z $\mathcal{D}$. Błąd popełniony na datasetcie $err_d$, dany jest wzorem:
+
+\begin{equation}
+	err_d = \frac{t}{n}
+\end{equation}
+
+Przy założeniu, że $d$ zawiera próbki niezależne od siebie oraz od $h$ i liczba przykładów uczących $n$ w zbiorze uczącym $d$ jest większa od 30, $err_d$ jest najlepszym estymatorem $err_{\mathcal{D}}$. Przedział w którym wartość $err_{\mathcal{D}}$ znajduję się z prawdopodobieństwem około 95\% można wyznaczyć jako:
+
+\begin{equation}
+	err_{d} \pm 1.96 \sqrt{\frac{err_{d}(1 - err_{d})}{n}} 
+\end{equation}
+
+Przedziały te zostały podane wraz z uzyskanymi w trakcie reprodukcji badań wartościami skuteczności na zbiorze testowym.
+
 \section{Opis eksperymentu}
 
 \subsection{Zbiór danych}
