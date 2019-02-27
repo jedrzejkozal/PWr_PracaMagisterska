@@ -1,6 +1,6 @@
 import sys
 from keras import Model
-from keras.layers import Dense, Flatten
+from keras.layers import Dense, Flatten, Dropout
 
 sys.path.insert(0, "../")
 from HilbertLayer import *
@@ -19,7 +19,9 @@ class MnistModel(Model):
         self.flatten = Flatten()
         fully_conn_hidden_size = 2048
         self.first_dense = Dense(fully_conn_hidden_size, activation='relu')
+        self.first_dropout = Dropout(0.2)
         self.second_dense = Dense(fully_conn_hidden_size, activation='relu')
+        self.second_dropout = Dropout(0.2)
 
         num_classes = 10
         self.softmax = Dense(num_classes, activation='softmax')
@@ -32,7 +34,9 @@ class MnistModel(Model):
 
         x = self.flatten(second_reNet_output)
         x = self.first_dense(x)
+        x = self.first_dropout(x)
         x = self.second_dense(x)
+        x = self.second_dropout(x)
         x = self.softmax(x)
 
         return x
