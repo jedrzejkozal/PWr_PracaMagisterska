@@ -1,7 +1,7 @@
 import pytest
 from keras.layers import Input
 
-from ModifiedTwoLayers import *
+from Models.ModifiedTwoLayers import *
 
 
 class TestModifiedTwoLayers(object):

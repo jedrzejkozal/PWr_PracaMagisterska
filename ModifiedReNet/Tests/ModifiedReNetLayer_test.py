@@ -1,7 +1,7 @@
 import pytest
 from keras.layers import Input
 
-from ModifiedReNetLayer import *
+from Models.ModifiedReNetLayer import *
 
 
 class TestModifiedReNetLayer(object):
@@ -30,4 +30,3 @@ class TestModifiedReNetLayer(object):
         result = sut.call(arg)
         result_shape = self.get_result_shape(result)
         assert result_shape == [1, 16, 2*self.hidden_size]
-    

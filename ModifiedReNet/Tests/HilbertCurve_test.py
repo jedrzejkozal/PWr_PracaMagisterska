@@ -1,6 +1,6 @@
 import pytest
 
-from HilbertCurve import *
+from Models.HilbertLayer.HilbertCurve import *
 
 
 class TestHilbertCurve(object):

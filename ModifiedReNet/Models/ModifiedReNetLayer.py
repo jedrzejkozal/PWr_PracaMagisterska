@@ -2,9 +2,7 @@ import tensorflow as tf
 from keras.layers import LSTM, Reshape, Permute
 from keras.layers import Layer
 from keras.layers import concatenate
-from keras import backend as K
 
-from HilbertLayer import *
 
 class ModifiedReNetLayer(Layer):
 

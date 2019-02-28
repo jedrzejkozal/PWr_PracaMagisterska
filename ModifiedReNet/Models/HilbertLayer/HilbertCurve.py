@@ -1,6 +1,6 @@
 import numpy as np
 
-from CommandsGenerator import *
+from Models.HilbertLayer.CommandsGenerator import *
 
 class HilbertCurve(object):
 
@@ -62,7 +62,7 @@ class HilbertCurve(object):
 
         for command in commands:
             self.__execute_single_command(command, img, result)
-            
+
         return result
 
 

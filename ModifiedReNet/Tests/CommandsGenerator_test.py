@@ -1,6 +1,6 @@
 import pytest
 
-from CommandsGenerator import *
+from Models.HilbertLayer.CommandsGenerator import *
 
 
 class TestCommandsGenerator(object):

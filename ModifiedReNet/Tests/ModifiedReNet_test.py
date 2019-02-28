@@ -1,7 +1,7 @@
 import pytest
 from keras.layers import Input
 
-from ModifiedReNet import *
+from Models.ModifiedReNet import *
 
 
 class TestModifiedReNet(object):

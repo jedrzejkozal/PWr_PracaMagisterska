@@ -1,7 +1,7 @@
 import pytest
 from keras.layers import Input
 
-from HilbertLayer import *
+from Models.HilbertLayer.HilbertLayer import *
 
 
 class TestHilbertLayer(object):

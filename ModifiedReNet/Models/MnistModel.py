@@ -1,10 +1,8 @@
-import sys
 from keras import Model
 from keras.layers import Dense, Flatten, Dropout
 
-sys.path.insert(0, "../")
-from HilbertLayer import *
-from ModifiedReNetLayer import *
+from Models.HilbertLayer.HilbertLayer import *
+from Models.ModifiedReNetLayer import *
 
 
 class MnistModel(Model):

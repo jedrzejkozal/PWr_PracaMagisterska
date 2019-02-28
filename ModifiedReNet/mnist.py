@@ -1,15 +1,15 @@
 import os
 import numpy as np
+
 from keras.utils import to_categorical
 from keras.datasets import mnist
 from keras.preprocessing.image import ImageDataGenerator
 from keras.callbacks import EarlyStopping
+
 from PIL import Image
-import sys
-sys.path.append('../Utils')
 #from SaveResults import *
 
-from MnistModel import *
+from Models.MnistModel import *
 
 
 #model hyperparmeters:
