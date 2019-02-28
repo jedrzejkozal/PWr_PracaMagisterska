@@ -84,7 +84,7 @@ RNN w swojej natywnej formie nie są w stanie nauczyć się długich zależnośc
 
 \subsubsection{GRU}
 
-Gated Recurrent Unit (GRU) \cite{DBLP:journals/corr/ChungGCB15} jest modyfikacją LSTM. W wyniku zastosowanych uproszeńw strukturze komórki GRU wymaga mniejszej mocy obliczeniowej do treningu, kosztem mniej mocy modelu. LSTM i GRU uzyskują porównywalne wyniki w praktycznych zastosowaniach \cite{DBLP:journals/corr/ChungGCB14}. GRU została dokładniej opisana w dalszej części pracy.
+Gated Recurrent Unit (GRU) \cite{DBLP:journals/corr/ChoMGBSB14} jest modyfikacją LSTM. W wyniku zastosowanych uproszeńw strukturze komórki GRU wymaga mniejszej mocy obliczeniowej do treningu, kosztem mniej mocy modelu. LSTM i GRU uzyskują porównywalne wyniki w praktycznych zastosowaniach \cite{DBLP:journals/corr/ChungGCB14}. GRU została dokładniej opisana w dalszej części pracy.
 
 \subsubsection{Neuronowe Maszyny Turinga}
 
@@ -233,6 +233,39 @@ W swojej pracy \cite{LSTM} Hochreiter i Schmidhuber odnoszą się do wcześniejs
 	\caption{Schemat komórki GRU.} Źródło: http://colah.github.io/posts/2015-08-Understanding-LSTMs/
 	\label{fig:gru}
 \end{figure}
+
+Struktura komórki Gated Reccurent Unit (GRU) została wprowadzona w \cite{DBLP:journals/corr/ChoMGBSB14}. Komórka GRU w znacznym stopniu przypomina strukturę komórki LSTM. GRU również wykorzystuje bramki multiplikatywne do obliczania wartości stanu ukrytego w kolejnych krokach czasowych. Znacząca różnica polega na zastosowaniu dwóch bramek zamiast trzech, pełniących inne funkcje. Ciąg operacji realizowanych przez bramki i warstwy ukryte GRU omówiono poniżej.
+
+Pierwsza bramka stosowana w ciągu przekształceń to reset gate, której aktywacje są obliczane jako:
+
+\begin{equation}
+	r_t = \sigma (W_r x_t + U_r h_{t-1})
+\end{equation}
+
+gdzie $W_r$ i $U_r$ są macierzami wag skojarzonymi z reset gate, $x$ oznacza wejście komórki a $h_{t-1}$ oznacza stan z poprzedniego kroku. Na podstawie $r$ obliczana jest wartość $\tilde{h_t}$:
+
+\begin{equation}
+	\tilde{h_t} = tanh(Wx_t + U(r_t \odot h_{t-1})
+\end{equation}
+
+gdzie $W$ i $U$ oznaczają skojarzone z operacją macierze wag, a $\tilde{h_t}$ oznacza kandydata do zastąpienia wektora stanu z poprzedniego kroku $h_{t-1}$. Intuicyjnie można powiedzieć, że reset gate ma za zadanie określić w jakich sytuacjach poprzedni stan sieci zawiera istotne informacje biorąc pod uwagę wejście w danym kroku. Jeśli $r_t$ będzie miało wartość bliską 0, $\tilde{h_t}$ będzie obliczone głównie na podstawie aktualnego wejścia $x_t$.
+
+Ponadto wprowadza się update gate $z$ realizującą operacje:
+
+\begin{equation}
+	z_t = \sigma(W_z x_t + U_z h_{t-1})
+\end{equation}
+
+gdzie $W_z$ i $U_z$ to wagi skojarzone z update gate. Update gate jest wykorzystywane do aktualizacji stanu ukrytego sieci:
+
+\begin{equation}
+	h_t = z_t \tilde{h_t} + (1 - z_t) h_{t-1}
+\end{equation}
+
+
+Update gate odpowiada za określanie w jakim stopniu stan ukryty sieci z poprzedniego kroku $h_{t-1}$ jest nadal aktualny. Informacja ta jest wykorzystywana również do określenia w jakim stopniu $\tilde{h_t}$ może zastąpić $h_{t-1}$. Jest to znacząca zmiana w porównaniu do LSTM, gdzie do określania aktualności poprzedniego stanu i wyliczonego w aktualnym kroku służyły dwie osobne bramki. Schemat komórki GRU został przedstawiony na rys \ref{fig:gru}.
+
+
 
 
 
