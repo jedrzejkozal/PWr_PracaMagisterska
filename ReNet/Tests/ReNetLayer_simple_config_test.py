@@ -1,7 +1,7 @@
-from ReNetLayerTest import *
+from Tests.ReNetLayerTest import *
 
 
-class Test3ChannelsReNetLayer(ReNetLayerTest):
+class TestSimpleReNetLayer(ReNetLayerTest):
 
     @classmethod
     def setup_model_params(cls):
@@ -15,7 +15,7 @@ class Test3ChannelsReNetLayer(ReNetLayerTest):
     @classmethod
     def setup(cls):
         cls.num_samples = 60
-        cls.img_width = 12
-        cls.img_height = 12
-        cls.number_of_channels = 3
+        cls.img_width = 10
+        cls.img_height = 10
+        cls.number_of_channels = 1
         cls.setup_model_params()

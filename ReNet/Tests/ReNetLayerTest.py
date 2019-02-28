@@ -3,7 +3,7 @@ import pytest
 import numpy as np
 from keras.layers import Input
 
-from ReNetLayer import *
+from Models.ReNetLayer import *
 
 
 class ReNetLayerTest(object):

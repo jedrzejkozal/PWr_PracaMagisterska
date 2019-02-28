@@ -1,8 +1,8 @@
-from ReNetTest import *
-from SimpleReNet import *
+from Tests.ReNetTest import *
+from Models.SimpleReNet.SimpleReNet import *
 
 
-class TestDropoutReNet(ReNetTest):
+class TestSimpleReNet(ReNetTest):
 
     @classmethod
     def setup_model_params(cls):
@@ -13,8 +13,6 @@ class TestDropoutReNet(ReNetTest):
         cls.reNet_hidden_size = 1
         cls.fully_conn_hidden_size = 1
         cls.num_classes = 2
-        cls.reNet_dropout = 0.2
-        cls.fully_conn_dropout = 0.2
 
 
     @classmethod
@@ -31,8 +29,7 @@ class TestDropoutReNet(ReNetTest):
     def sut(self):
         self.__class__.setup()
         model = self.SUT_class([[self.w_p, self.h_p]],
-                self.reNet_hidden_size, self.fully_conn_hidden_size, self.num_classes,
-                use_dropout=True, reNet_dropout=self.reNet_dropout, fully_conn_dropout=self.fully_conn_dropout)
+                self.reNet_hidden_size, self.fully_conn_hidden_size, self.num_classes)
         model.compile(loss='categorical_crossentropy', optimizer='adam',
                 metrics=['categorical_accuracy'])
         return model

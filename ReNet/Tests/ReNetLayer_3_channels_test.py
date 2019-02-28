@@ -1,8 +1,7 @@
-from ReNetTest import *
-from SimpleReNet import *
+from Tests.ReNetLayerTest import *
 
 
-class Test3ChannelsReNet(ReNetTest):
+class Test3ChannelsReNetLayer(ReNetLayerTest):
 
     @classmethod
     def setup_model_params(cls):
@@ -10,9 +9,7 @@ class Test3ChannelsReNet(ReNetTest):
         cls.h_p = 2
         cls.I = cls.img_width // cls.w_p
         cls.J = cls.img_height // cls.h_p
-        cls.reNet_hidden_size = 1
-        cls.fully_conn_hidden_size = 1
-        cls.num_classes = 2
+        cls.hidden_size = 1
 
 
     @classmethod
@@ -22,4 +19,3 @@ class Test3ChannelsReNet(ReNetTest):
         cls.img_height = 12
         cls.number_of_channels = 3
         cls.setup_model_params()
-        cls.SUT_class = SimpleReNet

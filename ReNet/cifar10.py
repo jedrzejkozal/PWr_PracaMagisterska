@@ -1,14 +1,13 @@
 import os
 import numpy as np
+
 from keras.utils import to_categorical
 from keras.datasets import cifar10
 from keras.preprocessing.image import ImageDataGenerator
 from keras.callbacks import EarlyStopping
-import sys
-sys.path.append('../Utils')
-from SaveResults import *
 
-from Cifar10Reproduction import *
+from Utils.SaveResults import *
+from Models.Cifar10Reproduction.Cifar10Reproduction import *
 
 
 #model hyperparmeters:
@@ -32,6 +31,7 @@ x_train = x_train.astype('float32')
 x_test = x_test.astype('float32')
 x_train /= 255
 x_test /= 255
+
 
 # convert class vectors to binary class matrices
 y_train = to_categorical(y_train, num_classes)

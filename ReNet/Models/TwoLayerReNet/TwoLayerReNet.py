@@ -1,6 +1,6 @@
 from keras import Model
 
-from ReNetLayer import *
+from Models.ReNetLayer import *
 
 class TwoLayerReNet(Model):
 

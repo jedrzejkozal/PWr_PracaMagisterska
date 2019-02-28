@@ -8,7 +8,7 @@ class SaveResults(object):
     def __init__(self, history, path):
         self.localtime = self.get_formated_time()
 
-        self.dirname = path + "/results/"
+        self.dirname = path
         self.create_dir()
 
         self.save_acc_plot(history)

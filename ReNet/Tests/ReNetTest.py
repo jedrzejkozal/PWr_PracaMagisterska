@@ -2,7 +2,7 @@ import pytest
 
 import numpy as np
 from keras.layers import Input
-from SimpleReNet import *
+from Models.SimpleReNet.SimpleReNet import *
 
 
 class ReNetTest(object):

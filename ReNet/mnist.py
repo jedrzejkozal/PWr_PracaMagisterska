@@ -1,14 +1,13 @@
 import os
 import numpy as np
+
 from keras.utils import to_categorical
 from keras.datasets import mnist
 from keras.preprocessing.image import ImageDataGenerator
 from keras.callbacks import EarlyStopping
-import sys
-sys.path.append('../Utils')
-from SaveResults import *
 
-from MnistReproduction import *
+from Utils.SaveResults import *
+from Models.MnistReproduction.MnistReproduction import *
 
 
 #model hyperparmeters:
@@ -32,6 +31,7 @@ x_train = x_train.astype('float32')
 x_test = x_test.astype('float32')
 x_train /= 255
 x_test /= 255
+
 
 # convert class vectors to binary class matrices
 y_train = to_categorical(y_train, num_classes)
@@ -63,13 +63,14 @@ model.fit(x_train_single_ex, y_train_single_ex,
             )
 
 history = model.fit_generator(datagen.flow(x_train, y_train, batch_size=32),
-                epochs=1000,
-                steps_per_epoch=80,
+                epochs=1,#1000,
+                steps_per_epoch=1,#80,
                 validation_data=(x_test, y_test),
                 callbacks=[EarlyStopping(monitor='val_loss', patience=5, verbose=1)]
             )
 
 
 path = os.path.dirname(os.path.realpath(__file__))
+path = path + "/Results/MnistReproduction/"
 print("path: ", path)
 save = SaveResults(history, path)

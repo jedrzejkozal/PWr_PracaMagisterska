@@ -1,7 +1,7 @@
-from ReNetLayerTest import *
+from Tests.ReNetLayerTest import *
 
 
-class TestSimpleReNetLayer(ReNetLayerTest):
+class TestDropoutReNetLayer(ReNetLayerTest):
 
     @classmethod
     def setup_model_params(cls):
@@ -10,6 +10,7 @@ class TestSimpleReNetLayer(ReNetLayerTest):
         cls.I = cls.img_width // cls.w_p
         cls.J = cls.img_height // cls.h_p
         cls.hidden_size = 1
+        cls.dropout = 0.2
 
 
     @classmethod
@@ -19,3 +20,11 @@ class TestSimpleReNetLayer(ReNetLayerTest):
         cls.img_height = 10
         cls.number_of_channels = 1
         cls.setup_model_params()
+
+
+    @pytest.fixture
+    def sut(self):
+        self.__class__.setup()
+
+        return ReNetLayer([[self.w_p, self.h_p]], self.hidden_size,
+                    use_dropout=True, dropout_rate=self.dropout)

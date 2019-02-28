@@ -1,8 +1,6 @@
-import sys
 from keras import Model
 
-sys.path.insert(0, "../")
-from ReNetLayer import *
+from Models.ReNetLayer import *
 
 
 class MnistReproduction(Model):
