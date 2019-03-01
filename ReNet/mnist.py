@@ -61,6 +61,10 @@ y_train_single_ex = y_train[0:1]
 x_train = mask_input_with_probability_p(x_train, 0.2)
 x_test = mask_input_with_probability_p(x_test, 0.2)
 
+x_train = x_train[:50000]
+y_train = y_train[:50000]
+
+
 shift = 3
 datagen = ImageDataGenerator(width_shift_range=shift, height_shift_range=shift)
 datagen.fit(x_train)
@@ -78,9 +82,10 @@ model.fit(x_train_single_ex, y_train_single_ex,
                 callbacks=[EarlyStopping(monitor='val_loss', patience=5, verbose=1)]
             )
 
-history = model.fit_generator(datagen.flow(x_train, y_train, batch_size=32),
-                epochs=1,#1000,
-                steps_per_epoch=1,#80,
+batch_size = 30
+history = model.fit_generator(datagen.flow(x_train, y_train, batch_size=batch_size),
+                epochs=20,
+                steps_per_epoch=np.ceil(x_train.shape[0] / batch_size),
                 validation_data=(x_test, y_test),
                 callbacks=[EarlyStopping(monitor='val_loss', patience=5, verbose=1)]
             )
