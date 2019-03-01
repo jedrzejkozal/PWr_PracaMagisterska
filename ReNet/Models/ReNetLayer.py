@@ -1,7 +1,7 @@
 import tensorflow as tf
 from keras.layers import LSTM, Dense, Flatten
 from keras.layers import Input, Reshape, Permute, concatenate
-from keras.layers import Layer, Dropout
+from keras.layers import Layer, Dropout, Masking
 from keras.preprocessing.sequence import pad_sequences
 from keras import backend as K
 
@@ -9,12 +9,17 @@ from keras import backend as K
 class ReNetLayer(Layer):
 
     def __init__(self, size_of_patches, hidden_size,
-                    use_dropout=False, dropout_rate=None):
+                    use_dropout=False, dropout_rate=None,
+                    is_first_layer=False):
         super().__init__()
 
         self.size_of_patches = size_of_patches
         self.w_p = size_of_patches[0][0]
         self.h_p = size_of_patches[0][1]
+
+        self.is_first_layer = is_first_layer
+        if is_first_layer:
+            self.mask = Masking(mask_value=float('Inf'))
 
         self.hidden_size = hidden_size
         self.LSTM_up_down = LSTM(hidden_size, return_sequences=True)
@@ -90,10 +95,17 @@ class ReNetLayer(Layer):
     def get_activations_for_columns(self, col):
         self.get_vertical_patches(col)
 
+        if self.is_first_layer:
+            self.patches = self.mask(self.patches)
+
         up_down_activation, down_up_activation = self.calc_vertical_LSTM_activations()
 
         merged_tensor = self.merge_opossite_directions_LSTM_activations(up_down_activation, down_up_activation)
         return self.layer_vertical_activations_permutarion(merged_tensor)
+
+
+    def get_vertical_patches(self, column):
+        self.patches = self.layer_vertical_patches_reshape(column)
 
 
     def calc_vertical_LSTM_activations(self):
@@ -105,10 +117,6 @@ class ReNetLayer(Layer):
             down_up_activation = self.dropout_down_up(down_up_activation)
 
         return up_down_activation, down_up_activation
-
-
-    def get_vertical_patches(self, column):
-        self.patches = self.layer_vertical_patches_reshape(column)
 
 
     def merge_opossite_directions_LSTM_activations(self, first_tensor, second_tensor):

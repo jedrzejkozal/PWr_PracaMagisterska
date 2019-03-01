@@ -9,7 +9,8 @@ class MnistReproduction(Model):
         super().__init__()
 
         self.first_reNetLayer = ReNetLayer([[2, 2]], 128, #256
-                use_dropout=True, dropout_rate=0.2)
+                use_dropout=True, dropout_rate=0.2,
+                is_first_layer=True)
         self.second_reNetLayer = ReNetLayer([[2, 2]], 128, #256
                 use_dropout=True, dropout_rate=0.2)
 

@@ -11,6 +11,18 @@ from Utils.SaveResults import *
 from Models.MnistReproduction.MnistReproduction import *
 
 
+def mask_input_with_probability_p(input, p):
+    mask_value = float('Inf')
+    r = np.random.rand(input.shape[1], input.shape[2])
+    r = r < 0.2
+
+    for i in range(input.shape[0]):
+        for j in range(input.shape[3]):
+            input[i, :, :, j][r] = mask_value
+
+    return input
+
+
 #model hyperparmeters:
 w_p = 2
 h_p = 2
@@ -45,6 +57,9 @@ print("y_train_single:", y_train[0:1].shape)
 
 x_train_single_ex = x_train[0:1]
 y_train_single_ex = y_train[0:1]
+
+x_train = mask_input_with_probability_p(x_train, 0.2)
+x_test = mask_input_with_probability_p(x_test, 0.2)
 
 shift = 3
 datagen = ImageDataGenerator(width_shift_range=shift, height_shift_range=shift)
