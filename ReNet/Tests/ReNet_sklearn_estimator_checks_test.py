@@ -27,6 +27,7 @@ class ReNetWrapper(BaseEstimator, ClassifierMixin):
 
         return self
 
+
     def predict(self, x):
         return self.model.predict(x)
 

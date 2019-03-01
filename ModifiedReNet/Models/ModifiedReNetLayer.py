@@ -1,12 +1,13 @@
 import tensorflow as tf
-from keras.layers import LSTM, Reshape, Permute
+from keras.layers import LSTM, Reshape, Permute, Dropout
 from keras.layers import Layer
 from keras.layers import concatenate
 
 
 class ModifiedReNetLayer(Layer):
 
-    def __init__(self, patch_size, hidden_size):
+    def __init__(self, patch_size, hidden_size,
+            use_dropout=False, dropout_rate=None):
         super().__init__()
 
         self.patch_size = patch_size
@@ -14,6 +15,11 @@ class ModifiedReNetLayer(Layer):
 
         self.LSTM_forward = LSTM(hidden_size, return_sequences=True)
         self.LSTM_backward = LSTM(hidden_size, return_sequences=True)
+
+        self.use_dropout = use_dropout
+        if use_dropout:
+            self.dropout_forward = Dropout(dropout_rate)
+            self.dropout_backward = Dropout(dropout_rate)
 
         self.output_permutation = Permute((3, 1, 2))
 
@@ -36,10 +42,19 @@ class ModifiedReNetLayer(Layer):
                 2*self.hidden_size, 1))
 
         LSTM_input = self.input_reshape(inputs)
-        forward_LSTM_output = self.LSTM_forward(LSTM_input)
-        backward_LSTM_output = self.LSTM_backward(tf.reverse(LSTM_input, [2]))
-
+        forward_LSTM_output, backward_LSTM_output = self.__get_LSTM_outputs(LSTM_input)
+        
         merged = concatenate([forward_LSTM_output, backward_LSTM_output], axis=2)
         merged = self.precise_shape(merged)
 
         return self.output_permutation(merged)
+
+
+    def __get_LSTM_outputs(self, LSTM_input):
+        forward_LSTM_output = self.LSTM_forward(LSTM_input)
+        backward_LSTM_output = self.LSTM_backward(tf.reverse(LSTM_input, [2]))
+        if self.use_dropout:
+            forward_LSTM_output = self.dropout_forward(forward_LSTM_output)
+            backward_LSTM_output = self.dropout_backward(backward_LSTM_output)
+
+        return forward_LSTM_output, backward_LSTM_output

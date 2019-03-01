@@ -1,15 +1,15 @@
 from Tests.ModifiedReNetTestBase import *
 
 
-class TestModifiedReNet(ModifiedReNetTestBase):
+class TestModifiedReNetDroupout(ModifiedReNetTestBase):
 
     @classmethod
     def setup_model_params(cls):
         cls.patch_size = 4
         cls.reNet_hidden_size = 3
         cls.fully_conn_hidden_size = 5
-        cls.use_dropout = False
-        cls.dropout_rate = None
+        cls.use_dropout = True
+        cls.dropout_rate = 0.2
 
 
     @classmethod

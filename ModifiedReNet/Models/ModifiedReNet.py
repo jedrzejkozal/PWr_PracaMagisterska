@@ -7,11 +7,14 @@ from Models.ModifiedReNetLayer import *
 
 class ModifiedReNet(Model):
 
-    def __init__(self, patch_size, reNet_hidden_size, fully_conn_hidden_size, num_classes):
+    def __init__(self, patch_size,
+            reNet_hidden_size, fully_conn_hidden_size, num_classes,
+            use_dropout=False, dropout_rate=None):
         super().__init__()
 
         self.hilbert_layer = HilbertLayer()
-        self.reNet = ModifiedReNetLayer(patch_size, reNet_hidden_size)
+        self.reNet = ModifiedReNetLayer(patch_size, reNet_hidden_size,
+                use_dropout, dropout_rate)
 
         self.flatten = Flatten()
         self.dense = Dense(fully_conn_hidden_size, activation='relu')
