@@ -5,6 +5,7 @@ from keras.utils import to_categorical
 from keras.datasets import mnist
 from keras.preprocessing.image import ImageDataGenerator
 from keras.callbacks import EarlyStopping
+from keras.optimizers import Adam
 
 from Utils.SaveResults import *
 from Models.MnistReproduction.MnistReproduction import *
@@ -51,7 +52,7 @@ datagen.fit(x_train)
 
 
 model = MnistReproduction()
-model.compile(loss='categorical_crossentropy', optimizer='adam',
+model.compile(loss='categorical_crossentropy', optimizer=Adam(lr=0.001, beta_1=0.9, beta_2=0.999, epsilon=10.0**-8.0),
         metrics=['categorical_accuracy'])
 
 #just for model to figure out what is the shape of input tensors
