@@ -1,8 +1,8 @@
-from Tests.ReNetTest import *
+from Tests.ReNetTestBase import *
 from Models.SimpleReNet.SimpleReNet import *
 
 
-class TestRectangularPatchReNet(ReNetTest):
+class TestRectangularPatchReNet(ReNetTestBase):
 
     @classmethod
     def setup_model_params(cls):

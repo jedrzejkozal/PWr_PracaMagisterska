@@ -1,8 +1,8 @@
-from Tests.ReNetTest import *
+from Tests.ReNetTestBase import *
 from Models.TwoLayerReNet.TwoLayerReNet import *
 
 
-class TestSimpleReNet(ReNetTest):
+class TestSimpleReNet(ReNetTestBase):
 
     @classmethod
     def setup_model_params(cls):

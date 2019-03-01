@@ -5,7 +5,7 @@ from keras.layers import Input
 from Models.SimpleReNet.SimpleReNet import *
 
 
-class ReNetTest(object):
+class ReNetTestBase(object):
 
     @pytest.fixture
     def sut(self):
