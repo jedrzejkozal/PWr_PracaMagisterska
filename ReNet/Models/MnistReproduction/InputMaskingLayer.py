@@ -1,7 +1,5 @@
-from keras.layers import Layer
-from keras.layers import Input
-from tensorflow.keras.backend import random_uniform
 import tensorflow as tf
+from keras.layers import Layer
 
 
 class InputMaskingLayer(Layer):
@@ -23,30 +21,11 @@ class InputMaskingLayer(Layer):
 
 
     def call(self, inputs):
-        mask = random_uniform(inputs.shape[1:])
-        bool_mask = mask < self.probability
+        random_tensor = tf.keras.backend.random_uniform(inputs.shape[1:])
+        bool_mask = random_tensor < self.probability
         mask_float = tf.cast(bool_mask, tf.float32)
+
         inf_tensor = tf.constant(self.mask_value, shape=inputs.shape[1:])
         final_mask = tf.multiply(mask_float, inf_tensor)
 
-
-        result = tf.multiply(inputs, final_mask)
-        print(result)
-        return result
-
-
-"""
-sess = tf.InteractiveSession()
-x = tf.constant([True, False], dtype=bool)
-print("x: ", x)
-x_float = tf.cast(x, tf.float32)
-print("x_float: ", x_float)
-
-x_float = tf.Print(x_float, [x_float], message="This is a: ")
-
-x_float.eval()
-"""
-
-i = InputMaskingLayer(0.2)
-arg = Input((6, 5, 3))
-i.call(arg)
+        return tf.multiply(inputs, final_mask)

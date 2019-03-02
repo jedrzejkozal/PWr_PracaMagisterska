@@ -1,12 +1,14 @@
 from keras import Model
 
 from Models.ReNetLayer import *
-
+from Models.MnistReproduction.InputMaskingLayer import *
 
 class MnistReproduction(Model):
 
     def __init__(self):
         super().__init__()
+
+        self.input_masking = InputMaskingLayer(0.2)
 
         self.first_reNetLayer = ReNetLayer([[2, 2]], 128, #256
                 use_dropout=True, dropout_rate=0.2,
@@ -26,7 +28,9 @@ class MnistReproduction(Model):
 
 
     def call(self, inputs):
-        first_reNet_output = self.first_reNetLayer(inputs)
+        x = self.input_masking(inputs)
+
+        first_reNet_output = self.first_reNetLayer(x)
         second_reNet_output = self.second_reNetLayer(first_reNet_output)
 
         x = self.flatten(second_reNet_output)
