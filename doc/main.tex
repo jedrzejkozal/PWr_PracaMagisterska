@@ -11,6 +11,7 @@
 \usepackage{caption}
 \usepackage{subfig}
 \usepackage{listings}
+\usepackage{tikz}
 
 \newcommand{\bb}{\textbf}
 
@@ -158,6 +159,57 @@ Celem pracy jest zbadanie skuteczności klasyfikacji zmodyfikowanej architektury
 W niniejszym rozdziale zostały omówione teoretyczne podstawy wybranych algorytmów i struktur sieci, które zostały wykorzystane w badaniach.
 
 \section{Rekurencyjna Sieć Neuronowa}
+
+Sieci rekurencyjne są modyfikacją zwykłych sieci feedforward powstałą poprzez dopuszczenie możliwości powstawania cykli w grafie obliczeniowym. Aktywacja każdej jednostki może być wyrażona jako:
+
+
+\begin{equation}
+	h_t = f(h_{t-1}, x_t)
+	\label{eq:basic-rnn}
+\end{equation}
+
+gdzie $h_t$ to aktywacja jednostki w czasie $t$, $x_t$ to wejście jednostki w czasie $t$, a $f$ oznacza nieliniowe przekształcenie realizowane przez jednostkę obliczeniową. Tego typu sformułowanie zasady działania modelu jest realizacją współdzielenia parametrów przez części modelu. Każda jednostka do obliczenia aktywacji wykorzystuje aktualne wejście i aktywację z poprzedniego kroku. Aby uniezależnić model od długości sekwencji w każdym kroku wykorzystuje się ten sam zestaw parametrów.
+
+W trakcie uczenia sieci dokonuje się rozwinięcia (ang. unfolding) grafu obliczeniowego, poprzez wielokrotne zastosowanie definicji sieci. Przykładowo dla dwóch kroków w czasie odwinięcie grafu można zapisać jako:
+
+\begin{equation}
+	h_2 = f(h_1, x_2) = f(f(h_0, x_1), x_2)
+\end{equation}
+
+Co jest zastosowaniem równania \ref{eq:basic-rnn} rekurencyjnie $n$ razy. Jako $h_0$ najczęściej stosowany jest wektor zer. Rozwinięcie grafu pozwala na zamianę grafu cyklicznego na acykliczny, bardziej przypominający graf sieci feedforward:
+
+\begin{figure}[!h]
+\centering
+\begin{tikzpicture}[auto,node distance=2.0cm]
+	\tikzstyle{node}=[circle,draw]
+		\node[node] (h0) {$h_0$};
+		\node[node] (h1) [right of=h0] {$h_1$};
+		\node[node] (x1) [below of=h1] {$x_1$};
+		\node[node] (h2) [right of=h1] {$h_2$};
+		\node[node] (x2) [below of=h2] {$x_2$};
+			\draw[->] (h0) edge node {$ $} (h1);
+			\draw[->] (x1) edge node {$ $} (h1);
+			\draw[->] (h1) edge node {$ $} (h2);
+			\draw[->] (x2) edge node {$ $} (h2);
+\end{tikzpicture}
+\end{figure}
+
+Rozwinięty graf pozwala na zastosowanie reguł propagacji wstecznej i obliczenie gradientów funkcji strat. Jest więc to proces umożliwiający uczenie sieci rekurencyjnej.
+
+\begin{figure}
+\centering
+	\includegraphics[width=0.9\textwidth]{img/LSTM3-SimpleRNN.png}
+	\caption{Schemat podstawowej jednostki sieci rekurencyjnej, korzystającej z funkcji aktywacji $tanhh$.} Źródło: http://colah.github.io/posts/2015-08-Understanding-LSTMs/
+	\label{fig:simple_rnn}
+\end{figure}
+
+Przekształcenie realizowane przez pojedynczą jednostkę rnn w najbardziej podstawowej formie można zapisać jako:
+
+\begin{equation}
+	h_t = g(W h_{t-1} + U x_t + b)
+\end{equation}
+
+gdzie $W$ i $U$ to macierze wag i wektor, $b$ to wektor biasu, a $g$ to funkcja aktywacji. Najczęściej stosowanymi funkcjami aktywacji są funkcja sigmoidalna, tanh lub ReLU. Istnieje wiele modyfikacji wprowadzonych do struktury jednostki sieci rekurencyjnej, które zostały omówione w dalszej części rozdziału.
 
 \section{Propagacja wsteczna w czasie}
 
