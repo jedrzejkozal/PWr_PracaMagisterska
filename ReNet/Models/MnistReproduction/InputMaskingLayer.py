@@ -9,6 +9,7 @@ class InputMaskingLayer(Layer):
 
         self.probability = p
         self.mask_value = float('Inf')
+        self.mask_not_drawn = True
 
 
     def build(self, input_shape):
@@ -20,12 +21,22 @@ class InputMaskingLayer(Layer):
         return input_shape
 
 
-    def call(self, inputs):
-        random_tensor = tf.keras.backend.random_uniform(inputs.shape[1:])
+    def generate_mask(self):
+        print("InputMaskingLayer: generate_mask: call")
+        random_tensor = tf.keras.backend.random_uniform(self.inputs_shape)
         bool_mask = random_tensor < self.probability
         mask_float = tf.cast(bool_mask, tf.float32)
 
-        inf_tensor = tf.constant(self.mask_value, shape=inputs.shape[1:])
-        final_mask = tf.multiply(mask_float, inf_tensor)
+        inf_tensor = tf.constant(self.mask_value, shape=self.inputs_shape)
+        self.mask = tf.multiply(mask_float, inf_tensor)
 
-        return tf.multiply(inputs, final_mask)
+
+    def call(self, inputs):
+        print("InputMaskingLayer: call: call")
+
+        if self.mask_not_drawn:
+            self.inputs_shape = inputs.shape[1:]
+            self.mask_not_drawn = False
+            self.generate_mask()
+
+        return tf.multiply(inputs, self.mask)

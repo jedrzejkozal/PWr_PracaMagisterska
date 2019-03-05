@@ -1,0 +1,14 @@
+full size from paper
+dropout: 0.5
+
+Epoch 1/1000
+1667/1667 [==============================] - 622s 373ms/step - loss: 1.5071 - categorical_accuracy: 0.4587 - val_loss: 0.9131 - val_categorical_accuracy: 0.6995
+Epoch 2/1000
+1667/1667 [==============================] - 624s 374ms/step - loss: 1.2273 - categorical_accuracy: 0.5646 - val_loss: 0.8255 - val_categorical_accuracy: 0.7438
+Epoch 3/1000
+1667/1667 [==============================] - 622s 373ms/step - loss: 1.1325 - categorical_accuracy: 0.6020 - val_loss: 0.6986 - val_categorical_accuracy: 0.7850
+Epoch 4/1000
+1667/1667 [==============================] - 623s 374ms/step - loss: 1.0829 - categorical_accuracy: 0.6189 - val_loss: 0.6651 - val_categorical_accuracy: 0.7889
+Epoch 5/1000
+1667/1667 [==============================] - 624s 374ms/step - loss: 1.0534 - categorical_accuracy: 0.6294 - val_loss: 0.6227 - val_categorical_accuracy: 0.8013
+

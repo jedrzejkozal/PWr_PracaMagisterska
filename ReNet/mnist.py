@@ -68,12 +68,15 @@ model.fit(x_train_single_ex, y_train_single_ex,
                 callbacks=[EarlyStopping(monitor='val_loss', patience=5, verbose=1)]
             )
 
+from keras.callbacks import Callback, LambdaCallback
+
 batch_size = 30
 history = model.fit_generator(datagen.flow(x_train, y_train, batch_size=batch_size),
-                epochs=20,
+                epochs=1000,
                 steps_per_epoch=np.ceil(x_train.shape[0] / batch_size),
                 validation_data=(x_test, y_test),
-                callbacks=[EarlyStopping(monitor='val_loss', patience=5, verbose=1)]
+                callbacks=[EarlyStopping(monitor='val_loss', patience=5, verbose=1)]#,
+                    #LambdaCallback(on_epoch_end=lambda x, y: model.input_masking.generate_mask())]
             )
 
 

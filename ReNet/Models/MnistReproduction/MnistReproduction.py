@@ -10,14 +10,14 @@ class MnistReproduction(Model):
 
         self.input_masking = InputMaskingLayer(0.2)
 
-        self.first_reNetLayer = ReNetLayer([[2, 2]], 128, #256
+        self.first_reNetLayer = ReNetLayer([[2, 2]], 256,
                 use_dropout=True, dropout_rate=0.2,
-                is_first_layer=True)
-        self.second_reNetLayer = ReNetLayer([[2, 2]], 128, #256
+                is_first_layer=False)
+        self.second_reNetLayer = ReNetLayer([[2, 2]], 256,
                 use_dropout=True, dropout_rate=0.2)
 
         self.flatten = Flatten()
-        fully_conn_hidden_size = 2048 #4096
+        fully_conn_hidden_size = 4096
         self.first_dense = Dense(fully_conn_hidden_size, activation='relu')
         self.first_dropout = Dropout(0.2)
         self.second_dense = Dense(fully_conn_hidden_size, activation='relu')
@@ -28,9 +28,9 @@ class MnistReproduction(Model):
 
 
     def call(self, inputs):
-        x = self.input_masking(inputs)
+        #x = self.input_masking(inputs)
 
-        first_reNet_output = self.first_reNetLayer(x)
+        first_reNet_output = self.first_reNetLayer(inputs)#x)
         second_reNet_output = self.second_reNetLayer(first_reNet_output)
 
         x = self.flatten(second_reNet_output)
