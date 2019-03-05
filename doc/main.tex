@@ -12,6 +12,7 @@
 \usepackage{subfig}
 \usepackage{listings}
 \usepackage{tikz}
+\usetikzlibrary{positioning}
 
 \newcommand{\bb}{\textbf}
 
@@ -42,8 +43,49 @@ Sekcji ta zawiera wprowadzenie podstawowych zagadnień, wykorzystywane w pracy, 
 
 \begin{figure}
 	\centering
-	\includegraphics[scale=0.7]{img/feed-forward-nn.png}
-	\caption{Schemat sieci neuronowej} Źródło: https://www.researchgate.net/profile/Ramon\_Quiza/publication/234055177/figure/fig1/\\AS:300092981563410@1448559150651/Sample\-of\-a\-feed\-forward-neural\-network.png
+	\begin{tikzpicture}[auto,node distance=1.5cm]
+	\tikzstyle{node}=[circle,draw]
+		\node[node, minimum size=0.7cm, label={[yshift=0.3cm]warstwa wejściowa}] (i1) {$ $};
+		\node[node, minimum size=0.7cm] (i2) [below=1.0cm of i1] {$ $};
+		\node[node, minimum size=0.7cm] (i3) [below=1.0cm of i2] {$ $};
+		\node[node, minimum size=0.7cm, label={[yshift=0.3cm]warstwa ukryta}] (h1) [above right=0.5cm and 3.0cm of i1] {$ $};
+		\node[node, minimum size=0.7cm] (h2) [below=1.0cm of h1] {$ $};
+		\node[node, minimum size=0.7cm] (h3) [below=1.0cm of h2] {$ $};
+		\node[node, minimum size=0.7cm] (h4) [below=1.0cm of h3] {$ $};
+		\node[node, minimum size=0.7cm, label={[yshift=0.3cm]warstwa wyjściowa}] (o1) [right= 3.0cm of h2] {$ $};
+		\node[node, minimum size=0.7cm] (o2) [below=1.0cm of o1] {$ $};
+			\draw[->] (i1) edge node {$ $} (h1);
+			\draw[->] (i1) edge node {$ $} (h2);
+			\draw[->] (i1) edge node {$ $} (h3);
+			\draw[->] (i1) edge node {$ $} (h4);
+			\draw[->] (i2) edge node {$ $} (h1);
+			\draw[->] (i2) edge node {$ $} (h2);
+			\draw[->] (i2) edge node {$ $} (h3);
+			\draw[->] (i2) edge node {$ $} (h4);
+			\draw[->] (i3) edge node {$ $} (h1);
+			\draw[->] (i3) edge node {$ $} (h2);
+			\draw[->] (i3) edge node {$ $} (h3);
+			\draw[->] (i3) edge node {$ $} (h4);
+			\draw[->] (h1) edge node {$ $} (o1);
+			\draw[->] (h1) edge node {$ $} (o2);
+			\draw[->] (h2) edge node {$ $} (o1);
+			\draw[->] (h2) edge node {$ $} (o2);
+			\draw[->] (h3) edge node {$ $} (o1);
+			\draw[->] (h3) edge node {$ $} (o2);
+			\draw[->] (h4) edge node {$ $} (o1);
+			\draw[->] (h4) edge node {$ $} (o2);
+			\node (input1) [left=1.0cm of i1] {$ $};
+			\node[label={[xshift=-0.25cm, yshift=0.65cm, rotate=90]left:wejścia}] (input2) [left=1.0cm of i2] {$ $};
+			\node (input3) [left=1.0cm of i3] {$ $};
+			\draw[->] (input1) edge node {$ $} (i1);
+			\draw[->] (input2) edge node {$ $} (i2);
+			\draw[->] (input3) edge node {$ $} (i3);
+			\node (output1) [right=1.0cm of o1] {$ $};
+			\node[label={[xshift=0.25cm, yshift=1.65cm, rotate=90]left:wejścia}] (output2) [right=1.0cm of o2] {$ $};
+			\draw[->] (o1) edge node {$ $} (output1);
+			\draw[->] (o2) edge node {$ $} (output2);
+\end{tikzpicture}
+	\caption{Schemat sieci neuronowej}
 	\label{feedforward-NN}
 \end{figure}
 
@@ -212,6 +254,8 @@ Przekształcenie realizowane przez pojedynczą jednostkę rnn w najbardziej pods
 gdzie $W$ i $U$ to macierze wag i wektor, $b$ to wektor biasu, a $g$ to funkcja aktywacji. Najczęściej stosowanymi funkcjami aktywacji są funkcja sigmoidalna, tanh lub ReLU. Istnieje wiele modyfikacji wprowadzonych do struktury jednostki sieci rekurencyjnej, które zostały omówione w dalszej części rozdziału.
 
 \section{Propagacja wsteczna w czasie}
+
+Propagacja wsteczna w czasie to algorytm dedykowany do uczenia sieci rekurencyjnych. Polega on na wykorzystaniu rozwiniętej formy grafu obliczeniowego sieci rekurencyjnej i zastosowaniu propagacji wstecznej, z uwzględnieniem tego, że każda jednostka rekurencyjna operuje na tym samym zestawie parametrów.
 
 \section{LSTM}
 
