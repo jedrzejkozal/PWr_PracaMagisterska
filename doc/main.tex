@@ -105,11 +105,46 @@ Można dopatrywać się powiązań między sposobem działania ludzkiego mózgu 
 \subsection{Rekurencyjne sieci neuronowe}
 
 \begin{figure}
-	\centering
-	\includegraphics[scale=1.0]{img/rnn.png}
-	\caption{Schemat sieci rekurencyjnej.} Źródło: http://www.wildml.com/2015/09/recurrent-neural-networks-tutorial-part-1-introduction-to-rnns/ (Lewo) sieci rekurencyjne można przedstawić jako jednostkę obliczeniową, która do realizacji obliczeń wykorzystuje wartości uzyskane dla poprzednich kroków. Na rysunku jest to widoczne w formie czarnego kwadratu, oznaczającego opóźnienie czasowe o jeden krok przy neuronie obok normalnych wejść i wyjść. (Prawo) rozwinięta wersja tego samego schematu, przedstawiająca w jaki sposób obliczenia są wykonywane w poszczególnych krokach. Reprezentacja ta pozwala na łatwiejszą analizę zachowań sieci i stosowanych algorytmów. 
+\centering
+\begin{tikzpicture}[auto,node distance=1.5cm]
+	\tikzstyle{node}=[circle,draw]
+		\node[node, minimum size=1.2cm] (h) {$h$};
+		\node (o) [above=1.0cm of h] {$o$};
+		\node (x) [below=1.0cm of h] {$x$};
+			\draw[->] (h) edge node {$V$} (o);
+			\draw[->] (x) edge node {$U$} (h);
+		\node[right=2.0cm of h] (h0) {$ $};
+		\node[node, right=1.0cm of h0, minimum size=1.2cm] (ht_1) {$h_{t-1}$};
+		\node (ot_1) [above=1.0cm of ht_1] {$o_{t-1}$};
+		\node (xt_1) [below=1.0cm of ht_1] {$x_{t-1}$};
+			\draw[->] (h0) edge node {$W$} (ht_1);
+			\draw[->] (ht_1) edge node {$V$} (ot_1);
+			\draw[->] (xt_1) edge node {$U$} (ht_1);
+		\node[node, right=1.0cm of ht_1, minimum size=1.2cm] (ht) {$h_{t}$};
+		\node (ot) [above=1.0cm of ht] {$o_{t}$};
+		\node (xt) [below=1.0cm of ht] {$x_{t}$};
+			\draw[->] (ht_1) edge node {$W$} (ht);
+			\draw[->] (ht) edge node {$V$} (ot);
+			\draw[->] (xt) edge node {$U$} (ht);
+		\node[node, right=1.0cm of ht, minimum size=1.2cm] (ht1) {$h_{t+1}$};
+		\node (ot1) [above=1.0cm of ht1] {$o_{t+1}$};
+		\node (xt1) [below=1.0cm of ht1] {$x_{t+1}$};
+			\draw[->] (ht) edge node {$W$} (ht1);
+			\draw[->] (ht1) edge node {$V$} (ot1);
+			\draw[->] (xt1) edge node {$U$} (ht1);
+		\node (hend) [right=1.0cm of ht1] {$ $};
+			\draw[->] (ht1) edge node {$W$} (hend);
+			\pgfsetarrowsend{latex} 
+			\pgfsetlinewidth{1ex} 
+			\pgfpathmoveto{\pgfpoint{1.0cm}{0.0cm}} 
+			\pgfpathlineto{\pgfpoint{2.5cm}{0.0cm}} 
+			\pgfusepath{stroke} 
+			\useasboundingbox (-0.25,-0.25) rectangle (3.75,2.25);
+\end{tikzpicture}
+\caption{Schemat sieci rekurencyjnej.} (Lewo) sieci rekurencyjne można przedstawić jako jednostkę obliczeniową, która do realizacji obliczeń wykorzystuje wartości uzyskane dla poprzednich kroków. Na rysunku jest to widoczne w formie czarnego kwadratu, oznaczającego opóźnienie czasowe o jeden krok przy neuronie obok normalnych wejść i wyjść. (Prawo) rozwinięta wersja tego samego schematu, przedstawiająca w jaki sposób obliczenia są wykonywane w poszczególnych krokach. Reprezentacja ta pozwala na łatwiejszą analizę zachowań sieci i stosowanych algorytmów. 
 	\label{fig:rnn}
 \end{figure}
+
 
 Sieci feedforward posiadają stałą liczbę wejść i wyjść, przez co nie radzą sobie dobrze z przetwarzaniem danych występujących w ciągach (takich jak tekst, dźwięki czy ciągi czasowe). Istnieją podejścia umożliwiające przetwarzanie ciągów przez sieci feedforward, ale nie cechują się wysoką skutecznością. W celu zaadresowania tego problemu powstały sieci rekurencyjne (ang. Recurrent Neural Networks - RNN).
 Sieci Rekurencyjne zostały oparte na pracy Rumelharta \cite{RNN}. RNN posiadają ukryty stan, będący wektorem przekazywanym między poszczególnymi krokami czasowymi. Stan jest obliczany przez warstwą ukrytą sieci, której wartość jest obliczana nie tylko na podstawie aktualnego wejścia, ale też na podstawie poprzedniego stanu sieci (zob rys. \ref{fig:rnn}).
