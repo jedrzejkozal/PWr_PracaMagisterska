@@ -297,46 +297,52 @@ Propagacja wsteczna w czasie to algorytm dedykowany do uczenia sieci rekurencyjn
 \begin{tikzpicture}[auto,node distance=1.5cm]
 	\tikzstyle{node}=[circle,draw]
 		\node (h) {$ $};
-		\node[node, right=1.0cm of h, minimum size=1.2cm] (ht_1) {$h_{t-1}$};
-		\node (ot_1) [above=1.0cm of ht_1] {$\mathcal{E}_{t-1}$};
-		\node (xt_1) [below=1.0cm of ht_1] {$x_{t-1}$};
+		\node[node, right=2.0cm of h, minimum size=1.2cm] (ht_1) {$h_{t-1}$};
+		\node (ot_1) [above=1.5cm of ht_1] {$\mathcal{E}_{t-1}$};
+		\node (xt_1) [below=1.5cm of ht_1] {$x_{t-1}$};
 			\draw[->] (h) edge node {$ $} (ht_1);
 			\draw[->] (ht_1) edge node {$ $} (ot_1);
-			\draw[->, loop right] (ot_1) edge node {$\frac{\partial \mathcal{E}_{t}}{\partial \bb{x}_{t-1}}$} (ht_1);
 			\draw[->] (xt_1) edge node {$ $} (ht_1);
-		\node[node, right=1.0cm of ht_1, minimum size=1.2cm] (ht) {$h_{t}$};
-		\node (ot) [above=1.0cm of ht] {$\mathcal{E}_{t}$};
-		\node (xt) [below=1.0cm of ht] {$x_{t}$};
+			\draw[->, bend left=30, red] (ot_1) edge node {$\frac{\partial \mathcal{E}_{t}}{\partial \bb{x}_{t-1}}$} (ht_1);
+			\draw[->, bend left=30, red] (ht_1) edge node {$\frac{\partial \bb{h}_{t-1}}{\partial \bb{h}_{t-2}}$} (h);
+		\node[node, right=2.0cm of ht_1, minimum size=1.2cm] (ht) {$h_{t}$};
+		\node (ot) [above=1.5cm of ht] {$\mathcal{E}_{t}$};
+		\node (xt) [below=1.5cm of ht] {$x_{t}$};
 			\draw[->] (ht_1) edge node {$ $} (ht);
 			\draw[->] (ht) edge node {$ $} (ot);
 			\draw[->] (xt) edge node {$ $} (ht);
-		\node[node, right=1.0cm of ht, minimum size=1.2cm] (ht1) {$h_{t+1}$};
-		\node (ot1) [above=1.0cm of ht1] {$\mathcal{E}_{t+1}$};
-		\node (xt1) [below=1.0cm of ht1] {$x_{t+1}$};
+			\draw[->, bend left=30, red] (ot) edge node {$\frac{\partial \mathcal{E}_{t}}{\partial \bb{x}_{t}}$} (ht);
+			\draw[->, bend left=30, red] (ht) edge node {$\frac{\partial \bb{h}_{t}}{\partial \bb{h}_{t-1}}$} (ht_1);
+		\node[node, right=2.0cm of ht, minimum size=1.2cm] (ht1) {$h_{t+1}$};
+		\node (ot1) [above=1.5cm of ht1] {$\mathcal{E}_{t+1}$};
+		\node (xt1) [below=1.5cm of ht1] {$x_{t+1}$};
 			\draw[->] (ht) edge node {$ $} (ht1);
 			\draw[->] (ht1) edge node {$ $} (ot1);
 			\draw[->] (xt1) edge node {$ $} (ht1);
-		\node (hend) [right=1.0cm of ht1] {$ $};
-			\draw[->] (ht1) edge node {$ $} (hend);
+			\draw[->, bend left=30, red] (ot1) edge node {$\frac{\partial \mathcal{E}_{t}}{\partial \bb{x}_{t+1}}$} (ht1);
+			\draw[->, bend left=30, red] (ht1) edge node {$\frac{\partial \bb{h}_{t+1}}{\partial \bb{h}_{t}}$} (ht);
+		\node (h_end) [right=2.0cm of ht1] {$ $};
+			\draw[->] (ht1) edge node {$ $} (h_end);
+			\draw[->, bend left=30, red] (h_end) edge node {$\frac{\partial \bb{h}_{t+2}}{\partial \bb{h}_{t+1}}$} (ht1);
 \end{tikzpicture}
-\caption{Schemat działania propagacji wstecznej w czasie.}
+\caption{Schemat działania propagacji wstecznej w czasie.} Czarnym kolorem zaznaczono przepływ informacji przy obliczaniu aktywacji sieci. Czerwonym kolorem zaznaczono przepływ informacji przy zastosowaniu wstecznej propagacji błędu.
 	\label{fig:rnn}
 \end{figure}
 
 \begin{equation}
-	\mathcal{E}_t = \mathcal{L}(x_t)
+	\mathcal{E}_t = \mathcal{L}(h_t)
 \end{equation}
 
 \begin{equation}
-	\frac{\partial \mathcal{E}}{\partial \Theta} = \sum_{1 <= t <= T} \frac{\partial \mathcal{E}_t}{\partial \Theta}
+	\frac{\partial \mathcal{E}}{\partial \Theta} = \sum_{1 \leq t \leq T} \frac{\partial \mathcal{E}_t}{\partial \Theta}
 \end{equation}
 
 \begin{equation}
-	\frac{\partial \mathcal{E}_t}{\partial \Theta} = \sum_{1 <= k <= t} (\frac{\partial \mathcal{E}_t}{\partial \bb{x}_t} \frac{\partial \bb{x}_t}{\partial \bb{x}_k} \frac{\partial \bb{x}_k}{\partial \Theta})
+	\frac{\partial \mathcal{E}_t}{\partial \Theta} = \sum_{1 \leq k \leq t} (\frac{\partial \mathcal{E}_t}{\partial \bb{h}_t} \frac{\partial \bb{h}_t}{\partial \bb{h}_k} \frac{\partial \bb{h}_k}{\partial \Theta})
 \end{equation}
 
 \begin{equation}
-	\frac{\partial \bb{x}_t}{\partial \bb{x}_k} = \prod_{t >= i > k} \frac{\partial \bb{x}_i}{\partial \bb{x}_{i-1}} = \prod_{t >= i > k} \bb{W}^{T}_{rec} diag(\sigma'(\bb{x}_{i-1}))
+	\frac{\partial \bb{h}_t}{\partial \bb{h}_k} = \prod_{t \geq i > k} \frac{\partial \bb{h}_i}{\partial \bb{h}_{i-1}} = \prod_{t \geq i > k} \bb{W}^{T}_{rec} diag(\sigma'(\bb{h}_{i-1}))
 \end{equation}
 
 \section{LSTM}
