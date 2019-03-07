@@ -290,7 +290,7 @@ gdzie $W$ i $U$ to macierze wag i wektor, $b$ to wektor biasu, a $g$ to funkcja 
 
 \section{Propagacja wsteczna w czasie}
 
-Propagacja wsteczna w czasie to algorytm dedykowany do uczenia sieci rekurencyjnych. Polega on na wykorzystaniu rozwiniętej formy grafu obliczeniowego sieci rekurencyjnej i zastosowaniu propagacji wstecznej, z uwzględnieniem tego, że każda jednostka rekurencyjna operuje na tym samym zestawie parametrów.
+Propagacja wsteczna w czasie to algorytm dedykowany do uczenia sieci rekurencyjnych. Polega on na wykorzystaniu rozwiniętej formy grafu obliczeniowego sieci rekurencyjnej i zastosowaniu propagacji wstecznej, z uwzględnieniem faktu współdzielenia parametrów - każda jednostka rekurencyjna operuje na tym samym zestawie parametrów.
 
 \begin{figure}
 \centering
@@ -325,25 +325,35 @@ Propagacja wsteczna w czasie to algorytm dedykowany do uczenia sieci rekurencyjn
 			\draw[->] (ht1) edge node {$ $} (h_end);
 			\draw[->, bend left=30, red] (h_end) edge node {$\frac{\partial \bb{h}_{t+2}}{\partial \bb{h}_{t+1}}$} (ht1);
 \end{tikzpicture}
-\caption{Schemat działania propagacji wstecznej w czasie.} Czarnym kolorem zaznaczono przepływ informacji przy obliczaniu aktywacji sieci. Czerwonym kolorem zaznaczono przepływ informacji przy zastosowaniu wstecznej propagacji błędu.
-	\label{fig:rnn}
+\caption{Schemat działania propagacji wstecznej w czasie.} Czarnym kolorem zaznaczono przepływ informacji przy obliczaniu aktywacji sieci (foreward pass). Czerwonym kolorem zaznaczono przepływ informacji przy zastosowaniu wstecznej propagacji błędu.
+	\label{fig:rnn_backprop}
 \end{figure}
+
+Błąd propagowany wstecz dla każdego kroku $\mathcal{E}_t$ można zapisać jako wartość funkcji strat od aktywacji w danym kroku:
 
 \begin{equation}
 	\mathcal{E}_t = \mathcal{L}(h_t)
 \end{equation}
 
-\begin{equation}
-	\frac{\partial \mathcal{E}}{\partial \Theta} = \sum_{1 \leq t \leq T} \frac{\partial \mathcal{E}_t}{\partial \Theta}
-\end{equation}
+Ze względu na współdzielenie parametrów sieci rekurencyjnej w każdym kroku czasowym gradient względem wybranego parametru sieci $\theta$ jest sumą gradientów dla każdego kroku w ciągu uczącym osobno:
 
 \begin{equation}
-	\frac{\partial \mathcal{E}_t}{\partial \Theta} = \sum_{1 \leq k \leq t} (\frac{\partial \mathcal{E}_t}{\partial \bb{h}_t} \frac{\partial \bb{h}_t}{\partial \bb{h}_k} \frac{\partial \bb{h}_k}{\partial \Theta})
+	\frac{\partial \mathcal{E}}{\partial \theta} = \sum_{1 \leq t \leq T} \frac{\partial \mathcal{E}_t}{\partial \theta}
 \end{equation}
+
+gdzie $T$ to długość sekwencji w ciągu uczącym. Wartość gradientu dla każdego kroku czasowego wyznacza się stosując regułę łańcucha dla pochodnych przy cofaniu się wzdłuż grafu obliczeniowego, tak jak ma to miejsce dla propagacji wstecznej:
+
+\begin{equation}
+	\frac{\partial \mathcal{E}_t}{\partial \theta} = \sum_{1 \leq k \leq t} (\frac{\partial \mathcal{E}_t}{\partial \bb{h}_t} \frac{\partial \bb{h}_t}{\partial \bb{h}_k} \frac{\partial \bb{h}_k}{\partial \theta})
+\end{equation}
+
+Intuicyjnie suma w powyższym wzorze określa kolejno wpływ wszystkich stanów sieci $k$ na aktualną wartość aktywacji w czasie $t$. Wyrażenie $\frac{\partial \bb{h}_t}{\partial \bb{h}_k}$ można zapisać stosując regułę łańcucha jako:
 
 \begin{equation}
 	\frac{\partial \bb{h}_t}{\partial \bb{h}_k} = \prod_{t \geq i > k} \frac{\partial \bb{h}_i}{\partial \bb{h}_{i-1}} = \prod_{t \geq i > k} \bb{W}^{T}_{rec} diag(\sigma'(\bb{h}_{i-1}))
 \end{equation}
+
+rys. \ref{fig:rnn_backprop}.
 
 \section{LSTM}
 
