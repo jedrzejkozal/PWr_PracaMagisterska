@@ -241,35 +241,50 @@ Sieci rekurencyjne są modyfikacją zwykłych sieci feedforward powstałą poprz
 
 
 \begin{equation}
-	h_t = f(h_{t-1}, x_t)
+	h_t = F(h_{t-1}, x_t)
 	\label{eq:basic-rnn}
 \end{equation}
 
-gdzie $h_t$ to aktywacja jednostki w czasie $t$, $x_t$ to wejście jednostki w czasie $t$, a $f$ oznacza nieliniowe przekształcenie realizowane przez jednostkę obliczeniową. Tego typu sformułowanie zasady działania modelu jest realizacją współdzielenia parametrów przez części modelu. Każda jednostka do obliczenia aktywacji wykorzystuje aktualne wejście i aktywację z poprzedniego kroku. Aby uniezależnić model od długości sekwencji w każdym kroku wykorzystuje się ten sam zestaw parametrów.
+gdzie $h_t$ to aktywacja jednostki w czasie $t$, $x_t$ to wejście jednostki w czasie $t$, a $F$ oznacza przekształcenie realizowane przez jednostkę obliczeniową. Takie sformułowanie zasady działania modelu jest realizacją współdzielenia parametrów przez części modelu. Każda jednostka do obliczenia aktywacji wykorzystuje aktualne wejście i aktywację z poprzedniego kroku. Aby uniezależnić model od długości sekwencji wykorzystuje się ten sam zestaw parametrów w każdym kroku.
+
+Aktywacja może zostać wykorzystana do obliczenia wartości wyjścia $y_t$:
+
+\begin{equation}
+	y_t = G(h_t)
+\end{equation}
+
+gdzie $G$ oznacza nieliniowe przekształcenie realizowane przez warstwę wyjściową sieci.
 
 W trakcie uczenia sieci dokonuje się rozwinięcia (ang. unfolding) grafu obliczeniowego, poprzez wielokrotne zastosowanie definicji sieci. Przykładowo dla dwóch kroków w czasie odwinięcie grafu można zapisać jako:
 
 \begin{equation}
-	h_2 = f(h_1, x_2) = f(f(h_0, x_1), x_2)
+	h_2 = F(h_1, x_2) = F(F(h_0, x_1), x_2)
 \end{equation}
 
-Co jest zastosowaniem równania \ref{eq:basic-rnn} rekurencyjnie $n$ razy. Jako $h_0$ najczęściej stosowany jest wektor zer. Rozwinięcie grafu pozwala na zamianę grafu cyklicznego na acykliczny, bardziej przypominający graf sieci feedforward:
-
-\begin{figure}[!h]
+\begin{figure}[h]
 \centering
 \begin{tikzpicture}[auto,node distance=2.0cm]
 	\tikzstyle{node}=[circle,draw]
 		\node[node] (h0) {$h_0$};
 		\node[node] (h1) [right of=h0] {$h_1$};
 		\node[node] (x1) [below of=h1] {$x_1$};
+		\node[node] (y1) [above of=h1] {$y_1$};
 		\node[node] (h2) [right of=h1] {$h_2$};
 		\node[node] (x2) [below of=h2] {$x_2$};
+		\node[node] (y2) [above of=h2] {$y_2$};
 			\draw[->] (h0) edge node {$ $} (h1);
 			\draw[->] (x1) edge node {$ $} (h1);
+			\draw[->] (h1) edge node {$ $} (y1);
 			\draw[->] (h1) edge node {$ $} (h2);
 			\draw[->] (x2) edge node {$ $} (h2);
+			\draw[->] (h2) edge node {$ $} (y2);
 \end{tikzpicture}
+\caption{Schemat rozwiniętego grafu obliczeniowego sieci rekurencyjnej.}
+\label{fig:unfolded}
 \end{figure}
+
+Co jest dwukrotnym zastosowaniem równania \ref{eq:basic-rnn} rekurencyjnie. Jako początkowy stan sieci $h_0$ najczęściej stosowany jest wektor zer. Rozwinięcie grafu pozwala na zamianę grafu cyklicznego na acykliczny, bardziej przypominający graf sieci feedforward. Przykładowy rozwinięty graf przedstawiono na rys. \ref{fig:unfolded}.
+
 
 Rozwinięty graf pozwala na zastosowanie reguł propagacji wstecznej i obliczenie gradientów funkcji strat. Jest więc to proces umożliwiający uczenie sieci rekurencyjnej.
 
@@ -280,13 +295,23 @@ Rozwinięty graf pozwala na zastosowanie reguł propagacji wstecznej i obliczeni
 	\label{fig:simple_rnn}
 \end{figure}
 
-Przekształcenie realizowane przez pojedynczą jednostkę rnn w najbardziej podstawowej formie można zapisać jako:
+Przekształcenie realizowane przez pojedynczą ukrytą jednostkę RNN w najbardziej podstawowej formie można zapisać jako:
 
 \begin{equation}
-	h_t = g(W h_{t-1} + U x_t + b)
+	h_t = f(W h_{t-1} + U x_t + b_u)
 \end{equation}
 
-gdzie $W$ i $U$ to macierze wag i wektor, $b$ to wektor biasu, a $g$ to funkcja aktywacji. Najczęściej stosowanymi funkcjami aktywacji są funkcja sigmoidalna, tanh lub ReLU. Istnieje wiele modyfikacji wprowadzonych do struktury jednostki sieci rekurencyjnej, które zostały omówione w dalszej części rozdziału.
+gdzie $W$ i $U$ to macierze wag, $b_u$ to wektor biasu, a $f$ to funkcja aktywacji. Najczęściej stosowanymi funkcjami aktywacji są funkcja sigmoidalna, tanh lub ReLU.
+
+Przekształcenie realizowane przez pojedynczą jednostkę wyjściową można zapisać jako:
+
+\begin{equation}
+	y_t = g(Y h_t + b_y)
+\end{equation}
+
+gdzie $Y$ to macierz wag, $b_y$ to wektor biasu, a $g$ to funkcja aktywacji. Najczęściej stosowaną funkcją w warstwie wyjściowej jest softmax.
+
+Istnieje wiele modyfikacji wprowadzonych do struktury jednostki sieci rekurencyjnej, które zostały omówione w dalszej części rozdziału.
 
 \section{Propagacja wsteczna w czasie}
 
@@ -303,33 +328,33 @@ Propagacja wsteczna w czasie to algorytm dedykowany do uczenia sieci rekurencyjn
 			\draw[->] (h) edge node {$ $} (ht_1);
 			\draw[->] (ht_1) edge node {$ $} (ot_1);
 			\draw[->] (xt_1) edge node {$ $} (ht_1);
-			\draw[->, bend left=30, red] (ot_1) edge node {$\frac{\partial \mathcal{E}_{t}}{\partial \bb{x}_{t-1}}$} (ht_1);
-			\draw[->, bend left=30, red] (ht_1) edge node {$\frac{\partial \bb{h}_{t-1}}{\partial \bb{h}_{t-2}}$} (h);
+			\draw[->, bend left=30, red] (ot_1) edge node {$\frac{\partial \mathcal{E}_{t-1}}{\partial h_{t-1}}$} (ht_1);
+			\draw[->, bend left=30, red] (ht_1) edge node {$\frac{\partial h_{t-1}}{\partial h_{t-2}}$} (h);
 		\node[node, right=2.0cm of ht_1, minimum size=1.2cm] (ht) {$h_{t}$};
 		\node (ot) [above=1.5cm of ht] {$\mathcal{E}_{t}$};
 		\node (xt) [below=1.5cm of ht] {$x_{t}$};
 			\draw[->] (ht_1) edge node {$ $} (ht);
 			\draw[->] (ht) edge node {$ $} (ot);
 			\draw[->] (xt) edge node {$ $} (ht);
-			\draw[->, bend left=30, red] (ot) edge node {$\frac{\partial \mathcal{E}_{t}}{\partial \bb{x}_{t}}$} (ht);
-			\draw[->, bend left=30, red] (ht) edge node {$\frac{\partial \bb{h}_{t}}{\partial \bb{h}_{t-1}}$} (ht_1);
+			\draw[->, bend left=30, red] (ot) edge node {$\frac{\partial \mathcal{E}_{t}}{\partial h_{t}}$} (ht);
+			\draw[->, bend left=30, red] (ht) edge node {$\frac{\partial h_{t}}{\partial h_{t-1}}$} (ht_1);
 		\node[node, right=2.0cm of ht, minimum size=1.2cm] (ht1) {$h_{t+1}$};
 		\node (ot1) [above=1.5cm of ht1] {$\mathcal{E}_{t+1}$};
 		\node (xt1) [below=1.5cm of ht1] {$x_{t+1}$};
 			\draw[->] (ht) edge node {$ $} (ht1);
 			\draw[->] (ht1) edge node {$ $} (ot1);
 			\draw[->] (xt1) edge node {$ $} (ht1);
-			\draw[->, bend left=30, red] (ot1) edge node {$\frac{\partial \mathcal{E}_{t}}{\partial \bb{x}_{t+1}}$} (ht1);
-			\draw[->, bend left=30, red] (ht1) edge node {$\frac{\partial \bb{h}_{t+1}}{\partial \bb{h}_{t}}$} (ht);
+			\draw[->, bend left=30, red] (ot1) edge node {$\frac{\partial \mathcal{E}_{t+1}}{\partial h_{t+1}}$} (ht1);
+			\draw[->, bend left=30, red] (ht1) edge node {$\frac{\partial h_{t+1}}{\partial h_{t}}$} (ht);
 		\node (h_end) [right=2.0cm of ht1] {$ $};
 			\draw[->] (ht1) edge node {$ $} (h_end);
-			\draw[->, bend left=30, red] (h_end) edge node {$\frac{\partial \bb{h}_{t+2}}{\partial \bb{h}_{t+1}}$} (ht1);
+			\draw[->, bend left=30, red] (h_end) edge node {$\frac{\partial h_{t+2}}{\partial h_{t+1}}$} (ht1);
 \end{tikzpicture}
-\caption{Schemat działania propagacji wstecznej w czasie.} Czarnym kolorem zaznaczono przepływ informacji przy obliczaniu aktywacji sieci (foreward pass). Czerwonym kolorem zaznaczono przepływ informacji przy zastosowaniu wstecznej propagacji błędu.
+\caption{Schemat działania propagacji wstecznej w czasie.} Czarnym kolorem zaznaczono przepływ informacji przy obliczaniu aktywacji sieci (forward pass). Czerwonym kolorem zaznaczono przepływ informacji przy zastosowaniu wstecznej propagacji błędu.
 	\label{fig:rnn_backprop}
 \end{figure}
 
-Błąd propagowany wstecz dla każdego kroku $\mathcal{E}_t$ można zapisać jako wartość funkcji strat od aktywacji w danym kroku:
+Błąd propagowany wstecz dla każdego kroku $\mathcal{E}_t$ można zapisać jako wartość funkcji strat $\mathcal{L}$ od aktywacji w danym kroku $h_t$:
 
 \begin{equation}
 	\mathcal{E}_t = \mathcal{L}(h_t)
@@ -344,16 +369,24 @@ Ze względu na współdzielenie parametrów sieci rekurencyjnej w każdym kroku 
 gdzie $T$ to długość sekwencji w ciągu uczącym. Wartość gradientu dla każdego kroku czasowego wyznacza się stosując regułę łańcucha dla pochodnych przy cofaniu się wzdłuż grafu obliczeniowego, tak jak ma to miejsce dla propagacji wstecznej:
 
 \begin{equation}
-	\frac{\partial \mathcal{E}_t}{\partial \theta} = \sum_{1 \leq k \leq t} (\frac{\partial \mathcal{E}_t}{\partial \bb{h}_t} \frac{\partial \bb{h}_t}{\partial \bb{h}_k} \frac{\partial \bb{h}_k}{\partial \theta})
+	\frac{\partial \mathcal{E}_t}{\partial \theta} = \sum_{1 \leq k \leq t} (\frac{\partial \mathcal{E}_t}{\partial h_t} \frac{\partial h_t}{\partial h_k} \frac{\partial h_k}{\partial \theta})
 \end{equation}
 
-Intuicyjnie suma w powyższym wzorze określa kolejno wpływ wszystkich stanów sieci $k$ na aktualną wartość aktywacji w czasie $t$. Wyrażenie $\frac{\partial \bb{h}_t}{\partial \bb{h}_k}$ można zapisać stosując regułę łańcucha jako:
+Suma w powyższym wzorze określa wpływ parametrów sieci w czasie $k$ poprzedzającym $t$ lub w samej chwili $t$ na aktualną wartość wyjścia w czasie $t$. Wyrażenie $\frac{\partial \mathcal{E}_t}{\partial h_t}$ można zapisać stosując regułę łańcucha jako:
 
 \begin{equation}
-	\frac{\partial \bb{h}_t}{\partial \bb{h}_k} = \prod_{t \geq i > k} \frac{\partial \bb{h}_i}{\partial \bb{h}_{i-1}} = \prod_{t \geq i > k} \bb{W}^{T}_{rec} diag(\sigma'(\bb{h}_{i-1}))
+	\frac{\partial \mathcal{E}_t}{\partial h_t} = \frac{\partial \mathcal{E}_t}{\partial y_t} \frac{\partial y_t}{\partial h_t} = \frac{\partial \mathcal{E}_t}{\partial h_t} \frac{\partial g(outnet_t)}{\partial outnet_t} Y
 \end{equation}
 
-rys. \ref{fig:rnn_backprop}.
+gdzie $outnet_t = Y h_t + b_y$ Wyrażenie $\frac{\partial h_t}{\partial h_k}$ można zapisać stosując ponownie regułę łańcucha jako:
+
+\begin{equation}
+	\frac{\partial h_t}{\partial h_k} = \prod_{k < i \leq t} \frac{\partial h_i}{\partial h_{i-1}} = \prod_{k < i \leq t} \frac{\partial f(net_i)}{\partial net_i} W
+\end{equation}
+
+gdzie $net_i = W h_i + U x_i + b_u$. Działanie wstecznej propagacji w czasie zostało zilustrowane na rys. \ref{fig:rnn_backprop}. Powyższe rozważania zostały przeprowadzone dla najprostszej jednostki RNN, ale ilustruję ideę działania. Dla bardziej skomplikowanych jednostek pozostaje ona niezmienna. Nadal wykorzystywana jest rozwinięta forma grafu obliczeniowego do obliczenia błędu, połączona z faktem współdzielenia parametrów. 
+
+Problemy związane z propagacją wsteczną w czasie zostały omówione w \cite{DBLP:journals/corr/abs-1211-5063}. W pracy tej zastosowano inną definicję $h_t$.
 
 \section{LSTM}
 
@@ -527,7 +560,7 @@ Każda kolejna warstwa sieci ReNet korzysta z wyjścia poprzedniej warstwy. Sche
 
 \section{Metodyka badań}
 
-\section{Reprodukcja wyników architektury ReNet}
+\section{Reprodukcja wcześniejszych wyników}
 
 Pierwszym eksperymentem jaki wykonano było zreprodukowanie wyników z \cite{DBLP:journals/corr/VisinKCMCB15}. Celem reprodukcji było potwierdzenie przesłanki do badań oraz sprawdzenie poprawności przygotowanej implementacji ReNet. W niniejszej sekcji podano krótki opis stosowanej metodyki i uzyskane wyniki.
 
