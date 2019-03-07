@@ -84,7 +84,10 @@ class ReNetLayer(Layer):
             LSTM_outputs.append(column_activations)
 
         merged = concatenate(LSTM_outputs, axis=2)
-        return self.layer_precise_tensor_shape(merged)
+        print("vertical_sweep: merged: ", merged.shape)
+        result = self.layer_precise_tensor_shape(merged)
+        print("vertical_sweep: result: ", result)
+        return result
 
 
     def get_columns(self, inputs):
@@ -99,6 +102,7 @@ class ReNetLayer(Layer):
             self.patches = self.mask(self.patches)
 
         up_down_activation, down_up_activation = self.calc_vertical_LSTM_activations()
+        print("up_down_activation: ", up_down_activation.shape)
 
         merged_tensor = self.merge_opossite_directions_LSTM_activations(up_down_activation, down_up_activation)
         return self.layer_vertical_activations_permutarion(merged_tensor)
@@ -151,6 +155,11 @@ class ReNetLayer(Layer):
         return self.layer_horizontal_activations_permutarion(merged_tensor)
 
 
+    def get_hor_patches(self, row):
+        self.patches = self.layer_horizontal_patches_permute(row)
+        self.patches = tf.squeeze(self.patches, axis=3)
+
+
     def calc_horizontal_LSTM_activations(self):
         left_right_activations = self.LSTM_left_right(self.patches)
         right_left_activations = self.LSTM_right_left(tf.reverse(self.patches, [-2]))
@@ -160,8 +169,3 @@ class ReNetLayer(Layer):
             right_left_activations = self.dropout_right_left(right_left_activations)
 
         return left_right_activations, right_left_activations
-
-
-    def get_hor_patches(self, row):
-        self.patches = self.layer_horizontal_patches_permute(row)
-        self.patches = tf.squeeze(self.patches, axis=3)
