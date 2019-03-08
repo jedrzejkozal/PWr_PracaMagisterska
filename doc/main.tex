@@ -382,11 +382,13 @@ gdzie $outnet_t = Y h_t + b_y$ Wyrażenie $\frac{\partial h_t}{\partial h_k}$ mo
 
 \begin{equation}
 	\frac{\partial h_t}{\partial h_k} = \prod_{k < i \leq t} \frac{\partial h_i}{\partial h_{i-1}} = \prod_{k < i \leq t} \frac{\partial f(net_i)}{\partial net_i} W
+\label{eq:BPTT_product}
 \end{equation}
 
 gdzie $net_i = W h_i + U x_i + b_u$. Działanie wstecznej propagacji w czasie zostało zilustrowane na rys. \ref{fig:rnn_backprop}. Powyższe rozważania zostały przeprowadzone dla najprostszej jednostki RNN, ale ilustruję ideę działania. Dla bardziej skomplikowanych jednostek pozostaje ona niezmienna. Nadal wykorzystywana jest rozwinięta forma grafu obliczeniowego do obliczenia błędu, połączona z faktem współdzielenia parametrów. 
 
-Problemy związane z propagacją wsteczną w czasie zostały omówione w \cite{DBLP:journals/corr/abs-1211-5063}. W pracy tej zastosowano inną definicję $h_t$.
+Problemy związane z propagacją wsteczną w czasie zostały omówione w \cite{DBLP:journals/corr/abs-1211-5063}. W pracy tej zastosowano inną definicję $h_t$, przez co część rozważań teoretycznych traci na ważności w kontekście definicji $h_t$ zastosowanej w tej pracy. Niemniej jednak najbardziej istotny problem pozostaje niezmienny. Jest on związany z iloczynem w równaniu \ref{eq:BPTT_product}. Wielokrotne mnożenie gradientów o module $|\frac{\partial h_i}{\partial h_{i-1}}| < 1$ powoduje problem znikających gradientów. Analogicznie wielokrotne mnożenie gradientów o module $|\frac{\partial h_i}{\partial h_{i-1}}| > 1$ powoduje problem wybuchających gradientów. W równaniu \ref{eq:BPTT_product} różnica $t - k$ oznacza czas pomiędzy aktualną jednostką a jednostką, której wpływ właśnie analizujemy. Wraz ze zwiększającym się $t - k$, liczba kolejnych mnożeń wzrasta. Jest to powodem znacznych trudności w uczeniu się długich zależności czasowych przez sieć.  Dyskusja możliwych rozwiązań została podana w \cite{DBLP:journals/corr/abs-1211-5063}. W dwóch pozostałych sekcjach tej pracy omówiono struktury komórki sieci rekurencyjnej, które pozwalają na uniknięcie problemu znikających gradientów. 
+
 
 \section{LSTM}
 
