@@ -10,11 +10,12 @@ from keras.datasets import mnist
 from keras.models import Sequential
 from keras.layers import Dense, Dropout, Flatten
 from keras.layers import Conv2D, MaxPooling2D
+from keras.callbacks import TensorBoard
 from keras import backend as K
 
 batch_size = 128
 num_classes = 10
-epochs = 12
+epochs = 5
 
 # input image dimensions
 img_rows, img_cols = 28, 28
@@ -63,7 +64,10 @@ model.fit(x_train, y_train,
           batch_size=batch_size,
           epochs=epochs,
           verbose=1,
-          validation_data=(x_test, y_test))
+          validation_data=(x_test, y_test),
+          callbacks=[TensorBoard(log_dir='./TensorBoard_logs',
+            histogram_freq=1,
+            write_grads=True, write_images=True)])
 score = model.evaluate(x_test, y_test, verbose=0)
 print('Test loss:', score[0])
 print('Test accuracy:', score[1])
