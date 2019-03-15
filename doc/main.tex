@@ -109,6 +109,7 @@ Można dopatrywać się powiązań między sposobem działania ludzkiego mózgu 
 \begin{tikzpicture}[auto,node distance=1.5cm]
 	\tikzstyle{node}=[circle,draw]
 		\node[node, minimum size=1.2cm] (h) {$h$};
+		\draw[->] (h) edge  [loop left] node {$ $} (h);
 		\node (o) [above=1.0cm of h] {$o$};
 		\node (x) [below=1.0cm of h] {$x$};
 			\draw[->] (h) edge node {$V$} (o);
