@@ -10,9 +10,10 @@ class ReNetLayer(Layer):
 
     def __init__(self, size_of_patches, hidden_size,
                     use_dropout=False, dropout_rate=None,
-                    is_first_layer=False):
+                    is_first_layer=False, input_dim=None):
         super().__init__()
 
+        self.input_dim = input_dim
         self.size_of_patches = size_of_patches
         self.w_p = size_of_patches[0][0]
         self.h_p = size_of_patches[0][1]

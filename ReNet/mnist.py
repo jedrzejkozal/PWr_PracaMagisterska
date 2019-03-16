@@ -4,19 +4,13 @@ import numpy as np
 from keras.utils import to_categorical
 from keras.datasets import mnist
 from keras.preprocessing.image import ImageDataGenerator
-from keras.callbacks import EarlyStopping
+from keras.callbacks import EarlyStopping, TensorBoard
 from keras.optimizers import Adam
+from os import makedirs
+from os.path import exists, join
 
 from Utils.SaveResults import *
-from Models.MnistReproduction.MnistReproduction import *
-
-
-#model hyperparmeters:
-w_p = 2
-h_p = 2
-reNet_hidden_size = 1
-fully_conn_hidden_size = 1
-num_classes = 2
+from Models.MnistReproduction.MnistModel import *
 
 
 #image parameters:
@@ -50,15 +44,34 @@ y_train_single_ex = y_train[0:1]
 x_train = x_train[:50000]
 y_train = y_train[:50000]
 
+#just for testing
+x_train = x_train[:100]
+y_train = y_train[:100]
+x_test = x_test[:100]
+y_test = y_test[:100]
+
+image = tf.reshape(x_test[:x_test.shape[0]], [-1, 28, 28, 1])
+tf.summary.image("image", image)
+
+# save class labels to disk to color data points in TensorBoard accordingly
+log_dir = './TensorBoard_logs'
+if not exists(log_dir):
+    makedirs(log_dir)
+
+with open(join(log_dir, 'metadata.tsv'), 'w') as f:
+    np.savetxt(f, y_test)
+
 
 shift = 3
 datagen = ImageDataGenerator(width_shift_range=shift, height_shift_range=shift)
 datagen.fit(x_train)
 
 
-model = MnistReproduction()
-model.compile(loss='categorical_crossentropy', optimizer=Adam(lr=0.001, beta_1=0.9, beta_2=0.999, epsilon=10.0**-8.0),
+model = get_model()
+model.compile(loss='categorical_crossentropy',
+        optimizer=Adam(lr=0.001, beta_1=0.9, beta_2=0.999, epsilon=10.0**-8.0),
         metrics=['categorical_accuracy'])
+
 
 #just for model to figure out what is the shape of input tensors
 #workaround for how keras fit_generator works
@@ -72,15 +85,27 @@ from keras.callbacks import Callback, LambdaCallback
 
 batch_size = 30
 history = model.fit_generator(datagen.flow(x_train, y_train, batch_size=batch_size),
-                epochs=1000,
+                epochs=10,#1000,
                 steps_per_epoch=np.ceil(x_train.shape[0] / batch_size),
                 validation_data=(x_test, y_test),
-                callbacks=[EarlyStopping(monitor='val_loss', patience=5, verbose=1)]#,
-                    #LambdaCallback(on_epoch_end=lambda x, y: model.input_masking.generate_mask())]
+                callbacks=[EarlyStopping(monitor='val_loss', patience=5, verbose=1),
+                #LambdaCallback(on_epoch_end=lambda x, y: model.input_masking.generate_mask()),
+                TensorBoard(log_dir=log_dir,
+                        batch_size=batch_size,
+                        histogram_freq=1,
+                        write_images=True,
+                        write_grads=False,
+                        embeddings_freq=1,
+                        embeddings_layer_names=['features'],
+                        embeddings_metadata='metadata.tsv',
+                        embeddings_data=x_test)
+                ]
             )
 
 
+"""
 path = os.path.dirname(os.path.realpath(__file__))
 path = path + "/Results/MnistReproduction/"
 print("path: ", path)
 save = SaveResults(history, path)
+"""
