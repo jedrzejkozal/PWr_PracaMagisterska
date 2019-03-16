@@ -11,7 +11,7 @@ def get_model():
     reNet_hidden_size = 128 #256
     model.add(ReNetLayer([[2, 2]], reNet_hidden_size,
             use_dropout=True, dropout_rate=0.2,
-            is_first_layer=False, input_dim=14))
+            is_first_layer=False))
     model.add(ReNetLayer([[2, 2]], reNet_hidden_size,
             use_dropout=True, dropout_rate=0.2))
 

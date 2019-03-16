@@ -10,10 +10,9 @@ class ReNetLayer(Layer):
 
     def __init__(self, size_of_patches, hidden_size,
                     use_dropout=False, dropout_rate=None,
-                    is_first_layer=False, input_dim=None):
+                    is_first_layer=False):
         super().__init__()
 
-        self.input_dim = input_dim
         self.size_of_patches = size_of_patches
         self.w_p = size_of_patches[0][0]
         self.h_p = size_of_patches[0][1]
@@ -85,9 +84,7 @@ class ReNetLayer(Layer):
             LSTM_outputs.append(column_activations)
 
         merged = concatenate(LSTM_outputs, axis=2)
-        print("vertical_sweep: merged: ", merged.shape)
         result = self.layer_precise_tensor_shape(merged)
-        print("vertical_sweep: result: ", result)
         return result
 
 
@@ -103,7 +100,6 @@ class ReNetLayer(Layer):
             self.patches = self.mask(self.patches)
 
         up_down_activation, down_up_activation = self.calc_vertical_LSTM_activations()
-        print("up_down_activation: ", up_down_activation.shape)
 
         merged_tensor = self.merge_opossite_directions_LSTM_activations(up_down_activation, down_up_activation)
         return self.layer_vertical_activations_permutarion(merged_tensor)
