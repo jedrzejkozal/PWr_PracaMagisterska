@@ -46,10 +46,10 @@ x_train = x_train[:50000]
 y_train = y_train[:50000]
 
 #just for testing
-x_train = x_train[:100]
-y_train = y_train[:100]
-x_test = x_test[:100]
-y_test = y_test[:100]
+#x_train = x_train[:100]
+#y_train = y_train[:100]
+#x_test = x_test[:100]
+#y_test = y_test[:100]
 
 log_dir = 'TensorBoard_logs'
 rmtree(log_dir, ignore_errors=True)
@@ -81,7 +81,7 @@ model.summary()
 
 batch_size = 30
 model.fit_generator(datagen.flow(x_train, y_train, batch_size=batch_size),
-        epochs=2,#1000,
+        epochs=1000,
         steps_per_epoch=np.ceil(x_train.shape[0] / batch_size),
         validation_data=(x_test, y_test),
         callbacks=[EarlyStopping(monitor='val_loss', patience=5, verbose=1),
