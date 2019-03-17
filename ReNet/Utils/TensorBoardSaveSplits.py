@@ -15,7 +15,6 @@ class TensorBoardSaveSplits(TensorBoard):
 
 
     def set_model(self, model):
-        print("TensorBoardSaveSplits set_model call")
         self.model = model
         if K.backend() == 'tensorflow':
             self.sess = K.get_session()
@@ -136,7 +135,7 @@ class TensorBoardSaveSplits(TensorBoard):
 
             #splits modifications
             if self.splits_path is not None:
-                embedding.sprite.image_path = self.splits_path #'mnistdigits.png'
+                embedding.sprite.image_path = self.splits_path #'sprite.png'
                 embedding.sprite.single_image_dim.extend(self.splits_size)
 
             projector.visualize_embeddings(self.writer, config)

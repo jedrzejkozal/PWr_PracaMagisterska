@@ -4,7 +4,7 @@ from Models.ReNetLayer import *
 from Models.MnistReproduction.InputMaskingLayer import *
 
 
-def get_model():
+def get_mnist_model():
     model = Sequential()
     #model.add(InputMaskingLayer(0.2))
 
