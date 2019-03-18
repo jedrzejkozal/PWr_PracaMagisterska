@@ -19,13 +19,13 @@ class ReNetLayer(Layer):
 
         self.is_first_layer = is_first_layer
         if is_first_layer:
-            self.mask = Masking(mask_value=float('Inf'))
+            self.mask = Masking(mask_value=-100.0)
 
         self.hidden_size = hidden_size
         self.LSTM_up_down = LSTM(hidden_size, return_sequences=True)
-        self.LSTM_down_up = LSTM(hidden_size, return_sequences=True)
+        self.LSTM_down_up = LSTM(hidden_size, return_sequences=True, go_backwards=True)
         self.LSTM_left_right = LSTM(hidden_size, return_sequences=True)
-        self.LSTM_right_left = LSTM(hidden_size, return_sequences=True)
+        self.LSTM_right_left = LSTM(hidden_size, return_sequences=True, go_backwards=True)
 
         self.use_dropout = use_dropout
         if use_dropout:
@@ -111,7 +111,7 @@ class ReNetLayer(Layer):
 
     def calc_vertical_LSTM_activations(self):
         up_down_activation = self.LSTM_up_down(self.patches)
-        down_up_activation = self.LSTM_down_up(tf.reverse(self.patches, [-2]))
+        down_up_activation = self.LSTM_down_up(self.patches)
 
         if self.use_dropout:
             up_down_activation = self.dropout_up_down(up_down_activation)
@@ -159,7 +159,7 @@ class ReNetLayer(Layer):
 
     def calc_horizontal_LSTM_activations(self):
         left_right_activations = self.LSTM_left_right(self.patches)
-        right_left_activations = self.LSTM_right_left(tf.reverse(self.patches, [-2]))
+        right_left_activations = self.LSTM_right_left(self.patches)
 
         if self.use_dropout:
             left_right_activations = self.dropout_left_right(left_right_activations)

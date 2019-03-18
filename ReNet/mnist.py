@@ -45,6 +45,7 @@ y_train_single_ex = y_train[0:1]
 x_train = x_train[:50000]
 y_train = y_train[:50000]
 
+
 #just for testing
 #x_train = x_train[:100]
 #y_train = y_train[:100]
@@ -81,11 +82,11 @@ model.summary()
 
 batch_size = 30
 model.fit_generator(datagen.flow(x_train, y_train, batch_size=batch_size),
-        epochs=1000,
+        epochs=10,
         steps_per_epoch=np.ceil(x_train.shape[0] / batch_size),
         validation_data=(x_test, y_test),
         callbacks=[EarlyStopping(monitor='val_loss', patience=5, verbose=1),
-                #LambdaCallback(on_epoch_end=lambda x, y: model.input_masking.generate_mask()),
+                LambdaCallback(on_epoch_end=lambda x, y: model.input_masking.generate_mask()),
                 TensorBoardSaveSplits(log_dir=log_dir,
                         splits_size=[28,28],
                         splits_path='sprite.png',

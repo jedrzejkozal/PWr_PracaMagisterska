@@ -8,7 +8,7 @@ class InputMaskingLayer(Layer):
         super().__init__()
 
         self.probability = p
-        self.mask_value = float('Inf')
+        self.mask_value = -100.0
         self.mask_not_drawn = True
 
 
