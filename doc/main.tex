@@ -110,25 +110,25 @@ Można dopatrywać się powiązań między sposobem działania ludzkiego mózgu 
 	\tikzstyle{node}=[circle,draw]
 		\node[node, minimum size=1.2cm] (h) {$h$};
 		\draw[->] (h) edge  [loop left] node {$ $} (h);
-		\node (o) [above=1.0cm of h] {$o$};
+		\node (o) [above=1.0cm of h] {$y$};
 		\node (x) [below=1.0cm of h] {$x$};
 			\draw[->] (h) edge node {$V$} (o);
 			\draw[->] (x) edge node {$U$} (h);
 		\node[right=2.0cm of h] (h0) {$ $};
 		\node[node, right=1.0cm of h0, minimum size=1.2cm] (ht_1) {$h_{t-1}$};
-		\node (ot_1) [above=1.0cm of ht_1] {$o_{t-1}$};
+		\node (ot_1) [above=1.0cm of ht_1] {$y_{t-1}$};
 		\node (xt_1) [below=1.0cm of ht_1] {$x_{t-1}$};
 			\draw[->] (h0) edge node {$W$} (ht_1);
 			\draw[->] (ht_1) edge node {$V$} (ot_1);
 			\draw[->] (xt_1) edge node {$U$} (ht_1);
 		\node[node, right=1.0cm of ht_1, minimum size=1.2cm] (ht) {$h_{t}$};
-		\node (ot) [above=1.0cm of ht] {$o_{t}$};
+		\node (ot) [above=1.0cm of ht] {$y_{t}$};
 		\node (xt) [below=1.0cm of ht] {$x_{t}$};
 			\draw[->] (ht_1) edge node {$W$} (ht);
 			\draw[->] (ht) edge node {$V$} (ot);
 			\draw[->] (xt) edge node {$U$} (ht);
 		\node[node, right=1.0cm of ht, minimum size=1.2cm] (ht1) {$h_{t+1}$};
-		\node (ot1) [above=1.0cm of ht1] {$o_{t+1}$};
+		\node (ot1) [above=1.0cm of ht1] {$y_{t+1}$};
 		\node (xt1) [below=1.0cm of ht1] {$x_{t+1}$};
 			\draw[->] (ht) edge node {$W$} (ht1);
 			\draw[->] (ht1) edge node {$V$} (ot1);
@@ -378,16 +378,47 @@ Suma w powyższym wzorze określa wpływ parametrów sieci w czasie $k$ poprzedz
 	\frac{\partial \mathcal{E}_t}{\partial h_t} = \frac{\partial \mathcal{E}_t}{\partial y_t} \frac{\partial y_t}{\partial h_t} = \frac{\partial \mathcal{E}_t}{\partial h_t} \frac{\partial g(outnet_t)}{\partial outnet_t} Y
 \end{equation}
 
-gdzie $outnet_t = Y h_t + b_y$ Wyrażenie $\frac{\partial h_t}{\partial h_k}$ można zapisać stosując ponownie regułę łańcucha jako:
+gdzie $outnet_t = Y h_t + b_y$ Wyrażenie $\frac{\partial h_t}{\partial h_k}$ można zapisać ponownie stosując regułę łańcucha jako:
 
 \begin{equation}
-	\frac{\partial h_t}{\partial h_k} = \prod_{k < i \leq t} \frac{\partial h_i}{\partial h_{i-1}} = \prod_{k < i \leq t} \frac{\partial f(net_i)}{\partial net_i} W
+	\frac{\partial h_t}{\partial h_k} = \prod_{k < i \leq t} \frac{\partial h_i}{\partial h_{i-1}} = \prod_{k < i \leq t} diag( \frac{\partial f(net_i)}{\partial net_i}) W
 \label{eq:BPTT_product}
 \end{equation}
 
-gdzie $net_i = W h_i + U x_i + b_u$. Działanie wstecznej propagacji w czasie zostało zilustrowane na rys. \ref{fig:rnn_backprop}. Powyższe rozważania zostały przeprowadzone dla najprostszej jednostki RNN, ale ilustruję ideę działania. Dla bardziej skomplikowanych jednostek pozostaje ona niezmienna. Nadal wykorzystywana jest rozwinięta forma grafu obliczeniowego do obliczenia błędu, połączona z faktem współdzielenia parametrów. 
+gdzie $net_i = W h_i + U x_i + b_u$. Działanie wstecznej propagacji w czasie zostało zilustrowane na rys. \ref{fig:rnn_backprop}. Powyższe rozważania zostały przeprowadzone dla najprostszej jednostki RNN, ale ilustruję ideę działania. Dla bardziej skomplikowanych jednostek idea ta pozostaje niezmienna. Nadal wykorzystywana jest rozwinięta forma grafu obliczeniowego do obliczenia błędu, połączona z faktem współdzielenia parametrów. 
 
-Problemy związane z propagacją wsteczną w czasie zostały omówione w \cite{DBLP:journals/corr/abs-1211-5063}. W pracy tej zastosowano inną definicję $h_t$, przez co część rozważań teoretycznych traci na ważności w kontekście definicji $h_t$ zastosowanej w tej pracy. Niemniej jednak najbardziej istotny problem pozostaje niezmienny. Jest on związany z iloczynem w równaniu \ref{eq:BPTT_product}. Wielokrotne mnożenie gradientów o module $|\frac{\partial h_i}{\partial h_{i-1}}| < 1$ powoduje problem znikających gradientów. Analogicznie wielokrotne mnożenie gradientów o module $|\frac{\partial h_i}{\partial h_{i-1}}| > 1$ powoduje problem wybuchających gradientów. W równaniu \ref{eq:BPTT_product} różnica $t - k$ oznacza czas pomiędzy aktualną jednostką a jednostką, której wpływ właśnie analizujemy. Wraz ze zwiększającym się $t - k$, liczba kolejnych mnożeń wzrasta. Jest to powodem znacznych trudności w uczeniu się długich zależności czasowych przez sieć.  Dyskusja możliwych rozwiązań została podana w \cite{DBLP:journals/corr/abs-1211-5063}. W dwóch pozostałych sekcjach tej pracy omówiono struktury komórki sieci rekurencyjnej, które pozwalają na uniknięcie problemu znikających gradientów. 
+Problemy związane z propagacją wsteczną w czasie zostały omówione w \cite{DBLP:journals/corr/abs-1211-5063}. Najbardziej istotny problem jest związany z iloczynem w równaniu \ref{eq:BPTT_product}. Wielokrotne mnożenie gradientów o module $|\frac{\partial h_i}{\partial h_{i-1}}| < 1$ powoduje problem znikających gradientów. Analogicznie wielokrotne mnożenie gradientów o module $|\frac{\partial h_i}{\partial h_{i-1}}| > 1$ powoduje problem wybuchających gradientów. W równaniu \ref{eq:BPTT_product} różnica $t - k$ oznacza czas pomiędzy aktualną jednostką a jednostką, której wpływ właśnie analizujemy. Wraz ze zwiększającym się $t - k$, liczba kolejnych mnożeń wzrasta. Jest to powodem znacznych trudności w uczeniu się długich zależności czasowych przez sieć.  Dyskusja możliwych rozwiązań została podana w \cite{DBLP:journals/corr/abs-1211-5063}. W pracy tej zastosowano inną definicję $h_t$, przez co część rozważań teoretycznych traci na ważności w kontekście definicji $h_t$ zastosowanej w tej pracy. Niemniej jednak część rozważań można zastosować dla parametryzacji przyjętej w tej pracy.
+
+W pierwszej kolejności należy zapisać jakobian z równania \ref{eq:BPTT_product} jako:
+
+\begin{equation}
+	\frac{\partial h_t}{\partial h_{t-1}} = diag(g'(W h_{t-1} + Ux_{t} + b)) W
+\end{equation}
+
+Przyjmijmy, że $\gamma$ oznacza górne ograniczenie 2-normy macierzy $diag(g'(W h_{t-1} + Ux_{t} + b))$:
+\begin{equation}
+	||diag(g'(W h_{t-1} + Ux_{t} + b))||_2 \leq \gamma
+\end{equation}
+
+Następnie korzystając z nierówności trójkąta można zapisać:
+
+\begin{equation}
+	\forall_{t} ||\frac{\partial h_{t}}{\partial h_{t-1}}||_2 \leq ||diag(g'(W h_{t-1} + Ux_{t} + b))||_2 ||W||_2 
+\end{equation}
+
+Jeśli największa wartość własna $\lambda_{1}$ macierzy $W$ (wartość 2-normy) spełnia warunek:
+
+\begin{equation}
+	\lambda_{1} < \frac{1}{\gamma}
+\end{equation}
+
+to wtedy zachodzi:
+
+\begin{equation}
+	\forall_{t} ||\frac{\partial h_{t}}{\partial h_{t-1}}||_2 \leq \gamma \frac{1}{\gamma} = 1
+\end{equation}
+
+co oznacza, że przy obliczaniu iloczynu powyższych jakobianów w równaniu \ref{eq:BPTT_product} uzyskamy jako wynik bardzo małe wartości i nastąpi znikanie gradientów. Analogiczne rozumowanie może zostać przeprowadzone dla wybuchających gradientów i zmienionej definicji $\gamma$. W dwóch pozostałych sekcjach tego rozdziału omówiono struktury komórki sieci rekurencyjnej, które pozwalają na uniknięcie problemu znikających gradientów. 
 
 
 \section{LSTM}
