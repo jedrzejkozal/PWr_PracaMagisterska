@@ -52,16 +52,16 @@ y_train = y_train[:50000]
 #x_test = x_test[:100]
 #y_test = y_test[:100]
 
-log_dir = 'TensorBoard_logs'
-rmtree(log_dir, ignore_errors=True)
+#log_dir = 'TensorBoard_logs'
+#rmtree(log_dir, ignore_errors=True)
 
-makedirs(log_dir)
-save_sprites(x_test, log_dir)
+#makedirs(log_dir)
+#save_sprites(x_test, log_dir)
 
 
 # save class labels to disk to color data points in TensorBoard accordingly
-with open(join(log_dir, 'metadata.tsv'), 'w') as f:
-    np.savetxt(f, y_test)
+#with open(join(log_dir, 'metadata.tsv'), 'w') as f:
+#    np.savetxt(f, y_test)
 
 
 shift = 3
@@ -82,22 +82,22 @@ model.summary()
 
 batch_size = 30
 model.fit_generator(datagen.flow(x_train, y_train, batch_size=batch_size),
-        epochs=10,
+        epochs=1000,
         steps_per_epoch=np.ceil(x_train.shape[0] / batch_size),
         validation_data=(x_test, y_test),
         callbacks=[EarlyStopping(monitor='val_loss', patience=5, verbose=1),
                 LambdaCallback(on_epoch_end=lambda x, y: model.layers[0].generate_mask()),
-                TensorBoardSaveSplits(log_dir=log_dir,
-                        splits_size=[28,28],
-                        splits_path='sprite.png',
-                        batch_size=batch_size,
-                        histogram_freq=1,
-                        write_images=True,
-                        write_grads=False,
-                        embeddings_freq=1,
-                        embeddings_layer_names=['features'],
-                        embeddings_metadata='metadata.tsv',
-                        embeddings_data=x_test)
+                #TensorBoardSaveSplits(log_dir=log_dir,
+                #        splits_size=[28,28],
+                #        splits_path='sprite.png',
+                #        batch_size=batch_size,
+                #        histogram_freq=1,
+                #        write_images=True,
+                #        write_grads=False,
+                #        embeddings_freq=1,
+                #        embeddings_layer_names=['features'],
+                #        embeddings_metadata='metadata.tsv',
+                #        embeddings_data=x_test)
             ]
     )
 
