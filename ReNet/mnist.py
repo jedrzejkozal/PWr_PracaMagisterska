@@ -75,10 +75,10 @@ y_train_single_ex = y_train[0:1]
 
 
 #just for testing
-#x_train = x_train[:100]
-#y_train = y_train[:100]
-#x_test = x_test[:100]
-#y_test = y_test[:100]
+#x_train = x_train[:10]
+#y_train = y_train[:10]
+#x_test = x_test[:10]
+#y_test = y_test[:10]
 
 #log_dir = 'TensorBoard_logs'
 #rmtree(log_dir, ignore_errors=True)
@@ -109,11 +109,11 @@ model.fit(x_train_single_ex, y_train_single_ex, epochs=1)
 model.summary()
 
 batch_size = 30
-model.fit_generator(datagen.flow(x_train, y_train, batch_size=batch_size),
+history = model.fit_generator(datagen.flow(x_train, y_train, batch_size=batch_size),
         epochs=1000,
         steps_per_epoch=np.ceil(x_train.shape[0] / batch_size),
         validation_data=(x_test, y_test),
-        callbacks=[EarlyStopping(monitor='val_loss', patience=5, verbose=1),
+        callbacks=[EarlyStopping(monitor='val_loss', patience=20, verbose=1),
                 LambdaCallback(on_epoch_end=lambda x, y: model.layers[0].generate_mask()),
                 #TensorBoardSaveSplits(log_dir=log_dir,
                 #        splits_size=[28,28],
@@ -129,4 +129,4 @@ model.fit_generator(datagen.flow(x_train, y_train, batch_size=batch_size),
             ]
     )
 
-score = model.evaluate(x_test, y_test, verbose=0)
+print(history.history)
