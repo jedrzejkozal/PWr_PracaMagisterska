@@ -1,31 +1,30 @@
-from keras import Model
+from keras.models import Sequential
 
-import sys
-sys.path.insert(0, "../")
-from ReNetLayer import *
-
-class Cifar10Reproduction(Model):
-
-    def __init__(self):
-        super().__init__()
-
-        self.first_reNetLayer = ReNetLayer([[2, 2]], 160) #320)
-        self.second_reNetLayer = ReNetLayer([[2, 2]], 160) #320)
-        self.third_reNetLayer = ReNetLayer([[2, 2]], 160) #320)
-        self.flatten = Flatten()
-        fully_conn_hidden_size = 2048 #4096
-        self.first_dense = Dense(fully_conn_hidden_size, activation='relu')
-        num_classes = 10
-        self.softmax = Dense(num_classes, activation='softmax')
+from Models.ReNetLayer import *
+from Models.MnistReproduction.InputMaskingLayer import *
 
 
-    def call(self, inputs):
-        first_reNet_output = self.first_reNetLayer(inputs)
-        second_reNet_output = self.second_reNetLayer(first_reNet_output)
-        third_reNet_output = self.third_reNetLayer(second_reNet_output)
 
-        x = self.flatten(third_reNet_output)
-        x = self.first_dense(x)
-        x = self.softmax(x)
+def get_cifar10_model():
+    model = Sequential()
 
-        return x
+    model.add(InputMaskingLayer(0.2))
+
+    reNet_hidden_size = 5 #320
+    model.add(ReNetLayer([[2, 2]], reNet_hidden_size,
+            use_dropout=True, dropout_rate=0.2,
+            is_first_layer=True))
+    model.add(ReNetLayer([[2, 2]], reNet_hidden_size,
+            use_dropout=True, dropout_rate=0.2))
+    model.add(ReNetLayer([[2, 2]], reNet_hidden_size,
+            use_dropout=True, dropout_rate=0.2))
+    model.add(Flatten())
+
+    fully_conn_hidden_size = 10 #4096
+    model.add(Dense(fully_conn_hidden_size, activation='relu'))
+    model.add(Dropout(0.2))
+
+    num_classes = 10
+    model.add(Dense(num_classes, activation='softmax'))
+
+    return model

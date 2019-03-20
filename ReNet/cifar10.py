@@ -4,18 +4,11 @@ import numpy as np
 from keras.utils import to_categorical
 from keras.datasets import cifar10
 from keras.preprocessing.image import ImageDataGenerator
-from keras.callbacks import EarlyStopping
+from keras.callbacks import EarlyStopping, TensorBoard, LambdaCallback
+from keras.optimizers import Adam
 
 from Utils.SaveResults import *
 from Models.Cifar10Reproduction.Cifar10Reproduction import *
-
-
-#model hyperparmeters:
-w_p = 2
-h_p = 2
-reNet_hidden_size = 1
-fully_conn_hidden_size = 1
-num_classes = 2
 
 
 #image parameters:
@@ -45,32 +38,34 @@ print("y_train_single:", y_train[0:1].shape)
 x_train_single_ex = x_train[0:1]
 y_train_single_ex = y_train[0:1]
 
+#just for testing
+x_train = x_train[:100]
+y_train = y_train[:100]
+x_test = x_test[:100]
+y_test = y_test[:100]
+
 shift = 3
 datagen = ImageDataGenerator(width_shift_range=shift, height_shift_range=shift,
                 horizontal_flip=True, vertical_flip=True)
 datagen.fit(x_train)
 
 
-model = Cifar10Reproduction()
-model.compile(loss='categorical_crossentropy', optimizer='adam',
+model = get_cifar10_model()
+model.compile(loss='categorical_crossentropy',
+        optimizer=Adam(lr=0.001, beta_1=0.9, beta_2=0.999, epsilon=10.0**-8.0),
         metrics=['categorical_accuracy'])
 
 #just for model to figure out what is the shape of input tensors
 #workaround for how keras fit_generator works
-model.fit(x_train_single_ex, y_train_single_ex,
-                epochs=1,
-                validation_data=(x_test, y_test),
-                callbacks=[EarlyStopping(monitor='val_loss', patience=5, verbose=1)]
-            )
+model.fit(x_train_single_ex, y_train_single_ex, epochs=1)
+model.summary()
 
+batch_size = 30
 history = model.fit_generator(datagen.flow(x_train, y_train, batch_size=32),
-                epochs=60,
-                steps_per_epoch=20,
+                epochs=1,
+                steps_per_epoch=np.ceil(x_train.shape[0] / batch_size),
                 validation_data=(x_test, y_test),
-                callbacks=[EarlyStopping(monitor='val_loss', patience=5, verbose=1)]
+                callbacks=[EarlyStopping(monitor='val_loss', patience=5, verbose=1),
+                        LambdaCallback(on_epoch_end=lambda x, y: model.layers[0].generate_mask()),
+                ]
             )
-
-
-path = os.path.dirname(os.path.realpath(__file__))
-print("path: ", path)
-save = SaveResults(history, path)
