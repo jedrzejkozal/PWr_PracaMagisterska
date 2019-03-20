@@ -8,7 +8,7 @@ from keras.callbacks import EarlyStopping, TensorBoard, LambdaCallback
 from keras.optimizers import Adam
 
 from Utils.SaveResults import *
-from Models.Cifar10Reproduction.Cifar10Reproduction import *
+from Models.Cifar10Reproduction.Cifar10Model import *
 
 
 #image parameters:
