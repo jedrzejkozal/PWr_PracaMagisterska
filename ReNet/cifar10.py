@@ -30,10 +30,13 @@ x_test /= 255
 y_train = to_categorical(y_train, num_classes)
 y_test = to_categorical(y_test, num_classes)
 
+x_train = x_train[:40000]
+y_train = y_train[:40000]
+
 print("x_train: ", x_train.shape)
-print("x_train_single: ", x_train[0:1].shape)
 print("y_train: ", y_train.shape)
-print("y_train_single:", y_train[0:1].shape)
+print("x_test: ", x_test.shape)
+print("y_test: ", y_test.shape)
 
 x_train_single_ex = x_train[0:1]
 y_train_single_ex = y_train[0:1]
