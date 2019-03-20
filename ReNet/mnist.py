@@ -30,20 +30,48 @@ x_test = x_test.astype('float32')
 x_train /= 255
 x_test /= 255
 
+indexes_all = []
+for i in range(0, num_classes):
+    indexes_all.append(np.argwhere(y_train == i).flatten())
+
+indexes_chosen = []
+for i in range(0, num_classes):
+    indexes_chosen.append(np.random.choice(indexes_all[i], 5000))
+
+del indexes_all
+
+choosen_samples_x = []
+choosen_samples_y = []
+for i in range(0, num_classes):
+    choosen_samples_x.append(x_train[indexes_chosen[i]])
+    choosen_samples_y.append(y_train[indexes_chosen[i]])
+
+del indexes_chosen
+
+x_train = np.vstack(choosen_samples_x)
+y_train = np.hstack(choosen_samples_y)
+
+del choosen_samples_x
+del choosen_samples_y
+
+print(x_train.shape)
+print(y_train.shape)
+
+print("x_train: ", x_train.shape)
+print("y_train: ", y_train.shape)
+print("x_test: ", x_test.shape)
+print("y_test: ", y_test.shape)
+
+print("y_train bincount: ", np.bincount(np.squeeze(y_train)))
+print("y_test bincount: ", np.bincount(np.squeeze(y_test)))
+
 
 # convert class vectors to binary class matrices
 y_train = to_categorical(y_train, num_classes)
 y_test = to_categorical(y_test, num_classes)
 
-print("x_train: ", x_train.shape)
-print("y_train: ", y_train.shape)
-
 x_train_single_ex = x_train[0:1]
 y_train_single_ex = y_train[0:1]
-
-
-x_train = x_train[:50000]
-y_train = y_train[:50000]
 
 
 #just for testing
