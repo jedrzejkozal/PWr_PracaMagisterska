@@ -15,6 +15,14 @@ from Models.Cifar10Reproduction.Cifar10Model import *
 
 x_train, y_train, x_test, y_test = load_SVHN('SVHNdataset/')
 
+print("x_train: ", x_train.shape)
+print("y_train: ", y_train.shape)
+print("x_test: ", x_test.shape)
+print("y_test: ", y_test.shape)
+
+print("y_train bincount: ", np.bincount(np.squeeze(y_train)))
+print("y_test bincount: ", np.bincount(np.squeeze(y_test)))
+
 x_train = x_train.astype('float32')
 x_test = x_test.astype('float32')
 x_train /= 255

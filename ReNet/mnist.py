@@ -13,6 +13,7 @@ from shutil import rmtree
 from Utils.SaveResults import *
 from Utils.TensorBoardSaveSplits import *
 from Utils.SaveTensorBoardSprite import *
+from Utils.ReduceImbalance import *
 from Models.MnistReproduction.MnistModel import *
 
 
@@ -30,29 +31,10 @@ x_test = x_test.astype('float32')
 x_train /= 255
 x_test /= 255
 
-indexes_all = []
-for i in range(0, num_classes):
-    indexes_all.append(np.argwhere(y_train == i).flatten())
-
-indexes_chosen = []
-for i in range(0, num_classes):
-    indexes_chosen.append(np.random.choice(indexes_all[i], 5000))
-
-del indexes_all
-
-choosen_samples_x = []
-choosen_samples_y = []
-for i in range(0, num_classes):
-    choosen_samples_x.append(x_train[indexes_chosen[i]])
-    choosen_samples_y.append(y_train[indexes_chosen[i]])
-
-del indexes_chosen
-
-x_train = np.vstack(choosen_samples_x)
-y_train = np.hstack(choosen_samples_y)
-
-del choosen_samples_x
-del choosen_samples_y
+x_train, y_train = reduce_imbalance(x_train, y_train,
+        samples_per_class=5000,
+        num_classes=num_classes,
+        labels=[0, 1, 2, 3, 4, 5, 6, 7, 8, 9])
 
 print(x_train.shape)
 print(y_train.shape)
