@@ -8,6 +8,7 @@ from keras.callbacks import EarlyStopping, TensorBoard, LambdaCallback
 from keras.optimizers import Adam
 
 from Utils.SaveResults import *
+from Utils.InputNormalisation import *
 from Models.Cifar10Reproduction.Cifar10Model import *
 
 
@@ -33,10 +34,17 @@ y_test = to_categorical(y_test, num_classes)
 x_train = x_train[:40000]
 y_train = y_train[:40000]
 
+
+x_train = zero_mean(x_train)
+x_test = zero_mean(x_test)
+x_train = unit_var(x_train)
+x_test = unit_var(x_test)
+
 print("x_train: ", x_train.shape)
 print("y_train: ", y_train.shape)
 print("x_test: ", x_test.shape)
 print("y_test: ", y_test.shape)
+
 
 x_train_single_ex = x_train[0:1]
 y_train_single_ex = y_train[0:1]
