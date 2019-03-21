@@ -19,17 +19,11 @@ img_rows, img_cols = 32, 32
 
 x_train = x_train.reshape(x_train.shape[0], img_rows, img_cols, 3)
 x_test = x_test.reshape(x_test.shape[0], img_rows, img_cols, 3)
-input_shape = (img_rows, img_cols, 3)
 
 x_train = x_train.astype('float32')
 x_test = x_test.astype('float32')
 x_train /= 255
 x_test /= 255
-
-
-# convert class vectors to binary class matrices
-y_train = to_categorical(y_train, num_classes)
-y_test = to_categorical(y_test, num_classes)
 
 x_train = x_train[:40000]
 y_train = y_train[:40000]
@@ -39,13 +33,17 @@ y_train = y_train[:40000]
 x_train = x_train.reshape(x_train.shape[0], img_rows*img_cols*3)
 x_test = x_test.reshape(x_test.shape[0], img_rows * img_cols*3)
 
-sigma = np.cov(x_train)
-evals, evecs = np.linalg.eigh(sigma)
-n_samples = x.shape[0]
-W = evecs @ np.diag(evals**(-1/2)) @ evecs.T * n_samples
+sigma = np.cov(np.transpose(x_train))
+evalues, evectors = np.linalg.eigh(sigma)
+n_samples = x_train.shape[0]
+W = evectors @ np.diag(evalues**(-1/2)) @ evectors.T * (n_samples-1)
 
+# please note:
+# in https://www.cs.toronto.edu/~kriz/learning-features-2009-TR.pdf matrix X is defined as (d, n)
+# so with this notation result ZCA matrix with shape (n, d) is calculated as Y^T = X^T W^T
+# so using notation with X as (n, d) Y = X W^T with W calculated for X defined as (d, n)
 def ZCA(X):
-    return W @ X
+    return X @ np.transpose(W)
 
 x_train = ZCA(x_train)
 x_test = ZCA(x_test)
@@ -63,6 +61,10 @@ print("y_train: ", y_train.shape)
 print("x_test: ", x_test.shape)
 print("y_test: ", y_test.shape)
 
+
+# convert class vectors to binary class matrices
+y_train = to_categorical(y_train, num_classes)
+y_test = to_categorical(y_test, num_classes)
 
 x_train_single_ex = x_train[0:1]
 y_train_single_ex = y_train[0:1]
