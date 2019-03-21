@@ -35,6 +35,24 @@ x_train = x_train[:40000]
 y_train = y_train[:40000]
 
 
+# ZCA
+x_train = x_train.reshape(x_train.shape[0], img_rows*img_cols*3)
+x_test = x_test.reshape(x_test.shape[0], img_rows * img_cols*3)
+
+sigma = np.cov(x_train)
+evals, evecs = np.linalg.eigh(sigma)
+n_samples = x.shape[0]
+W = evecs @ np.diag(evals**(-1/2)) @ evecs.T * n_samples
+
+def ZCA(X):
+    return W @ X
+
+x_train = ZCA(x_train)
+x_test = ZCA(x_test)
+
+x_train = x_train.reshape(x_train.shape[0], img_rows, img_cols, 3)
+x_test = x_test.reshape(x_test.shape[0], img_rows, img_cols, 3)
+
 x_train = zero_mean(x_train)
 x_test = zero_mean(x_test)
 x_train = unit_var(x_train)
