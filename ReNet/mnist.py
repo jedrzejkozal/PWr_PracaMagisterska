@@ -98,7 +98,7 @@ history = model.fit_generator(datagen.flow(x_train, y_train, batch_size=batch_si
         steps_per_epoch=np.ceil(x_train.shape[0] / batch_size),
         validation_data=(x_test, y_test),
         callbacks=[EarlyStopping(monitor='val_loss', patience=20, verbose=1),
-                LambdaCallback(on_epoch_end=lambda x, y: model.layers[0].generate_mask()),
+                #LambdaCallback(on_epoch_end=lambda x, y: model.layers[0].generate_mask()),
                 #TensorBoardSaveSplits(log_dir=log_dir,
                 #        splits_size=[28,28],
                 #        splits_path='sprite.png',

@@ -11,16 +11,17 @@ class NumpyArrayIteratorWithMasking(NumpyArrayIterator):
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
         self.orginal_x = np.copy(self.x)
-        self.mask_value = -100
         self.mask_input()
 
 
     def mask_input(self):
+        print("mask_input call")
         mask = self.generate_mask_with_prob(0.2)
+        print(np.bincount(mask.reshape(mask.size)))
 
         tmp = np.copy(self.orginal_x)
         for i in range(self.x.shape[0]):
-            tmp[i][mask] = -100
+            tmp[i][mask] = -100.0
         self.x = tmp
 
 
