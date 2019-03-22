@@ -79,8 +79,7 @@ class ReNetLayerTest(object):
         sut.J = self.J
         sut.layer_vertical_patches_reshape = Reshape((self.J, self.w_p * self.h_p * self.number_of_channels))
 
-        sut.get_vertical_patches(arg)
-        result = sut.patches
+        result = sut.get_vertical_patches(arg)
         result_shape = self.get_result_shape(result)
         assert result_shape == [self.J, self.h_p*self.w_p*self.number_of_channels]
 
@@ -122,8 +121,7 @@ class ReNetLayerTest(object):
         sut.J = self.J
         sut.layer_horizontal_patches_permute = Permute((2, 3, 1))
 
-        sut.get_hor_patches(arg)
-        result = sut.patches
+        result = sut.get_hor_patches(arg)
         result_shape = self.get_result_shape(result)
         assert result_shape == [self.I, 2*self.hidden_size]
 

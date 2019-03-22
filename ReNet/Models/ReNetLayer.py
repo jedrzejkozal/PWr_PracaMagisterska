@@ -94,24 +94,26 @@ class ReNetLayer(Layer):
 
 
     def get_activations_for_columns(self, col):
-        self.get_vertical_patches(col)
+        patches = self.get_vertical_patches(col)
 
         if self.is_first_layer:
-            self.patches = self.mask(self.patches)
+            p = self.mask(patches)
+        else:
+            p = patches
 
-        up_down_activation, down_up_activation = self.calc_vertical_LSTM_activations()
+        up_down_activation, down_up_activation = self.calc_vertical_LSTM_activations(p)
 
         merged_tensor = self.merge_opossite_directions_LSTM_activations(up_down_activation, down_up_activation)
         return self.layer_vertical_activations_permutarion(merged_tensor)
 
 
     def get_vertical_patches(self, column):
-        self.patches = self.layer_vertical_patches_reshape(column)
+        return self.layer_vertical_patches_reshape(column)
 
 
-    def calc_vertical_LSTM_activations(self):
-        up_down_activation = self.LSTM_up_down(self.patches)
-        down_up_activation = self.LSTM_down_up(self.patches)
+    def calc_vertical_LSTM_activations(self, patches):
+        up_down_activation = self.LSTM_up_down(patches)
+        down_up_activation = self.LSTM_down_up(patches)
 
         if self.use_dropout:
             up_down_activation = self.dropout_up_down(up_down_activation)
@@ -130,7 +132,7 @@ class ReNetLayer(Layer):
     def horizontal_sweep(self, inputs):
         LSTM_outputs = []
 
-        for i, row in enumerate(self.get_rows(inputs)):
+        for row in self.get_rows(inputs):
             row_activations = self.get_activations_for_row(row)
             LSTM_outputs.append(row_activations)
 
@@ -144,22 +146,22 @@ class ReNetLayer(Layer):
 
 
     def get_activations_for_row(self, row):
-        self.get_hor_patches(row)
+        patches = self.get_hor_patches(row)
 
-        left_right_activations, right_left_activations = self.calc_horizontal_LSTM_activations()
+        left_right_activations, right_left_activations = self.calc_horizontal_LSTM_activations(patches)
 
         merged_tensor = self.merge_opossite_directions_LSTM_activations(left_right_activations, right_left_activations)
         return self.layer_horizontal_activations_permutarion(merged_tensor)
 
 
     def get_hor_patches(self, row):
-        self.patches = self.layer_horizontal_patches_permute(row)
-        self.patches = tf.squeeze(self.patches, axis=3)
+        hor_patches = self.layer_horizontal_patches_permute(row)
+        return tf.squeeze(hor_patches, axis=3)
 
 
-    def calc_horizontal_LSTM_activations(self):
-        left_right_activations = self.LSTM_left_right(self.patches)
-        right_left_activations = self.LSTM_right_left(self.patches)
+    def calc_horizontal_LSTM_activations(self, patches):
+        left_right_activations = self.LSTM_left_right(patches)
+        right_left_activations = self.LSTM_right_left(patches)
 
         if self.use_dropout:
             left_right_activations = self.dropout_left_right(left_right_activations)
