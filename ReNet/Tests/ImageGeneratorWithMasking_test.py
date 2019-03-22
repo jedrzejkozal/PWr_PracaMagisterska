@@ -23,5 +23,4 @@ class TestImageGeneratorWithMasking(object):
         x = np.zeros((10, 6, 6, 1))
         sut = NumpyArrayIteratorWithMasking(x, x, x)
         sut.mask_input()
-        print("res: ", sut.x)
         assert sut.x.shape == (10, 6, 6, 1)

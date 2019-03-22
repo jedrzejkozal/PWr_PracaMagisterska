@@ -19,7 +19,6 @@ class NumpyArrayIteratorWithMasking(NumpyArrayIterator):
     def mask_input(self):
         print("mask_input call")
         mask = self.generate_mask_with_prob(0.2)
-        print(np.bincount(mask.reshape(mask.size)))
 
         tmp = np.copy(self.orginal_x)
         for i in range(self.x.shape[0]):
@@ -28,33 +27,29 @@ class NumpyArrayIteratorWithMasking(NumpyArrayIterator):
 
 
     def generate_mask_with_prob(self, p):
+        rand_matrix = self.get_random_binomial(p)
+        expand_matrix = self.get_expand_matrix(self.x.shape[1]//self.patch_size_x)
+        single_dim_mask = np.transpose(expand_matrix) @ rand_matrix @ expand_matrix
+
+        all_dims = [single_dim_mask]*self.x.shape[3]
+
+        mask = np.stack(all_dims, axis=2)
+
+        return mask > 0.5
+
+
+    def get_random_binomial(self, p):
         img_size = self.x.shape[1]*self.x.shape[2]
         patches_size = img_size//self.patch_size_x//self.patch_size_y
         rand_matrix = np.random.binomial(1, p, size=patches_size)
-        rand_matrix = rand_matrix.reshape(self.x.shape[1]//self.patch_size_x, self.x.shape[2]//self.patch_size_y)
-
-        expand_matrix = self.get_expand_matrix(self.x.shape[1]//self.patch_size_x)
-
-        single_dim_mask = np.transpose(expand_matrix) @ rand_matrix @ expand_matrix
-        print("single_dim_mask.shape: ", single_dim_mask.shape)
-
-        all_dims = [single_dim_mask]*self.x.shape[3]
-        print("all_dims: ", all_dims)
-
-        mask = np.stack(all_dims, axis=2)
-        print("mask shape: ", mask.shape)
-
-        return mask > 0.5
+        return rand_matrix.reshape(self.x.shape[1]//self.patch_size_x, self.x.shape[2]//self.patch_size_y)
 
 
     def get_expand_matrix(self, n):
         expand_matrix = np.zeros((n, 2*n)) #won't work for rectangular imgs
         for i in range(n):
             expand_matrix[i, 2*i:2*i+2] = 1
-        print("expand_matrix:")
-        print(expand_matrix)
         return expand_matrix
-
 
 
     def on_epoch_end(self):
@@ -62,10 +57,6 @@ class NumpyArrayIteratorWithMasking(NumpyArrayIterator):
         self.mask_input()
 
 
-x = np.zeros((10, 6, 6, 1))
-n = NumpyArrayIteratorWithMasking(x, x, x)
-res = n.generate_mask_with_prob(0.2)
-print(res)
 
 class ImageDataGeneratorWithMasking(ImageDataGenerator):
 
