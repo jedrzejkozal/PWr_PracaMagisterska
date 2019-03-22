@@ -12,8 +12,9 @@ from Utils.LoadSVHN import *
 from Models.Cifar10Reproduction.Cifar10Model import *
 
 
-
-x_train, y_train, x_test, y_test = load_SVHN('SVHNdataset/')
+script_path = os.path.dirname(os.path.abspath(__file__))
+dataset_path = os.path.join(script_path ,'SVHNdataset/')
+x_train, y_train, x_test, y_test = load_SVHN(dataset_path)
 
 print("x_train: ", x_train.shape)
 print("y_train: ", y_train.shape)
