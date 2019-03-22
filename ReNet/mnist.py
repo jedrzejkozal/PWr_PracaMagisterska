@@ -14,6 +14,7 @@ from Utils.SaveResults import *
 from Utils.TensorBoardSaveSplits import *
 from Utils.SaveTensorBoardSprite import *
 from Utils.ReduceImbalance import *
+from Utils.ImageGeneratorWithMasking import *
 from Models.MnistReproduction.MnistModel import *
 
 
@@ -75,7 +76,8 @@ y_train_single_ex = y_train[0:1]
 
 
 shift = 3
-datagen = ImageDataGenerator(width_shift_range=shift, height_shift_range=shift)
+#datagen = ImageDataGenerator(width_shift_range=shift, height_shift_range=shift)
+datagen = ImageDataGeneratorWithMasking(width_shift_range=shift, height_shift_range=shift)
 datagen.fit(x_train)
 
 

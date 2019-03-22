@@ -1,7 +1,7 @@
 from keras.models import Sequential
 
 from Models.ReNetLayer import *
-from Models.MnistReproduction.InputMaskingLayer import *
+from Models.InputMaskingLayer import *
 
 
 

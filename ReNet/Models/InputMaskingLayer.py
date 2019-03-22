@@ -27,8 +27,8 @@ class InputMaskingLayer(Layer):
         bool_mask = random_tensor < self.probability
         mask_float = tf.cast(bool_mask, tf.float32)
 
-        inf_tensor = tf.constant(self.mask_value, shape=self.inputs_shape)
-        self.mask = tf.multiply(mask_float, inf_tensor)
+        mask_value_tensor = tf.constant(self.mask_value, shape=self.inputs_shape)
+        self.mask = tf.multiply(mask_float, mask_value_tensor)
 
 
     def call(self, inputs):
