@@ -10,7 +10,7 @@ from keras.optimizers import Adam
 from Utils.SaveResults import *
 from Utils.InputNormalisation import *
 from Models.Cifar10Reproduction.Cifar10Model import *
-from Utils.ImageGeneratorWithMasking import *
+#from Utils.ImageGeneratorWithMasking import *
 
 
 #image parameters:
@@ -77,9 +77,9 @@ y_train_single_ex = y_train[0:1]
 #y_test = y_test[:100]
 
 shift = 3
-#datagen = ImageDataGenerator(width_shift_range=shift, height_shift_range=shift,
-#                horizontal_flip=True, vertical_flip=True)
-datagen = ImageDataGeneratorWithMasking(width_shift_range=shift, height_shift_range=shift)
+datagen = ImageDataGenerator(width_shift_range=shift, height_shift_range=shift,
+                horizontal_flip=True, vertical_flip=True)
+#datagen = ImageDataGeneratorWithMasking(width_shift_range=shift, height_shift_range=shift, horizontal_flip=True, vertical_flip=True)
 datagen.fit(x_train)
 
 
