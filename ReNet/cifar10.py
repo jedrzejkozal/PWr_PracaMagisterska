@@ -34,6 +34,7 @@ y_train = y_train[:40000]
 x_train = x_train.reshape(x_train.shape[0], img_rows*img_cols*3)
 x_test = x_test.reshape(x_test.shape[0], img_rows * img_cols*3)
 
+"""
 sigma = np.cov(np.transpose(x_train))
 evalues, evectors = np.linalg.eigh(sigma)
 n_samples = x_train.shape[0]
@@ -48,6 +49,7 @@ def ZCA(X):
 
 x_train = ZCA(x_train)
 x_test = ZCA(x_test)
+"""
 
 x_train = x_train.reshape(x_train.shape[0], img_rows, img_cols, 3)
 x_test = x_test.reshape(x_test.shape[0], img_rows, img_cols, 3)
@@ -78,7 +80,7 @@ y_train_single_ex = y_train[0:1]
 
 shift = 3
 datagen = ImageDataGenerator(width_shift_range=shift, height_shift_range=shift,
-                horizontal_flip=True, vertical_flip=True)
+                horizontal_flip=True, vertical_flip=True, zca_whitening=True)
 #datagen = ImageDataGeneratorWithMasking(width_shift_range=shift, height_shift_range=shift, horizontal_flip=True, vertical_flip=True)
 datagen.fit(x_train)
 
