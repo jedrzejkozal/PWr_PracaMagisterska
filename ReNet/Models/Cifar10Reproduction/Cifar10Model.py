@@ -8,7 +8,7 @@ from Models.InputMaskingLayer import *
 def get_cifar10_model():
     model = Sequential()
 
-    model.add(InputMaskingLayer(0.2))
+    #model.add(InputMaskingLayer(0.2))
 
     reNet_hidden_size = 5 #320
     model.add(ReNetLayer([[2, 2]], reNet_hidden_size,

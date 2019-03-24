@@ -10,6 +10,7 @@ from keras.optimizers import Adam
 from Utils.SaveResults import *
 from Utils.InputNormalisation import *
 from Models.Cifar10Reproduction.Cifar10Model import *
+from Utils.ImageGeneratorWithMasking import *
 
 
 #image parameters:
@@ -70,14 +71,15 @@ x_train_single_ex = x_train[0:1]
 y_train_single_ex = y_train[0:1]
 
 #just for testing
-x_train = x_train[:100]
-y_train = y_train[:100]
-x_test = x_test[:100]
-y_test = y_test[:100]
+#x_train = x_train[:100]
+#y_train = y_train[:100]
+#x_test = x_test[:100]
+#y_test = y_test[:100]
 
 shift = 3
-datagen = ImageDataGenerator(width_shift_range=shift, height_shift_range=shift,
-                horizontal_flip=True, vertical_flip=True)
+#datagen = ImageDataGenerator(width_shift_range=shift, height_shift_range=shift,
+#                horizontal_flip=True, vertical_flip=True)
+datagen = ImageDataGeneratorWithMasking(width_shift_range=shift, height_shift_range=shift)
 datagen.fit(x_train)
 
 
@@ -93,10 +95,10 @@ model.summary()
 
 batch_size = 30
 history = model.fit_generator(datagen.flow(x_train, y_train, batch_size=32),
-                epochs=1,
+                epochs=1000,
                 steps_per_epoch=np.ceil(x_train.shape[0] / batch_size),
                 validation_data=(x_test, y_test),
-                callbacks=[EarlyStopping(monitor='val_loss', patience=5, verbose=1),
-                        LambdaCallback(on_epoch_end=lambda x, y: model.layers[0].generate_mask()),
+                callbacks=[EarlyStopping(monitor='val_loss', patience=20, verbose=1),
+                        #LambdaCallback(on_epoch_end=lambda x, y: model.layers[0].generate_mask()),
                 ]
             )

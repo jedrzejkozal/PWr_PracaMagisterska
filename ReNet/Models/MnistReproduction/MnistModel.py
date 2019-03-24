@@ -18,9 +18,9 @@ def get_mnist_model():
     model.add(Flatten())
     fully_conn_hidden_size = 4096
     model.add(Dense(fully_conn_hidden_size, activation='relu'))
-    model.add(Dropout(0.5))
+    model.add(Dropout(0.1))
     model.add(Dense(fully_conn_hidden_size, activation='relu', name='features'))
-    model.add(Dropout(0.5))
+    model.add(Dropout(0.1))
 
     num_classes = 10
     model.add(Dense(num_classes, activation='softmax'))
