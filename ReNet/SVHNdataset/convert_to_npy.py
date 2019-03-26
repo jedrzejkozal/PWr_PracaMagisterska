@@ -14,7 +14,7 @@ def load_mat_file(filename):
 
 
 def save_matrix(matrix, filename):
-    np.save(filename, matrix, allow_pickle=False)
+    np.save(filename, matrix, allow_pickle=False, fix_imports=False)
 
 x_train, y_train = load_mat_file('train_32x32.mat')
 save_matrix(x_train, 'x_train.npy')
