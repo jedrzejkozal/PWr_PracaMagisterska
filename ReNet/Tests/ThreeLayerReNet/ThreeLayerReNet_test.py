@@ -1,8 +1,8 @@
 from Tests.ReNetTestBase import *
-from Models.TwoLayerReNet.TwoLayerReNet import *
+from Models.ThreeLayerReNet.ThreeLayerReNet import *
 
 
-class TestTwoLayerReNet(ReNetTestBase):
+class TestThreeLayerReNet(ReNetTestBase):
 
     @classmethod
     def setup_model_params(cls):
@@ -18,8 +18,8 @@ class TestTwoLayerReNet(ReNetTestBase):
     @classmethod
     def setup(cls):
         cls.num_samples = 60
-        cls.img_width = 20
-        cls.img_height = 20
+        cls.img_width = 24
+        cls.img_height = 24
         cls.number_of_channels = 1
         cls.setup_model_params()
-        cls.SUT_class = TwoLayerReNet
+        cls.SUT_class = ThreeLayerReNet
