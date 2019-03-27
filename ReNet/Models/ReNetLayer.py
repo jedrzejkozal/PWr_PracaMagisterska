@@ -22,10 +22,10 @@ class ReNetLayer(Layer):
             self.mask = Masking(mask_value=-100.0)
 
         self.hidden_size = hidden_size
-        self.LSTM_up_down = LSTM(hidden_size, return_sequences=True)
-        self.LSTM_down_up = LSTM(hidden_size, return_sequences=True, go_backwards=True)
-        self.LSTM_left_right = LSTM(hidden_size, return_sequences=True)
-        self.LSTM_right_left = LSTM(hidden_size, return_sequences=True, go_backwards=True)
+        self.LSTM_up_down = LSTM(self.hidden_size, return_sequences=True) # , input_shape=(J, rnn_features)
+        self.LSTM_down_up = LSTM(self.hidden_size, return_sequences=True, go_backwards=True)
+        self.LSTM_left_right = LSTM(self.hidden_size, return_sequences=True) # , input_shape=(I, rnn_features)
+        self.LSTM_right_left = LSTM(self.hidden_size, return_sequences=True, go_backwards=True)
 
         self.use_dropout = use_dropout
         if use_dropout:
@@ -46,6 +46,8 @@ class ReNetLayer(Layer):
     def compute_output_shape(self, input_shape):
         I = int(input_shape[1]) // self.w_p
         J = int(input_shape[2]) // self.h_p
+
+        #rnn_features = self.w_p*self.h_p*input_shape[3]
         return (input_shape[0], I, J, 2*self.hidden_size)
 
 
@@ -103,7 +105,7 @@ class ReNetLayer(Layer):
 
         up_down_activation, down_up_activation = self.calc_vertical_LSTM_activations(p)
 
-        merged_tensor = self.merge_opossite_directions_LSTM_activations(up_down_activation, down_up_activation)
+        merged_tensor = self.merge_vert_LSTM_activations(up_down_activation, down_up_activation)
         return self.layer_vertical_activations_permutarion(merged_tensor)
 
 
@@ -122,10 +124,10 @@ class ReNetLayer(Layer):
         return up_down_activation, down_up_activation
 
 
-    def merge_opossite_directions_LSTM_activations(self, first_tensor, second_tensor):
+    def merge_vert_LSTM_activations(self, first_tensor, second_tensor):
         merged_vector = concatenate(
-                [tf.keras.backend.expand_dims(first_tensor),
-                 tf.keras.backend.expand_dims(second_tensor)], axis=2)
+                [tf.keras.backend.expand_dims(first_tensor, axis=2),
+                 tf.keras.backend.expand_dims(second_tensor, axis=2)], axis=2)
         return merged_vector
 
 
@@ -134,6 +136,7 @@ class ReNetLayer(Layer):
 
         for row in self.get_rows(inputs):
             row_activations = self.get_activations_for_row(row)
+            print("row_activations shape: ", row_activations.shape)
             LSTM_outputs.append(row_activations)
 
         merged = concatenate(LSTM_outputs, axis=1)
@@ -142,7 +145,7 @@ class ReNetLayer(Layer):
 
     def get_rows(self, inputs):
         for i in range(0, inputs.shape[1]):
-            yield inputs[:, i:i+1, :]
+            yield inputs[:, i:i+1, :, :]
 
 
     def get_activations_for_row(self, row):
@@ -150,7 +153,7 @@ class ReNetLayer(Layer):
 
         left_right_activations, right_left_activations = self.calc_horizontal_LSTM_activations(patches)
 
-        merged_tensor = self.merge_opossite_directions_LSTM_activations(left_right_activations, right_left_activations)
+        merged_tensor = self.merge_hor_LSTM_activations(left_right_activations, right_left_activations)
         return self.layer_horizontal_activations_permutarion(merged_tensor)
 
 
@@ -168,3 +171,9 @@ class ReNetLayer(Layer):
             right_left_activations = self.dropout_right_left(right_left_activations)
 
         return left_right_activations, right_left_activations
+
+    def merge_hor_LSTM_activations(self, first_tensor, second_tensor):
+        merged_vector = concatenate(
+                [tf.keras.backend.expand_dims(first_tensor, axis=1),
+                 tf.keras.backend.expand_dims(second_tensor, axis=1)], axis=2)
+        return merged_vector

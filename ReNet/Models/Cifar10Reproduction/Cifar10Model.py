@@ -4,10 +4,8 @@ from Models.ReNetLayer import *
 from Models.InputMaskingLayer import *
 
 
-
 def get_cifar10_model():
     model = Sequential()
-
     #model.add(InputMaskingLayer(0.2))
 
     reNet_hidden_size = 320

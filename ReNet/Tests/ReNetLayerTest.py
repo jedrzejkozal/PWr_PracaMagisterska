@@ -11,8 +11,11 @@ class ReNetLayerTest(object):
     @pytest.fixture
     def sut(self):
         self.__class__.setup()
-
-        return ReNetLayer([[self.w_p, self.h_p]], self.hidden_size)
+        sut = ReNetLayer([[self.w_p, self.h_p]], self.hidden_size)
+        input_shape = (self.num_samples, self.img_width, self.img_height,
+                self.number_of_channels)
+        sut.compute_output_shape(input_shape)
+        return sut
 
 
     @pytest.fixture
@@ -35,6 +38,7 @@ class ReNetLayerTest(object):
 
 
     def get_result_shape(self, result):
+        print("result_shape: ", result.shape)
         return list(map(lambda x: int(x), result.shape[1:]))
 
 
