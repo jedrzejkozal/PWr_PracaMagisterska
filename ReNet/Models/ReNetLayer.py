@@ -72,7 +72,6 @@ class ReNetLayer(Layer):
         self.J = int(inputs_shape[2]) // self.h_p
 
         self.layer_vertical_patches_reshape = Reshape((self.J, self.w_p * self.h_p * int(inputs_shape[3])))
-        self.layer_horizontal_patches_permute = Permute((2, 3, 1))
         self.layer_precise_tensor_shape = Reshape((self.J, self.I, int(2*self.hidden_size)))
 
 

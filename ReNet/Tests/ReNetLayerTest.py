@@ -134,7 +134,6 @@ class ReNetLayerTest(object):
         arg = Input((1, self.I, 2*self.hidden_size))
         sut.I = self.I
         sut.J = self.J
-        sut.layer_horizontal_patches_permute = Permute((2, 3, 1))
 
         result = sut.get_hor_patches(arg)
         result_shape = self.get_result_shape(result)
@@ -145,7 +144,6 @@ class ReNetLayerTest(object):
         arg = Input((self.I, self.J, 2*self.hidden_size))
         sut.I = self.I
         sut.J = self.J
-        sut.layer_horizontal_patches_permute = Permute((2, 3, 1))
         sut.layer_precise_tensor_shape = Reshape((self.J, self.I, int(2*self.hidden_size)))
 
         result = sut.horizontal_sweep(arg)
@@ -157,7 +155,6 @@ class ReNetLayerTest(object):
     def test_get_activations_for_row_output_shape_is_I_1_2hidden_size(self, sut):
         row_shape = (1, self.img_width, self.number_of_channels)
         arg = Input(row_shape)
-        sut.layer_horizontal_patches_permute = Permute((2, 3, 1))
 
         result = sut.get_activations_for_row(arg)
         result_shape = self.get_result_shape(result)
