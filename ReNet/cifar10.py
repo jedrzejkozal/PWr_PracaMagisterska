@@ -22,6 +22,7 @@ num_classes = 10
 img_rows, img_cols = 32, 32
 (x_train, y_train), (x_test, y_test) = cifar10.load_data()
 
+
 x_train = x_train.reshape(x_train.shape[0], img_rows, img_cols, 3)
 x_test = x_test.reshape(x_test.shape[0], img_rows, img_cols, 3)
 

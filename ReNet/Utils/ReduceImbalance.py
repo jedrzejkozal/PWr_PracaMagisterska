@@ -15,7 +15,7 @@ def reduce_imbalance(x_data, y_data,
         indexes_all.append(np.argwhere(y_data == l).flatten())
 
     indexes_chosen = []
-    for i in range(0, num_classes):
+    for i in range(num_classes):
         indexes_chosen.append(np.random.choice(indexes_all[i], samples_per_class))
 
     del indexes_all
@@ -29,6 +29,6 @@ def reduce_imbalance(x_data, y_data,
     del indexes_chosen
 
     x_data = np.vstack(choosen_samples_x)
-    y_data = np.hstack(choosen_samples_y)
+    y_data = np.vstack(choosen_samples_y)
 
     return x_data, y_data
