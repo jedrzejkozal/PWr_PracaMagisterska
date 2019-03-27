@@ -41,9 +41,6 @@ print("y_train: ", y_train.shape)
 print("x_test: ", x_test.shape)
 print("y_test: ", y_test.shape)
 
-x_train_single_ex = x_train[0:1]
-y_train_single_ex = y_train[0:1]
-
 #just for testing
 x_train = x_train[:100]
 y_train = y_train[:100]
@@ -63,6 +60,8 @@ model.compile(loss='categorical_crossentropy',
 
 #just for model to figure out what is the shape of input tensors
 #workaround for how keras fit_generator works
+x_train_single_ex = x_train[0:1]
+y_train_single_ex = y_train[0:1]
 model.fit(x_train_single_ex, y_train_single_ex, epochs=1)
 model.summary()
 

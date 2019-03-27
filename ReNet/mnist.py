@@ -48,14 +48,9 @@ print("y_test: ", y_test.shape)
 print("y_train bincount: ", np.bincount(np.squeeze(y_train)))
 print("y_test bincount: ", np.bincount(np.squeeze(y_test)))
 
-
 # convert class vectors to binary class matrices
 y_train = to_categorical(y_train, num_classes)
 y_test = to_categorical(y_test, num_classes)
-
-x_train_single_ex = x_train[0:1]
-y_train_single_ex = y_train[0:1]
-
 
 #just for testing
 #x_train = x_train[:10]
@@ -88,6 +83,8 @@ model.compile(loss='categorical_crossentropy',
 
 #just for model to figure out what is the shape of input tensors
 #workaround for how keras fit_generator works
+x_train_single_ex = x_train[0:1]
+y_train_single_ex = y_train[0:1]
 model.fit(x_train_single_ex, y_train_single_ex, epochs=1)
 model.summary()
 

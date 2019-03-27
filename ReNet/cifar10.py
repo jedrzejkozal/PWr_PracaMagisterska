@@ -11,7 +11,8 @@ from os import makedirs
 
 from Utils.SaveResults import *
 from Utils.TensorBoardSaveSplits import *
-from Utils.InputNormalisation import *
+from Utils.ReduceImbalance import *
+from Utils.InputNormalization import *
 from Models.Cifar10Reproduction.Cifar10Model import *
 #from Utils.ImageGeneratorWithMasking import *
 
@@ -29,15 +30,17 @@ x_test = x_test.astype('float32')
 x_train /= 255
 x_test /= 255
 
-x_train = x_train[:40000]
-y_train = y_train[:40000]
+x_train, y_train = reduce_imbalance(x_train, y_train,
+        samples_per_class=4000,
+        num_classes=num_classes,
+        labels=[0, 1, 2, 3, 4, 5, 6, 7, 8, 9])
 
-
+"""
 # ZCA
 x_train = x_train.reshape(x_train.shape[0], img_rows*img_cols*3)
 x_test = x_test.reshape(x_test.shape[0], img_rows * img_cols*3)
 
-"""
+
 sigma = np.cov(np.transpose(x_train))
 evalues, evectors = np.linalg.eigh(sigma)
 n_samples = x_train.shape[0]
@@ -52,15 +55,13 @@ def ZCA(X):
 
 x_train = ZCA(x_train)
 x_test = ZCA(x_test)
-"""
 
 x_train = x_train.reshape(x_train.shape[0], img_rows, img_cols, 3)
 x_test = x_test.reshape(x_test.shape[0], img_rows, img_cols, 3)
+"""
 
-x_train = zero_mean(x_train)
-x_test = zero_mean(x_test)
-x_train = unit_var(x_train)
-x_test = unit_var(x_test)
+x_train = normalize(x_train)
+x_test = normalize(x_test)
 
 print("x_train: ", x_train.shape)
 print("y_train: ", y_train.shape)
@@ -71,9 +72,6 @@ print("y_test: ", y_test.shape)
 # convert class vectors to binary class matrices
 y_train = to_categorical(y_train, num_classes)
 y_test = to_categorical(y_test, num_classes)
-
-x_train_single_ex = x_train[0:1]
-y_train_single_ex = y_train[0:1]
 
 #just for testing
 #x_train = x_train[:100]
@@ -86,9 +84,16 @@ rmtree(log_dir, ignore_errors=True)
 makedirs(log_dir)
 
 shift = 3
-datagen = ImageDataGenerator(width_shift_range=shift, height_shift_range=shift,
-                horizontal_flip=True, vertical_flip=True)#, zca_whitening=True)
-#datagen = ImageDataGeneratorWithMasking(width_shift_range=shift, height_shift_range=shift, horizontal_flip=True, vertical_flip=True)
+datagen = ImageDataGenerator(width_shift_range=shift,
+                height_shift_range=shift,
+                zca_whitening=True,
+                horizontal_flip=True,
+                vertical_flip=True)
+#datagen = ImageDataGeneratorWithMasking(width_shift_range=shift,
+#                height_shift_range=shift,
+#                zca_whitening=True,
+#                horizontal_flip=True,
+#                vertical_flip=True)
 datagen.fit(x_train)
 
 
@@ -99,6 +104,8 @@ model.compile(loss='categorical_crossentropy',
 
 #just for model to figure out what is the shape of input tensors
 #workaround for how keras fit_generator works
+x_train_single_ex = x_train[0:1]
+y_train_single_ex = y_train[0:1]
 model.fit(x_train_single_ex, y_train_single_ex, epochs=1)
 model.summary()
 
