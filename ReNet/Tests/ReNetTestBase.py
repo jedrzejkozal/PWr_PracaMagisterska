@@ -11,8 +11,11 @@ class ReNetTestBase(object):
     def sut(self):
         self.__class__.setup()
         model = self.SUT_class([[self.w_p, self.h_p]],
-                self.reNet_hidden_size, self.fully_conn_hidden_size, self.num_classes)
-        model.compile(loss='categorical_crossentropy', optimizer='adam',
+                self.reNet_hidden_size,
+                self.fully_conn_hidden_size,
+                self.num_classes)
+        model.compile(loss='categorical_crossentropy',
+                optimizer='adam',
                 metrics=['categorical_accuracy'])
         return model
 
@@ -40,15 +43,15 @@ class ReNetTestBase(object):
         return list(map(lambda x: int(x), result.shape[1:]))
 
 
-    def test_model_output_for_2_classes_shape_is_num_samples_x_2(self, sut, simple_data_x,
-            simple_data_y):
+    def test_model_output_for_2_classes_shape_is_num_samples_x_2(self, sut,
+            simple_data_x, simple_data_y):
         sut.fit(simple_data_x, simple_data_y, epochs=1, shuffle=False)
         result = sut.predict(simple_data_x)
         assert result.shape == (self.num_samples, 2)
 
 
-    def test_call_returns_tensor_with_valid_shape(self, sut, simple_data_x,
-            simple_data_y):
+    def test_call_returns_tensor_with_valid_shape(self, sut,
+            simple_data_x, simple_data_y):
         arg = Input((self.img_height, self.img_width, self.number_of_channels))
 
         result = sut.call(arg)

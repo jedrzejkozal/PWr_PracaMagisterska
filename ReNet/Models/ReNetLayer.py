@@ -22,9 +22,9 @@ class ReNetLayer(Layer):
             self.mask = Masking(mask_value=-100.0)
 
         self.hidden_size = hidden_size
-        self.LSTM_up_down = LSTM(self.hidden_size, return_sequences=True) # , input_shape=(J, rnn_features)
+        self.LSTM_up_down = LSTM(self.hidden_size, return_sequences=True)
         self.LSTM_down_up = LSTM(self.hidden_size, return_sequences=True, go_backwards=True)
-        self.LSTM_left_right = LSTM(self.hidden_size, return_sequences=True) # , input_shape=(I, rnn_features)
+        self.LSTM_left_right = LSTM(self.hidden_size, return_sequences=True)
         self.LSTM_right_left = LSTM(self.hidden_size, return_sequences=True, go_backwards=True)
 
         self.use_dropout = use_dropout
@@ -34,8 +34,7 @@ class ReNetLayer(Layer):
             self.dropout_left_right = Dropout(dropout_rate)
             self.dropout_right_left = Dropout(dropout_rate)
 
-        self.layer_vertical_activations_permutarion = Permute((1, 3, 2))
-        self.layer_horizontal_activations_permutarion = Permute((3, 1, 2))
+        self.layer_horizontal_activations_permutarion = Permute((2, 1, 3))
 
 
     def build(self, input_shape):
@@ -47,7 +46,6 @@ class ReNetLayer(Layer):
         I = int(input_shape[1]) // self.w_p
         J = int(input_shape[2]) // self.h_p
 
-        #rnn_features = self.w_p*self.h_p*input_shape[3]
         return (input_shape[0], I, J, 2*self.hidden_size)
 
 
@@ -82,7 +80,7 @@ class ReNetLayer(Layer):
         LSTM_outputs = []
 
         for col in self.get_columns(inputs):
-            column_activations = self.get_activations_for_columns(col)
+            column_activations = self.get_activations_for_column(col)
             LSTM_outputs.append(column_activations)
 
         merged = concatenate(LSTM_outputs, axis=2)
@@ -95,7 +93,7 @@ class ReNetLayer(Layer):
             yield inputs[:, :, j:j+self.w_p, :]
 
 
-    def get_activations_for_columns(self, col):
+    def get_activations_for_column(self, col):
         patches = self.get_vertical_patches(col)
 
         if self.is_first_layer:
@@ -105,8 +103,7 @@ class ReNetLayer(Layer):
 
         up_down_activation, down_up_activation = self.calc_vertical_LSTM_activations(p)
 
-        merged_tensor = self.merge_vert_LSTM_activations(up_down_activation, down_up_activation)
-        return self.layer_vertical_activations_permutarion(merged_tensor)
+        return self.merge_vert_LSTM_activations(up_down_activation, down_up_activation)
 
 
     def get_vertical_patches(self, column):
@@ -127,7 +124,7 @@ class ReNetLayer(Layer):
     def merge_vert_LSTM_activations(self, first_tensor, second_tensor):
         merged_vector = concatenate(
                 [tf.keras.backend.expand_dims(first_tensor, axis=2),
-                 tf.keras.backend.expand_dims(second_tensor, axis=2)], axis=2)
+                 tf.keras.backend.expand_dims(second_tensor, axis=2)], axis=3)
         return merged_vector
 
 
@@ -136,7 +133,6 @@ class ReNetLayer(Layer):
 
         for row in self.get_rows(inputs):
             row_activations = self.get_activations_for_row(row)
-            print("row_activations shape: ", row_activations.shape)
             LSTM_outputs.append(row_activations)
 
         merged = concatenate(LSTM_outputs, axis=1)
@@ -158,8 +154,7 @@ class ReNetLayer(Layer):
 
 
     def get_hor_patches(self, row):
-        hor_patches = self.layer_horizontal_patches_permute(row)
-        return tf.squeeze(hor_patches, axis=3)
+        return tf.squeeze(row, axis=1)
 
 
     def calc_horizontal_LSTM_activations(self, patches):
@@ -172,8 +167,9 @@ class ReNetLayer(Layer):
 
         return left_right_activations, right_left_activations
 
+
     def merge_hor_LSTM_activations(self, first_tensor, second_tensor):
         merged_vector = concatenate(
-                [tf.keras.backend.expand_dims(first_tensor, axis=1),
-                 tf.keras.backend.expand_dims(second_tensor, axis=1)], axis=2)
+                [tf.keras.backend.expand_dims(first_tensor, axis=2),
+                 tf.keras.backend.expand_dims(second_tensor, axis=2)], axis=3)
         return merged_vector

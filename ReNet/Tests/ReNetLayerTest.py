@@ -6,6 +6,7 @@ from keras.layers import Input
 from Models.ReNetLayer import *
 
 
+
 class ReNetLayerTest(object):
 
     @pytest.fixture
@@ -38,20 +39,19 @@ class ReNetLayerTest(object):
 
 
     def get_result_shape(self, result):
-        print("result_shape: ", result.shape)
-        return list(map(lambda x: int(x), result.shape[1:]))
+        return list(map(lambda x: x.value, result.shape[1:]))
 
 
     def test_get_columns_outputs_returns_columns_with_valid_shape(self, sut):
-        arg = Input((self.img_height, self.img_width, self.number_of_channels)) #10, 10, 1
+        arg = Input((self.img_height, self.img_width, self.number_of_channels))
 
         for result in sut.get_columns(arg):
             result_shape = self.get_result_shape(result)
-            assert result_shape == [self.img_height, self.w_p, self.number_of_channels] #10, 2, 1
+            assert result_shape == [self.img_height, self.w_p, self.number_of_channels]
 
 
     def test_get_columns_generates_5_columns(self, sut):
-        arg = Input((self.img_height, self.img_width, self.number_of_channels)) #10, 10, 1
+        arg = Input((self.img_height, self.img_width, self.number_of_channels))
 
         number_of_col = 0
         for result in sut.get_columns(arg):
@@ -65,7 +65,7 @@ class ReNetLayerTest(object):
             width = self.img_width + 1
         else:
             width = self.img_width
-        return Input((self.img_height, width, self.number_of_channels)) #10, 11, 1
+        return Input((self.img_height, width, self.number_of_channels))
 
 
     def test_call_not_even_number_of_columns_for_patches_exception_raised(self, sut):
@@ -78,7 +78,7 @@ class ReNetLayerTest(object):
         assert "invalid patches size" in str(err.value)
 
 
-    def test_get_vert_patches_returns_patches_with_valid_shape(self, sut, simple_data_x):
+    def test_get_vert_patches_returns_patches_with_valid_shape(self, sut):
         arg = Input((self.img_height, self.w_p, self.number_of_channels))
         sut.J = self.J
         sut.layer_vertical_patches_reshape = Reshape((self.J, self.w_p * self.h_p * self.number_of_channels))
@@ -88,7 +88,7 @@ class ReNetLayerTest(object):
         assert result_shape == [self.J, self.h_p*self.w_p*self.number_of_channels]
 
 
-    def test_vertical_sweep_output_shape_is_J_I_2(self, sut, simple_data_x):
+    def test_vertical_sweep_output_shape_is_J_I_2(self, sut):
         arg = Input((self.img_height, self.img_width, self.number_of_channels))
         sut.I = self.I
         sut.J = self.J
@@ -101,16 +101,27 @@ class ReNetLayerTest(object):
         assert result_shape == [self.J, self.I, 2*self.hidden_size]
 
 
+    def test_get_activations_for_column_ouput_shape_is_J_1_2hidden_size(self, sut):
+        column_shape = (self.img_height, self.w_p, self.number_of_channels)
+        arg = Input(column_shape)
+        sut.layer_vertical_patches_reshape = Reshape((self.J, self.w_p * self.h_p * self.number_of_channels))
+
+        result = sut.get_activations_for_column(arg)
+        result_shape = self.get_result_shape(result)
+
+        assert result_shape == [None, 1, 2*self.hidden_size]
+
+
     def test_get_rows_outputs_returns_rows_with_valid_shape(self, sut):
-        arg = Input((self.J, self.I, 2*self.hidden_size)) #5, 5, 2
+        arg = Input((self.J, self.I, 2*self.hidden_size))
 
         for result in sut.get_rows(arg):
             result_shape = self.get_result_shape(result)
             assert result_shape == [1, self.I, 2*self.hidden_size]
 
 
-    def test_get_rows_generates_5_rows(self, sut):
-        arg = Input((self.J, self.I, 2*self.hidden_size)) #5, 5, 2
+    def test_get_rows_generates_J_rows(self, sut):
+        arg = Input((self.J, self.I, 2*self.hidden_size))
 
         number_of_col = 0
         for result in sut.get_rows(arg):
@@ -119,7 +130,7 @@ class ReNetLayerTest(object):
         assert number_of_col == self.J
 
 
-    def test_get_hor_patches_returns_patches_with_valid_shape(self, sut, simple_data_x):
+    def test_get_hor_patches_returns_patches_with_valid_shape(self, sut):
         arg = Input((1, self.I, 2*self.hidden_size))
         sut.I = self.I
         sut.J = self.J
@@ -130,8 +141,7 @@ class ReNetLayerTest(object):
         assert result_shape == [self.I, 2*self.hidden_size]
 
 
-
-    def test_horizontal_sweep_output_shape_is_J_I_2(self, sut, simple_data_x):
+    def test_horizontal_sweep_output_shape_is_J_I_2(self, sut):
         arg = Input((self.I, self.J, 2*self.hidden_size))
         sut.I = self.I
         sut.J = self.J
@@ -142,3 +152,14 @@ class ReNetLayerTest(object):
         result_shape = self.get_result_shape(result)
 
         assert result_shape == [self.J, self.I, 2*self.hidden_size]
+
+
+    def test_get_activations_for_row_output_shape_is_I_1_2hidden_size(self, sut):
+        row_shape = (1, self.img_width, self.number_of_channels)
+        arg = Input(row_shape)
+        sut.layer_horizontal_patches_permute = Permute((2, 3, 1))
+
+        result = sut.get_activations_for_row(arg)
+        result_shape = self.get_result_shape(result)
+
+        assert result_shape == [1, None, 2*self.hidden_size]
