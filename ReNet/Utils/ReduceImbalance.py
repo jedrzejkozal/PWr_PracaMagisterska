@@ -10,6 +10,9 @@ def reduce_imbalance(x_data, y_data,
     assert num_classes is not None
     assert labels is not None
 
+    if len(y_data.shape) > 1:
+        y_data = y_data.flatten()
+
     indexes_all = []
     for l in labels:
         indexes_all.append(np.argwhere(y_data == l).flatten())
@@ -29,6 +32,6 @@ def reduce_imbalance(x_data, y_data,
     del indexes_chosen
 
     x_data = np.vstack(choosen_samples_x)
-    y_data = np.vstack(choosen_samples_y)
+    y_data = np.hstack(choosen_samples_y)
 
     return x_data, y_data
