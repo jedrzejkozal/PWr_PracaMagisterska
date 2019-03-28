@@ -19,25 +19,6 @@ class ReNetLayerTest(object):
         return sut
 
 
-    @pytest.fixture
-    def simple_data_x(self):
-        self.__class__.setup()
-        x = np.zeros((self.num_samples, self.img_width, self.img_height,
-                self.number_of_channels), dtype=np.uint8)
-        x[self.num_samples // 2:] = np.ones(
-                    (self.img_width, self.img_height, self.number_of_channels)
-                )
-        return x
-
-
-    @pytest.fixture
-    def simple_data_y(self):
-        self.__class__.setup()
-        y = np.zeros((self.num_samples), dtype=np.uint8)
-        y[self.num_samples // 2:] = 1
-        return y
-
-
     def get_result_shape(self, result):
         return list(map(lambda x: x.value, result.shape[1:]))
 
@@ -88,7 +69,19 @@ class ReNetLayerTest(object):
         assert result_shape == [self.J, self.h_p*self.w_p*self.number_of_channels]
 
 
-    def test_vertical_sweep_output_shape_is_J_I_2(self, sut):
+    def test_calc_vertical_LSTM_activations_outputs_shape_is_J_x_hidden_units(self, sut):
+        num_features = self.w_p * self.h_p * self.number_of_channels
+        arg = Input((self.J, num_features))
+
+        up_down_result, down_up_result = sut.calc_vertical_LSTM_activations(arg)
+        up_down_result_shape = self.get_result_shape(up_down_result)
+        down_up_result_shape = self.get_result_shape(down_up_result)
+
+        assert up_down_result_shape == [None, self.hidden_size]
+        assert down_up_result_shape == [None, self.hidden_size]
+
+
+    def test_vertical_sweep_output_shape_is_J_x_I_x_2(self, sut):
         arg = Input((self.img_height, self.img_width, self.number_of_channels))
         sut.I = self.I
         sut.J = self.J
@@ -101,7 +94,7 @@ class ReNetLayerTest(object):
         assert result_shape == [self.J, self.I, 2*self.hidden_size]
 
 
-    def test_get_activations_for_column_ouput_shape_is_J_1_2hidden_size(self, sut):
+    def test_get_activations_for_column_ouput_shape_is_J_x_1_x_2hidden_size(self, sut):
         column_shape = (self.img_height, self.w_p, self.number_of_channels)
         arg = Input(column_shape)
         sut.layer_vertical_patches_reshape = Reshape((self.J, self.w_p * self.h_p * self.number_of_channels))
@@ -140,7 +133,19 @@ class ReNetLayerTest(object):
         assert result_shape == [self.I, 2*self.hidden_size]
 
 
-    def test_horizontal_sweep_output_shape_is_J_I_2(self, sut):
+    def test_calc_horizontal_LSTM_activations_outputs_shape_is_I_x_hidden_units(self, sut):
+        num_features = self.w_p * self.h_p * self.number_of_channels
+        arg = Input((self.I, num_features))
+
+        up_down_result, down_up_result = sut.calc_horizontal_LSTM_activations(arg)
+        up_down_result_shape = self.get_result_shape(up_down_result)
+        down_up_result_shape = self.get_result_shape(down_up_result)
+
+        assert up_down_result_shape == [None, self.hidden_size]
+        assert down_up_result_shape == [None, self.hidden_size]
+
+
+    def test_horizontal_sweep_output_shape_is_J_x_I_x_2hidden_size(self, sut):
         arg = Input((self.I, self.J, 2*self.hidden_size))
         sut.I = self.I
         sut.J = self.J
@@ -152,7 +157,7 @@ class ReNetLayerTest(object):
         assert result_shape == [self.J, self.I, 2*self.hidden_size]
 
 
-    def test_get_activations_for_row_output_shape_is_I_1_2hidden_size(self, sut):
+    def test_get_activations_for_row_output_shape_is_I_x_1_x_2hidden_size(self, sut):
         row_shape = (1, self.img_width, self.number_of_channels)
         arg = Input(row_shape)
 
@@ -160,3 +165,12 @@ class ReNetLayerTest(object):
         result_shape = self.get_result_shape(result)
 
         assert result_shape == [1, None, 2*self.hidden_size]
+
+
+    def test_call_output_shape_is_J_x_I_x_2hidden_size(self, sut):
+        arg = Input((self.img_width, self.img_height, self.number_of_channels))
+
+        result = sut.call(arg)
+        result_shape = self.get_result_shape(result)
+
+        assert result_shape == [self.J, self.I, 2*self.hidden_size]
