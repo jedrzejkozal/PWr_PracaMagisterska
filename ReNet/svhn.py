@@ -47,7 +47,7 @@ y_train = y_train[:100]
 x_test = x_test[:100]
 y_test = y_test[:100]
 
-shift = 3
+
 datagen = ImageDataGenerator(width_shift_range=[-2.0, 0.0, 2.0])
 datagen.fit(x_train)
 

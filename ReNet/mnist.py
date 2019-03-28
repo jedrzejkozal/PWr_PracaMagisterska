@@ -60,8 +60,7 @@ makedirs(log_dir)
 #    np.savetxt(f, y_test)
 
 
-shift = 3
-#datagen = ImageDataGenerator(width_shift_range=shift, height_shift_range=shift)
+#datagen = ImageDataGenerator(width_shift_range=[-2.0, 0.0, 2.0])
 datagen = ImageDataGeneratorWithMasking(width_shift_range=[-2.0, 0.0, 2.0])
 datagen.fit(x_train)
 
