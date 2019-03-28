@@ -55,9 +55,10 @@ x_train = x_train.reshape(x_train.shape[0], img_rows, img_cols, 3)
 x_test = x_test.reshape(x_test.shape[0], img_rows, img_cols, 3)
 
 import matplotlib.pyplot as plt
-fig, ax = plt.subplots()
-image = x_train[0]
-im = ax.imshow(image.astype('int32'))
+plt.figure()
+for xx in range(25):
+    plt.subplot(5,5,xx+1)
+    plt.imshow(x_train[xx].astype('int32'))
 #plt.show()
 
 x_train = normalize(x_train)
