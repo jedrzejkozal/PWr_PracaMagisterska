@@ -9,7 +9,7 @@ from keras.optimizers import Adam
 
 from Utils.SaveResults import *
 from Utils.LoadSVHN import *
-from Models.Cifar10Reproduction.Cifar10Model import *
+from Models.SVHNReproduction.SVHNModel import *
 
 
 script_path = os.path.dirname(os.path.abspath(__file__))
@@ -48,12 +48,11 @@ x_test = x_test[:100]
 y_test = y_test[:100]
 
 shift = 3
-datagen = ImageDataGenerator(width_shift_range=shift, height_shift_range=shift,
-                horizontal_flip=True, vertical_flip=True)
+datagen = ImageDataGenerator(width_shift_range=[-2.0, 0.0, 2.0])
 datagen.fit(x_train)
 
 
-model = get_cifar10_model()
+model = get_svhn_model()
 model.compile(loss='categorical_crossentropy',
         optimizer=Adam(lr=0.001, beta_1=0.9, beta_2=0.999, epsilon=10.0**-8.0),
         metrics=['categorical_accuracy'])

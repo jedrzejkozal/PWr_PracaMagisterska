@@ -13,7 +13,6 @@ from shutil import rmtree
 from Utils.SaveResults import *
 from Utils.TensorBoardSaveSplits import *
 from Utils.SaveTensorBoardSprite import *
-from Utils.ReduceImbalance import *
 from Utils.ImageGeneratorWithMasking import *
 from Models.MnistReproduction.MnistModel import *
 
@@ -31,14 +30,6 @@ x_train = x_train.astype('float32')
 x_test = x_test.astype('float32')
 x_train /= 255
 x_test /= 255
-
-x_train, y_train = reduce_imbalance(x_train, y_train,
-        samples_per_class=5000,
-        num_classes=num_classes,
-        labels=[0, 1, 2, 3, 4, 5, 6, 7, 8, 9])
-
-print(x_train.shape)
-print(y_train.shape)
 
 print("x_train: ", x_train.shape)
 print("y_train: ", y_train.shape)
@@ -71,7 +62,7 @@ makedirs(log_dir)
 
 shift = 3
 #datagen = ImageDataGenerator(width_shift_range=shift, height_shift_range=shift)
-datagen = ImageDataGeneratorWithMasking(width_shift_range=shift, height_shift_range=shift)
+datagen = ImageDataGeneratorWithMasking(width_shift_range=[-2.0, 0.0, 2.0])
 datagen.fit(x_train)
 
 
