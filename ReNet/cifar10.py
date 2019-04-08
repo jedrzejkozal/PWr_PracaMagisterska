@@ -87,7 +87,7 @@ makedirs(log_dir)
 
 datagen = ImageDataGenerator(width_shift_range=[-2.0, 0.0, 2.0],
                 horizontal_flip=True,
-                vertical_flip=True)
+                vertical_flip=False)
 #datagen = ImageDataGeneratorWithMasking(width_shift_range=[-2.0, 0.0, 2.0],
 #                height_shift_range=shift,
 #                horizontal_flip=True,
@@ -109,7 +109,7 @@ model.summary()
 
 batch_size = 30
 history = model.fit_generator(datagen.flow(x_train, y_train, batch_size=batch_size),
-                epochs=10,
+                epochs=100,
                 steps_per_epoch=np.ceil(x_train.shape[0] / batch_size),
                 validation_data=(x_test, y_test),
                 callbacks=[EarlyStopping(monitor='val_loss', patience=20, verbose=1),

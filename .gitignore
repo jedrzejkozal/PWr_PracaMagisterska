@@ -20,3 +20,5 @@ ReNet/experiments/lstm-on-Yelp-review-data/review.json
 *.csv
 ReNet/TensorBoard_logs
 experiments/logs
+*.npy
+*.npz
