@@ -49,6 +49,8 @@ def load_SVHN(path):
     y_test = np.load(join(path, 'y_test.npy'), allow_pickle=True, fix_imports=False)
     x_test = np.moveaxis(x_test, -1, 0)
     y_test = np.squeeze(y_test)
-    print("y_test: ", y_test)
+
+    y_train = y_train - 1
+    y_test = y_test - 1
 
     return x_train, y_train, x_test, y_test

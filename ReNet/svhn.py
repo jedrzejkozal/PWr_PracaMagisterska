@@ -9,15 +9,13 @@ from keras.optimizers import Adam
 
 from Utils.SaveResults import *
 from Utils.LoadSVHN import *
+from Utils.ImageGeneratorWithMasking import *
 from Models.SVHNReproduction.SVHNModel import *
 
 
 script_path = os.path.dirname(os.path.abspath(__file__))
 dataset_path = os.path.join(script_path ,'SVHNdataset/')
 x_train, y_train, x_test, y_test = load_SVHN(dataset_path)
-
-y_train = y_train - 1
-y_test = y_test - 1
 
 print("x_train: ", x_train.shape)
 print("y_train: ", y_train.shape)
@@ -40,14 +38,9 @@ print("y_train: ", y_train.shape)
 print("x_test: ", x_test.shape)
 print("y_test: ", y_test.shape)
 
-#just for testing
-x_train = x_train[:100]
-y_train = y_train[:100]
-x_test = x_test[:100]
-y_test = y_test[:100]
 
-
-datagen = ImageDataGenerator(width_shift_range=[-2.0, 0.0, 2.0])
+#datagen = ImageDataGenerator(width_shift_range=[-2.0, 0.0, 2.0])
+datagen = ImageDataGeneratorWithMasking(width_shift_range=[-2.0, 0.0, 2.0])
 datagen.fit(x_train)
 
 
@@ -65,7 +58,7 @@ model.summary()
 
 batch_size = 30
 history = model.fit_generator(datagen.flow(x_train, y_train, batch_size=32),
-                epochs=1,
+                epochs=100,
                 steps_per_epoch=np.ceil(x_train.shape[0] / batch_size),
                 validation_data=(x_test, y_test),
                 callbacks=[EarlyStopping(monitor='val_loss', patience=5, verbose=1),
