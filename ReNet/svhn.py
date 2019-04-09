@@ -29,12 +29,8 @@ x_test = x_test.astype('float32')
 x_train /= 255
 x_test /= 255
 
-
-# convert class vectors to binary class matrices
-num_classes = 10
-y_train = to_categorical(y_train, num_classes)
-y_test = to_categorical(y_test, num_classes)
-
+y_train = to_categorical(y_train)
+y_test = to_categorical(y_test)
 
 print("x_train: ", x_train.shape)
 print("y_train: ", y_train.shape)
