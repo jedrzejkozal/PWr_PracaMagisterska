@@ -23,3 +23,4 @@ experiments/logs
 *.npy
 *.npz
 ReNet/SVHNdataset/*
+HyperparamsSearch/hyperparams.log
