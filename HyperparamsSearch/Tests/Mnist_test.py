@@ -54,6 +54,7 @@ class MnistModel(ModelIfc):
         self.model.compile(loss='categorical_crossentropy',
                 optimizer=Adam(lr=hyperparams["lr"]),
                 metrics=['categorical_accuracy'])
+        self.__print_model_summary()
         self.model.fit(x=self.x_train,
                 y=self.y_train,
                 batch_size=30,
@@ -66,6 +67,11 @@ class MnistModel(ModelIfc):
 
     def evaluate(self, hyperparams):
         return self.model.evaluate(x=self.x_test, y=self.y_test)
+
+
+    def __print_model_summary(self):
+        self.model.fit(x=self.x_train[0:1], y=self.y_train[0:1], verbose=0)
+        self.model.summary()
 
 
 h = HyperparamsSearch()

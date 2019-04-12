@@ -1,9 +1,9 @@
 
 
 class Logger(object):
-    def save_logs(self, results, hyperparams_names):
+    def save_logs(self, results, hyperparams_names, filename):
         formated = self.__get_formated_results(results, hyperparams_names)
-        self.__dump_logs(formated)
+        self.__dump_logs(formated, filename)
 
 
     def __get_formated_results(self, results, hyperparams_names):
@@ -26,7 +26,7 @@ class Logger(object):
         return result
 
 
-    def __dump_logs(self, logs):
-        f = open("hyperparams.log", "w")
+    def __dump_logs(self, logs, filename):
+        f = open(filename, "w")
         f.write(logs)
         f.close()
