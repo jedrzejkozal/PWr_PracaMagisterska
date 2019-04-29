@@ -43,10 +43,10 @@ class ReNetLayer(Layer):
 
 
     def compute_output_shape(self, input_shape):
-        I = int(input_shape[1]) // self.w_p
-        J = int(input_shape[2]) // self.h_p
+        J = int(input_shape[1]) // self.h_p
+        I = int(input_shape[2]) // self.w_p
 
-        return (input_shape[0], I, J, 2*self.hidden_size)
+        return (input_shape[0], J, I, 2*self.hidden_size)
 
 
     def call(self, inputs):
@@ -68,8 +68,8 @@ class ReNetLayer(Layer):
 
 
     def __initialize_input_size_dependent_variables(self, inputs_shape):
-        self.I = int(inputs_shape[1]) // self.w_p
-        self.J = int(inputs_shape[2]) // self.h_p
+        self.J = int(inputs_shape[1]) // self.h_p
+        self.I = int(inputs_shape[2]) // self.w_p
 
         self.layer_vertical_patches_reshape = Reshape((self.J, self.w_p * self.h_p * int(inputs_shape[3])))
         self.layer_precise_tensor_shape = Reshape((self.J, self.I, int(2*self.hidden_size)))
@@ -93,20 +93,21 @@ class ReNetLayer(Layer):
 
 
     def get_activations_for_column(self, col):
-        patches = self.get_vertical_patches(col)
-
-        if self.is_first_layer:
-            p = self.mask(patches)
-        else:
-            p = patches
-
+        patches = self.convert_to_vertical_patch(col)
+        p = self.mask_if_first_layer(patches)
         up_down_activation, down_up_activation = self.calc_vertical_LSTM_activations(p)
-
         return self.merge_vert_LSTM_activations(up_down_activation, down_up_activation)
 
 
-    def get_vertical_patches(self, column):
+    def convert_to_vertical_patch(self, column):
         return self.layer_vertical_patches_reshape(column)
+
+
+    def mask_if_first_layer(self, patches):
+        if self.is_first_layer:
+            return self.mask(patches)
+        else:
+            return patches
 
 
     def calc_vertical_LSTM_activations(self, patches):
