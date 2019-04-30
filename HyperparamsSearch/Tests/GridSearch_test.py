@@ -2,7 +2,7 @@ from keras import Sequential
 import numpy as np
 import pytest
 
-from HyperparamsSearch import *
+from GridSearch import *
 
 
 class ModelMock(ModelIfc):
@@ -36,7 +36,7 @@ class TestHyperparamsSearch(object):
 
     @pytest.fixture
     def sut(self):
-        return HyperparamsSearch()
+        return GridSearch()
 
 
     def test_type_of_model_is_incorrect(self, sut):

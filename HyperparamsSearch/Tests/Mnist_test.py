@@ -7,7 +7,7 @@ from keras.callbacks import EarlyStopping
 
 
 
-from HyperparamsSearch import *
+from GridSearch import *
 
 
 class MnistModel(ModelIfc):
@@ -74,7 +74,7 @@ class MnistModel(ModelIfc):
         self.model.summary()
 
 
-h = HyperparamsSearch()
+h = GridSearch()
 hyperparams_arg = {"lr": [0.001],
                     "neurons": [2],
                     "dropout": [0.1, 0.5]}

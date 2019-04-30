@@ -2,7 +2,7 @@ from ModelIfc import *
 from CartesianProduct import *
 from Logger import *
 
-class HyperparamsSearch(object):
+class GridSearch(object):
 
     def __init__(self):
         self.logger = Logger()
