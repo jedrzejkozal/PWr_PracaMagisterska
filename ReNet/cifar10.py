@@ -10,11 +10,9 @@ from sklearn.decomposition import PCA
 from shutil import rmtree
 from os import makedirs
 
-from Utils.SaveResults import *
-from Utils.TensorBoardSaveSplits import *
-from Utils.InputNormalization import *
 from Models.Cifar10Reproduction.Cifar10Model import *
-#from Utils.ImageGeneratorWithMasking import *
+from Utils.InputNormalization import *
+from Utils.masking import *
 
 
 #image parameters:
@@ -80,18 +78,10 @@ y_test = to_categorical(y_test, num_classes)
 #x_test = x_test[:100]
 #y_test = y_test[:100]
 
-log_dir = 'TensorBoard_cifar10_logs'
-rmtree(log_dir, ignore_errors=True)
-makedirs(log_dir)
-
 
 datagen = ImageDataGenerator(width_shift_range=[-2.0, 0.0, 2.0],
                 horizontal_flip=True,
                 vertical_flip=False)
-#datagen = ImageDataGeneratorWithMasking(width_shift_range=[-2.0, 0.0, 2.0],
-#                height_shift_range=shift,
-#                horizontal_flip=True,
-#                vertical_flip=True)
 datagen.fit(x_train)
 
 
@@ -107,24 +97,15 @@ y_train_single_ex = y_train[0:1]
 model.fit(x_train_single_ex, y_train_single_ex, epochs=1)
 model.summary()
 
-batch_size = 30
-history = model.fit_generator(datagen.flow(x_train, y_train, batch_size=batch_size),
-                epochs=100,
-                steps_per_epoch=np.ceil(x_train.shape[0] / batch_size),
-                validation_data=(x_test, y_test),
-                callbacks=[EarlyStopping(monitor='val_loss', patience=20, verbose=1),
-                        #LambdaCallback(on_epoch_end=lambda x, y: model.layers[0].generate_mask()),
-                        #TensorBoardSaveSplits(log_dir=log_dir,
-                                #splits_size=[28,28],
-                                #splits_path='sprite.png',
-                                #batch_size=batch_size,
-                                #histogram_freq=1,
-                                #write_images=True,
-                                #write_grads=False,
-                                #embeddings_freq=1,
-                                #embeddings_layer_names=['features'],
-                                #embeddings_metadata='metadata.tsv',
-                                #embeddings_data=x_test
-                                #)
+batch_size = 32
+num_epochs = 50
+for i in range(num_epochs):
+    print("epoch {}/{}".format(i+1, num_epochs))
+    masked_x_train = mask_input(x_train)
+    model.fit_generator(datagen.flow(masked_x_train, y_train, batch_size=batch_size),
+            epochs=1,
+            steps_per_epoch=np.ceil(x_train.shape[0] / batch_size),
+            validation_data=(x_test, y_test),
+            callbacks=[EarlyStopping(monitor='val_loss', patience=20, verbose=1)
                 ]
-            )
+        )

@@ -39,8 +39,7 @@ print("x_test: ", x_test.shape)
 print("y_test: ", y_test.shape)
 
 
-#datagen = ImageDataGenerator(width_shift_range=[-2.0, 0.0, 2.0])
-datagen = ImageDataGeneratorWithMasking(width_shift_range=[-2.0, 0.0, 2.0])
+datagen = ImageDataGenerator(width_shift_range=[-2.0, 0.0, 2.0])
 datagen.fit(x_train)
 
 
@@ -56,12 +55,15 @@ y_train_single_ex = y_train[0:1]
 model.fit(x_train_single_ex, y_train_single_ex, epochs=1)
 model.summary()
 
-batch_size = 30
-history = model.fit_generator(datagen.flow(x_train, y_train, batch_size=32),
-                epochs=100,
-                steps_per_epoch=np.ceil(x_train.shape[0] / batch_size),
-                validation_data=(x_test, y_test),
-                callbacks=[EarlyStopping(monitor='val_loss', patience=5, verbose=1),
-                        #LambdaCallback(on_epoch_end=lambda x, y: model.layers[0].generate_mask()),
+batch_size = 32
+num_epochs = 50
+for i in range(num_epochs):
+    print("epoch {}/{}".format(i+1, num_epochs))
+    masked_x_train = mask_input(x_train)
+    model.fit_generator(datagen.flow(masked_x_train, y_train, batch_size=batch_size),
+            epochs=1,
+            steps_per_epoch=np.ceil(x_train.shape[0] / batch_size),
+            validation_data=(x_test, y_test),
+            callbacks=[EarlyStopping(monitor='val_loss', patience=20, verbose=1)
                 ]
-            )
+        )

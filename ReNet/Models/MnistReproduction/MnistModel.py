@@ -1,12 +1,10 @@
 from keras.models import Sequential
 
 from Models.ReNetLayer import *
-from Models.InputMaskingLayer import *
 
 
 def get_mnist_model():
     model = Sequential()
-    #model.add(InputMaskingLayer(0.2))
 
     reNet_hidden_size = 256
     model.add(ReNetLayer([[2, 2]], reNet_hidden_size,
