@@ -12,12 +12,13 @@ from os import makedirs
 
 from Models.Cifar10Reproduction.Cifar10Model import *
 from Utils.InputNormalization import *
-from Utils.masking import *
+from Utils.Masking import *
 
 
 #image parameters:
 num_classes = 10
 img_rows, img_cols = 32, 32
+num_channels = 3
 (x_train, y_train), (x_test, y_test) = cifar10.load_data()
 
 
@@ -99,10 +100,12 @@ model.summary()
 
 batch_size = 32
 num_epochs = 50
+masking = Masking(img_rows, img_cols, num_channels)
 for i in range(num_epochs):
     print("epoch {}/{}".format(i+1, num_epochs))
-    masked_x_train = mask_input(x_train)
-    model.fit_generator(datagen.flow(masked_x_train, y_train, batch_size=batch_size),
+    masked_x_train = masking.mask_input(x_train)
+    model.fit_generator(datagen.flow(masked_x_train, y_train,
+            batch_size=batch_size),
             epochs=1,
             steps_per_epoch=np.ceil(x_train.shape[0] / batch_size),
             validation_data=(x_test, y_test),

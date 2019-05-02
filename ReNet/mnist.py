@@ -11,12 +11,13 @@ from os.path import exists, join
 from shutil import rmtree
 
 from Models.MnistReproduction.MnistModel import *
-from Utils.masking import *
+from Utils.Masking import *
 
 
 #image parameters:
 num_classes = 10
 img_rows, img_cols = 28, 28
+num_channels = 1
 (x_train, y_train), (x_test, y_test) = mnist.load_data()
 
 x_train = x_train.reshape(x_train.shape[0], img_rows, img_cols, 1)
@@ -56,7 +57,6 @@ model.compile(loss='categorical_crossentropy',
         optimizer=Adam(lr=0.001, beta_1=0.9, beta_2=0.999, epsilon=10.0**-8.0),
         metrics=['categorical_accuracy'])
 
-
 #just for model to figure out what is the shape of input tensors
 #workaround for how keras fit_generator works
 x_train_single_ex = x_train[0:1]
@@ -66,10 +66,12 @@ model.summary()
 
 batch_size = 32
 num_epochs = 50
+masking = Masking(img_rows, img_cols, num_channels)
 for i in range(num_epochs):
     print("epoch {}/{}".format(i+1, num_epochs))
-    masked_x_train = mask_input(x_train)
-    model.fit_generator(datagen.flow(masked_x_train, y_train, batch_size=batch_size),
+    masked_x_train = masking.mask_input(x_train)
+    model.fit_generator(datagen.flow(masked_x_train, y_train,
+            batch_size=batch_size),
             epochs=1,
             steps_per_epoch=np.ceil(x_train.shape[0] / batch_size),
             validation_data=(x_test, y_test),

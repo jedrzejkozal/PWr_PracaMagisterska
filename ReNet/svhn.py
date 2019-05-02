@@ -7,15 +7,17 @@ from keras.preprocessing.image import ImageDataGenerator
 from keras.callbacks import EarlyStopping, TensorBoard, LambdaCallback
 from keras.optimizers import Adam
 
-from Utils.SaveResults import *
-from Utils.LoadSVHN import *
-from Utils.ImageGeneratorWithMasking import *
 from Models.SVHNReproduction.SVHNModel import *
+from Utils.LoadSVHN import *
+from Utils.Masking import *
 
 
 script_path = os.path.dirname(os.path.abspath(__file__))
 dataset_path = os.path.join(script_path ,'SVHNdataset/')
 x_train, y_train, x_test, y_test = load_SVHN(dataset_path)
+
+img_rows, img_cols = 32, 32
+num_channels = 3
 
 print("x_train: ", x_train.shape)
 print("y_train: ", y_train.shape)
@@ -57,10 +59,12 @@ model.summary()
 
 batch_size = 32
 num_epochs = 50
+masking = Masking(img_rows, img_cols, num_channels)
 for i in range(num_epochs):
     print("epoch {}/{}".format(i+1, num_epochs))
-    masked_x_train = mask_input(x_train)
-    model.fit_generator(datagen.flow(masked_x_train, y_train, batch_size=batch_size),
+    masked_x_train = masking.mask_input(x_train)
+    model.fit_generator(datagen.flow(masked_x_train, y_train,
+            batch_size=batch_size),
             epochs=1,
             steps_per_epoch=np.ceil(x_train.shape[0] / batch_size),
             validation_data=(x_test, y_test),
