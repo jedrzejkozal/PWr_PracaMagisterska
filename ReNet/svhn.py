@@ -8,6 +8,7 @@ from keras.callbacks import EarlyStopping, TensorBoard, LambdaCallback
 from keras.optimizers import Adam
 
 from Models.SVHNReproduction.SVHNModel import *
+from Utils.InputNormalization import *
 from Utils.LoadSVHN import *
 from Utils.Masking import *
 
@@ -31,6 +32,9 @@ x_train = x_train.astype('float32')
 x_test = x_test.astype('float32')
 x_train /= 255
 x_test /= 255
+
+x_train = normalize(x_train)
+x_test = normalize(x_test)
 
 y_train = to_categorical(y_train)
 y_test = to_categorical(y_test)
