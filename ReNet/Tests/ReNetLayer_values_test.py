@@ -13,8 +13,8 @@ x = np.array([[[1, 2, 3, 4],
                 [13, 14, 15, 16]]]).reshape(1, 4, 4, 1)
 print("x: ", x)
 print("x.shape: ", x.shape)
-y = np.array([[[1, 2, 5, 6, 3, 7, 4, 8],
-                [3, 7, 4, 8, 1, 2, 5, 6]],
+y = np.array([[[1, 2, 5, 6, 3, 4, 7, 8],
+                [3, 4, 7, 8, 1, 2, 5, 6]],
                 [[9,10,13,14,11,12,15,16],
                 [11,12,15,16,9,10,13,14]]]).reshape(1, 2, 2, 8)
 print("y: ", y)
@@ -63,11 +63,11 @@ def set_LSTM_identity_weights(lstm):
     lstm.set_weights(weights)
 
 
-def set_LSTM_identity_weights_longer_matrix(lstm):
+def set_LSTM_identity_weights_longer_matrix_select_first(lstm):
     weights = lstm.get_weights()
     print_shapes(weights)
     n = weights[1].shape[0]
-    #forget gate - or at least i hope it's forget gate
+    #forget gate - or at least I hope it's forget gate
     weights[0][:, :n] = np.zeros((2*n, n))
 
     #update gate
@@ -87,10 +87,34 @@ def set_LSTM_identity_weights_longer_matrix(lstm):
     lstm.set_weights(weights)
 
 
+def set_LSTM_identity_weights_longer_matrix_select_second(lstm):
+    weights = lstm.get_weights()
+    print_shapes(weights)
+    n = weights[1].shape[0]
+    #forget gate - or at least I hope it's forget gate
+    weights[0][:, :n] = np.zeros((2*n, n))
+
+    #update gate
+    weights[0][:n, n:2*n] = np.zeros((n, n))
+    weights[0][n:, n:2*n] = np.identity(n)
+
+    #output gate
+    weights[0][:n, 2*n:3*n] = np.zeros((n, n))
+    weights[0][n:, 2*n:3*n] = np.identity(n)
+
+    #tanh
+    weights[0][:n, 3*n:] = np.zeros((n, n))
+    weights[0][n:, 3*n:] = np.identity(n)
+
+    weights[1] = np.zeros(weights[1].shape)
+
+    lstm.set_weights(weights)
+
+
 set_LSTM_identity_weights(model.layers[0].LSTM_up_down)
 set_LSTM_identity_weights(model.layers[0].LSTM_down_up)
-set_LSTM_identity_weights_longer_matrix(model.layers[0].LSTM_left_right)
-set_LSTM_identity_weights_longer_matrix(model.layers[0].LSTM_right_left)
+set_LSTM_identity_weights_longer_matrix_select_first(model.layers[0].LSTM_left_right)
+set_LSTM_identity_weights_longer_matrix_select_first(model.layers[0].LSTM_right_left)
 
 
 
@@ -149,3 +173,5 @@ print("====================================")
 result = model.predict(x)
 print("target: ", y)
 print("prediction: ", result)
+
+assert np.isclose(y, result).all()
