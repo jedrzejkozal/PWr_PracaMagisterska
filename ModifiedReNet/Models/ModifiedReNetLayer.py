@@ -1,4 +1,3 @@
-import tensorflow as tf
 from keras.layers import LSTM, Reshape, Permute, Dropout
 from keras.layers import Layer
 from keras.layers import concatenate
@@ -14,7 +13,7 @@ class ModifiedReNetLayer(Layer):
         self.hidden_size = hidden_size
 
         self.LSTM_forward = LSTM(hidden_size, return_sequences=True)
-        self.LSTM_backward = LSTM(hidden_size, return_sequences=True)
+        self.LSTM_backward = LSTM(hidden_size, return_sequences=True, go_backwards=True)
 
         self.use_dropout = use_dropout
         if use_dropout:
@@ -36,23 +35,26 @@ class ModifiedReNetLayer(Layer):
 
 
     def call(self, inputs):
-        self.input_reshape = Reshape((int(inputs.shape[2]) // self.patch_size,
-                self.patch_size * int(inputs.shape[3])))
-        self.precise_shape = Reshape((int(inputs.shape[2]) // self.patch_size,
-                2*self.hidden_size, 1))
-
+        self.__initialize_input_size_dependent_variables(inputs.shape)
         LSTM_input = self.input_reshape(inputs)
         forward_LSTM_output, backward_LSTM_output = self.__get_LSTM_outputs(LSTM_input)
-        
+
         merged = concatenate([forward_LSTM_output, backward_LSTM_output], axis=2)
         merged = self.precise_shape(merged)
 
         return self.output_permutation(merged)
 
 
+    def __initialize_input_size_dependent_variables(self, inputs_shape):
+        self.input_reshape = Reshape((int(inputs_shape[2]) // self.patch_size,
+                self.patch_size * int(inputs_shape[3])))
+        self.precise_shape = Reshape((int(inputs_shape[2]) // self.patch_size,
+                2*self.hidden_size, 1))
+
+
     def __get_LSTM_outputs(self, LSTM_input):
         forward_LSTM_output = self.LSTM_forward(LSTM_input)
-        backward_LSTM_output = self.LSTM_backward(tf.reverse(LSTM_input, [2]))
+        backward_LSTM_output = self.LSTM_backward(LSTM_input)
         if self.use_dropout:
             forward_LSTM_output = self.dropout_forward(forward_LSTM_output)
             backward_LSTM_output = self.dropout_backward(backward_LSTM_output)

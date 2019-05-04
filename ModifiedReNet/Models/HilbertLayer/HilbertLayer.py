@@ -20,13 +20,27 @@ class HilbertLayer(Layer):
 
 
     def call(self, inputs):
-        self.side_length = int(inputs.shape[1])
-        self.reshape = Reshape((1, 1, int(inputs.shape[3])))
+        self.__initialize_input_size_dependent_variables(inputs.shape)
+        vec = self.__convert_to_1D(inputs)
 
-        indexes = self.hilbert_curve.get_indexes_vec(self.side_length)
+        return concatenate(vec, axis=2)
 
+
+    def __initialize_input_size_dependent_variables(self, inputs_shape):
+        self.side_length = int(inputs_shape[1])
+        self.all_channels_reshape = Reshape((1, 1, int(inputs_shape[3])))
+
+
+    def __convert_to_1D(self, inputs):
         pixels = []
-        for index in indexes:
-            pixels.append(self.reshape(inputs[:, index[0, 0], index[0, 1], :]))
+        for index in self.__get_indexes():
+            pixels.append(self.__get_pixel_at_index(inputs, index))
+        return pixels
 
-        return concatenate(pixels, axis=2)
+
+    def __get_indexes(self):
+        return self.hilbert_curve.get_indexes_vec(self.side_length)
+
+
+    def __get_pixel_at_index(self, inputs, index):
+        return self.all_channels_reshape(inputs[:, index[0, 0], index[0, 1], :])
