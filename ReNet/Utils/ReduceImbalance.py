@@ -1,6 +1,22 @@
 import numpy as np
 
 
+def undersample_to_lowest_cardinality_class(x_data, y_data):
+    if (len(np.squeeze(y_data).shape) != 1):
+        y_data = convert_from_one_hot_to_labels(y_data)
+
+    bincount = np.bincount(np.squeeze(y_data))
+    return reduce_imbalance(x_data,
+                            y_data,
+                            samples_per_class=np.min(bincount),
+                            num_classes=len(bincount),
+                            labels=list(range(len(bincount))))
+
+
+def convert_from_one_hot_to_labels(x):
+    return np.argwhere(x == 1)[:, 1]
+
+
 def reduce_imbalance(x_data, y_data,
         samples_per_class=None,
         num_classes=None,
