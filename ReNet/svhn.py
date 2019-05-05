@@ -51,7 +51,7 @@ datagen.fit(x_train)
 
 model = get_svhn_model()
 model.compile(loss='categorical_crossentropy',
-        optimizer=Adam(lr=0.001, beta_1=0.9, beta_2=0.999, epsilon=10.0**-8.0),
+        optimizer=Adam(lr=0.01, beta_1=0.9, beta_2=0.999, epsilon=10.0**-8.0),
         metrics=['categorical_accuracy'])
 
 #just for model to figure out what is the shape of input tensors
@@ -75,3 +75,4 @@ for i in range(num_epochs):
             callbacks=[EarlyStopping(monitor='val_loss', patience=20, verbose=1)
                 ]
         )
+    del masked_x_train
