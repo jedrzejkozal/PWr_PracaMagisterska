@@ -1,17 +1,27 @@
+from keras.utils import to_categorical
 import numpy as np
 
 
 def undersample_to_lowest_cardinality_class(x_data, y_data):
-    if (len(np.squeeze(y_data).shape) != 1):
+    was_one_hot = False
+    if is_one_hot(y_data):
+        was_one_hot = True
         y_data = convert_from_one_hot_to_labels(y_data)
 
+
     bincount = np.bincount(np.squeeze(y_data))
-    return reduce_imbalance(x_data,
+    x_data, y_data = reduce_imbalance(x_data,
                             y_data,
                             samples_per_class=np.min(bincount),
                             num_classes=len(bincount),
                             labels=list(range(len(bincount))))
+    if was_one_hot:
+        y_data = to_categorical(y_data)
+    return x_data, y_data
 
+
+def is_one_hot(x):
+    return len(np.squeeze(x).shape) != 1
 
 def convert_from_one_hot_to_labels(x):
     return np.argwhere(x == 1)[:, 1]
@@ -35,7 +45,8 @@ def reduce_imbalance(x_data, y_data,
 
     indexes_chosen = []
     for i in range(num_classes):
-        indexes_chosen.append(np.random.choice(indexes_all[i], samples_per_class))
+        np.random.seed(0)
+        indexes_chosen.append(np.random.choice(indexes_all[i], samples_per_class, replace=False))
 
     del indexes_all
 
