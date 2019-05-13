@@ -11,8 +11,13 @@
 \usepackage{caption}
 \usepackage{subfig}
 \usepackage{listings}
+\usepackage[ruled,vlined]{algorithm2e}
 \usepackage{tikz}
 \usetikzlibrary{positioning}
+%test
+\usepackage{fourier} 
+\usepackage{array}
+\usepackage{makecell}
 
 \newcommand{\bb}{\textbf}
 
@@ -617,36 +622,72 @@ Przedziały te zostały podane wraz z uzyskanymi w trakcie reprodukcji badań wa
 
 \section{Opis eksperymentu}
 
+W niniejszej sekcji przedstawiono szczegóły konfiguracji eksperymentu. Opisano wykorzystane zbiory danych, hardware oraz inne narzędzia takie jak biblioteki. Dodatkowo omówiono przyjętą metodykę wyboru hiperparametrów modelu.
+
 \subsection{Zbióry danych}
+
+\begin{table}
+\centering
+\caption{Wykorzystane zbiory danych}
+\label{tab:dataset}
+\begin{tabular}{ |c|c|c|c|c|c| } 
+ \hline
+ nazwa zbioru & liczba obrazów & liczba klas & szerokość & wysokość & źródło \\ 
+ \hline
+ \thead{Chest X-Ray\\ Images (Pneumonia)} & 5863 & 2 & $>$1500 & $>$1000 & \cite{xray-dataset}\\ 
+ \hline
+ \thead{Flowers Recognition} & 4242 & 5 & 320 & 240 & \cite{flowers-dataset} \\ 
+ \hline
+ \thead{Fashion MNIST} & 70000 & 10 & 28 & 28 & \cite{fashion-dataset} \\ 
+ \hline
+ \thead{Natural Images} & 6899 & 8 & $>$200 & $>$50 & \cite{natural-img-dataset} \\ 
+ \hline
+\end{tabular}
+\end{table}
+
+Do przeprowadzenia eksperymentów wykorzystano datasety z różnych domen, mające przetestować zdolność badanych do ekstrakcji cech z obrazów. Zestawienie wykorzystanych zbiorów przedstawiono w tabeli \ref{tab:dataset}. Wykorzystano datasety o różnych liczbach obrazów, z obrazami o różnej wielkości oraz różnej liczbie klas.
+
+W procesie przetwarzania wstępnego obrazy były przycinane do rozmiaru 64x64 lub 32x32. W przypadku datasetu Chest X-Ray dokonano konwersji do skali szarości, ponieważ informacja o kolorach w zdjęciach rentgenowskich nie wnosiła wiele informacji w porównaniu do skali szarości. Istotne jest także to, że przy przygotowanej implementacji sieci ReNet w przypadku pominięcia przycinania obrazu do małych rozmiarów model osiąga wielkość uniemożliwiającą trenowanie go na powszechnie dostępnych kartach graficznych, ze względu na brak pamięci. Daje to dość istotne ograniczenie obszaru zastosowań sieci ReNet. 
+
+Wykorzystane datasety są w różnym stopniu niezbalansowane. Problem ten rozwiązano przez zastosowanie undersamplingu zbioru treningowego do klasy zawierającej najmniejszą liczbę przykładów uczących. Rozwiązanie to zastosowano przy doborze hiperparametrów oraz przy sprawdzianie krzyżowym dla każdego foldu.
+
+W trakcie poszukiwania zbiorów danych odnotowano znaczący spadek jakość klasyfikacji modeli ReNet dla datasetów zawierających dużo klas i mało przykładów uczących przypadających na pojedynczą klasę takich jak \cite{fruits-dataset} czy \cite{face-dataset}. Nie zostały one wykorzystane w tej pracy, ponieważ celem pracy jest porównanie skuteczności modeli a nie wskazanie ich dziedzin zastosowań, niemniej jest to bardzo istotne odkrycie, które należy brać pod uwagę pracując z modelami ReNet.
 
 \subsection{Wykorzystane narzędzia i hardware}
 
+Większość eksperymentów przeprowadzono na platformie google colab, która pozwala na wykorzystanie maszyn wirtualnych z GPU i TPU do realizacji projektów naukowych. Ze względu na dynamiczną alokację maszyn wirtualnych dla każdej sesji nie można określić jaki model karty graficznej bądź TPU został wykorzystany do obliczeń. Reprodukcja badań z \cite{DBLP:journals/corr/VisinKCMCB15} została wykonana przy pomocy (komputer Lesia).
+
+Implementacja analizowanych modeli została wykonana przy pomocy biblioteki keras \cite{keras} z backendem tensorflow \cite{tensorflow}. W badaniach wykorzystano także biblioteki scikit-learn \cite{scikit-learn} oraz numpy \cite{numpy}. Wszystkie datasety zostały pobrane z wykorzystaniem publicznego API seriwsu kaggle.
+
 \subsection{Dobór hiperparametrów modelu}
 
-Aby zapewnić najlepsze osiągi porównywanych algorytmów z uwzględnieniem ograniczonej mocy obliczeniowej dokonano ręcznego doboru hiperparametrów modeli. Modele uczono przez 20 epok porównując osiągane wyniki. Do dalszych testów wybrano modele osiągające największe accuracy na zbiorze testowym. 
+Aby zapewnić najlepsze osiągi porównywanych algorytmów z uwzględnieniem ograniczonej mocy obliczeniowej dokonano doboru wybranych hiperparametrów modeli. Mając na uwadze ograniczenia czasowe i obliczeniowe zdecydowano się wykorzystać zmodyfikowaną wersję alogorytmu Grid Search. Każdy z hiperparametrów dobierano osobno na podstawie przyjętego zakresu. Po wybraniu najlepszej wartości jednego z hiperparametrów przechodzono do następnego. Modyfikacja ta polega na zastąpieniu przeszukiwania zupełnego przyjętej dyskretnej przestrzeni hiperparametrów przez przeszukiwania zachłanne. W sytuacji gdy dostępne zasoby obliczeniowe są ograniczone jest to sposób na uniknięcie wielu niepotrzebnych obliczeń. Modele uczono przez 20 epok porównując osiągane wyniki. Do dalszych testów wybrano modele osiągające największą skuteczność (accuracy) na zbiorze testowym. Dokładna procedura doboru hiperparametrów została opisana w postaci poniższego algorytmu:
+
+\begin{algorithm}[H]
+\SetAlgoLined
+\caption{Procedura doboru hiperparametrów}
+1. Dobór hiprametrów mających największy wpływ na proces uczenia i.e. parametrów mających wpływ na funckję strat - learning rate oraz współczynniki reugraryzacji l1 i l2\\
+2. Dobór liczby warstw odpowiedzialnych za ekstrakcję cech (warstwy ReNet, zmodyfikowana ReNet oraz konwolucyjna) wraz z prawdopodobieństwiem maskowania neuronu w warstwach Dropout\\
+3. Dobór liczby neuronów w warstwach odpowiedzialnych za ekstrakcję cech.\\
+4. Dobór liczby neuronów w warstwach w pełni połączonych wraz z prawdopodobieństwem maskowania neuronu w warstwach Dropout\\
+\end{algorithm}
+
+Warto zwrócić uwagę, że w punkcie 4 powyższej procedury przyjęto, że każdy model posiada dwie warstwy w pełni połączone. W celu porównania architektury ReNet ze zaproponowaną modyfikacją oraz bez modyfikacji z sieciami konwolucyjnymi, modele powinny dysponować takimi samymi warstwami dokonującymi klasyfikacji na podstawie nauczonej reprezentacji. W szczególności badania te nie mają na celu uzyskanie jak najlepszych możliwych modeli do rozwiązania wybranych zagadnień, a jedynie porównanie zdolności modeli do ekstrachowania odpowiednich cech z obrazów.
+
+W punkcie 2 dobór liczby warstw jest połączony z doborem siły regularyzacji, ponieważ w niektórych przypadkach bardziej wskazane jest stosowanie głębszych modeli ze zwiększoną regularyzacją. Przyjęto też uproszczenie w punkcie 3. Dla sieci ReNet oraz ReNet z modyfikacją przyjęto tą samą liczbę neuronów w każdej warstwie. Taką samą strukturę modelu przyjęto w pracy wprowadzającej ReNet. Przyjęte ograniczenie pozwala ograniczyć liczbę poszukiwanych parametrów.
+
+W przypadku parametrów odpowiadających za liczność neuronów w warstawach porówywano osiągane wyniki dla kolejnych potęg 2 z zakresu $[32, 4096]$. Gdy powyżej pewnej wartości sieć osiągała znacząco gorsze wyniki, przerywano proces poszukiwania i przechodzono do następnego hiperparametru badanego modelu. W przypadku parametrów odpowiedzialnych za proces uczenia wybierano parametry z zakresu $[10^{-2}, 10^{-8}]$ w skali logarytmicznej, ponownie przerywając poszukiwania, jeśli powyżej pewnego zakresu wyniki nie były poprawiane.
+
+Opisana procedura pozwala na zmniejszenie nakładu obliczeniowego potrzebnego do wyboru modelu, jednocześnie jest na tyle ustrukturyzowana, że nie powinna wpłynąć na reprodukowalność uzyskanych wyników. Otrzymany model nie będzie optymalnym rozwiązaniem w analizowanej przestrzeni, ale będzie wystarczająco dobry do przeprowadzenia porównania testów.
 
 \begin{figure}
 \centering
-	\includegraphics[width=0.5\textwidth]{img/grid_search.png}
+	\includegraphics[width=0.8\textwidth]{img/grid_search.png}
 	\caption{Porównanie Grid Search i Random Search.} Źródło: https:\/\/i.stack.imgur.com\/cIDuR.png
 	\label{fig:hyperparams}
 \end{figure}
 
-Inne dostępne rozwiązania problemu doboru hiperametrów to wykorzystanie algorytmów grid search lub random search. Grid search nie jest zalecaną metodą doboru hiperparametrów. Często inne hiperparametry mają większy bądź mniejszy wpływ na wyniki procesu uczenia. Dodatkową wadą jest możliwość występowania maksimum optymalizowanej metryki pomiędzy punktami tworzonej siatki, jak to zostało przedstawione na rys. \ref{fig:hyperparams}. Wadą obu jest eksponencjalnie rosnąca liczba prób dla kolejnych hiperparametrów.
-
-Z tego powodu zdecydowano podzielić proces doboru hiperparametrów na kolejne kroki, które wykonano w celu doboru najlepszego modelu. Zostały one przedstawione w (tutaj wkleić algorytm).
-
-1. Dobór hiprametrów mających największy wpływ na proces uczenia i.e. learning rate i współczynniki reugraryzacji l1 i l2 warstw Dense
-2. Dobór liczby neuronów w warstwach Dense
-3. Dobór liczby warstw odpowiedzialnych za ekstrakcję cech (warstwy ReNet, zmodyfikowana ReNet oraz konwolucyjna)
-4. Dobór liczby neuronów w warstwach odpowiedzialnych za ekstrakcję cech.
-5. Dobór metod i współczynników reguralizacji warstwach odpowiedzialnych za ekstrakcję cech.
-
-Warto zwrócić uwagę, że w punkcie 2. przyjęto tą samą liczbę warstw Dense dla wszystkich modeli - 2. W celu porównania architektury ReNet, zmodyfikowanej ReNet oraz konwolucyjnej i ich zdolności do ekstrachowania odpowiednich cech z obrazów modele powinny dysponować takimi samymi warstwami dokonującymi klasyfikacji na podstawie nauczonej reprezentacji.
-
-W przypadku parametrów odpowiadających za liczność neuronów w warstawach porówywano osiągane wyniki dla kolejnych potęg 2 z zakresu $[32, 4096]$. Gdy powyżej pewnej wartości sieć osiągała znacząco gorsze wyniki, przerywano proces poszukiwania i przechodzono do następnego hiperparametru badanego modelu. W przypadku parametrów odpowiedzialnych za proces uczenia wybierano parametry z zakresu $[10^{-3}, 10^{-8}]$ w skali logarytmicznej, ponownie przerywając poszukiwania, jeśli powyżej pewnego zakresu wyniki nie były poprawiane.
-
-Opisana metoda pozwala na zmniejszenie nakładu obliczeniowego potrzebnego do wyboru modelu, jednocześnie pozwala na ustrukturyzowany wybór modelu. Otrzymany model nie będzie optymalnym rozwiązaniem w analizowanej przestrzeni, ale będzie wystarczająco dobry do przeprowadzenia porównania testów. 
+Inne dostępne rozwiązania problemu doboru hiperametrów to wykorzystanie algorytmów Grid Search lub Random Search. Grid Search nie jest zalecaną metodą. Często hiperparametry mają różny wpływ na wyniki procesu uczenia. Maksimum optymalizowanej metryki może występować pomiędzy punktami tworzonej siatki, jak to zostało przedstawione na rys. \ref{fig:hyperparams}. W przypadku w którym jeden z hiperparametrów ma większy wpływ na osiągane wyniki siatka dla jego wartości powinna być o wiele gęstsza. Random Search unika tego problemu poprzez wybieranie losowych punktów z przestrzeni, przez co hiperparametry mające większy wpływ na proces uczenia są próbkowane we większej liczbie punktów i istnieje większa szansa na znalezienie efektywniejszej wartości. Wadą obu algorytmów jest eksponencjalnie rosnąca liczba prób dla kolejnych hiperparametrów.
 
 Dodatkowo porównano wyniki osiągane dla trzech algorytmów uczenia: SGD, RMSprop oraz Adam. Najlepsze rezultaty osiągnięto dla algorytmu Adam, przez co został on wybrany jako algorytm optymalizacji w dalszej części eksperymentów.
 
@@ -655,6 +696,10 @@ Dodatkowo porównano wyniki osiągane dla trzech algorytmów uczenia: SGD, RMSpr
 
 
 \chapter{Wnioski}
+
+Obszary dalszych badań:
+ReNet dla dużej liczby klas,
+zbadanie jak będzie się zachowywał model ReNet przy zwiększającej się liczbie neuronów w kolejynch warstwach (jak w sieciach konwolucyjnych)
 
 \bibliography{bibliography}
 
