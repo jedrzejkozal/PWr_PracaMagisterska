@@ -61,36 +61,33 @@ y_train_single_ex = y_train[0:1]
 model.fit(x_train_single_ex, y_train_single_ex, epochs=1)
 model.summary()
 
+batch_size = 32
+masking = Masking(img_rows, img_cols, num_channels)
+masked_x_train = masking.mask_input(x_train)
+model.fit_generator(datagen.flow(masked_x_train, y_train,
+        batch_size=batch_size),
+        epochs=1,
+        steps_per_epoch=np.ceil(x_train.shape[0] / batch_size),
+        validation_data=(x_test, y_test),
+        callbacks=[EarlyStopping(monitor='val_loss', patience=20, verbose=1)
+            ]
+    )
+del masked_x_train
+
+
 def save_weights(model, savedir):
+    create_dir(savedir)
     for index, layer in enumerate(model.layers):
         weights = layer.get_weights()
+        print("layer ", index+1, ": ", [w.shape for w in weights])
         filedir = os.path.join(savedir, str(index+1))
         np.save(filedir, weights)
 
-def load_weights(model, loaddir):
-    filelist = os.listdir(loaddir)
-    filelist.sort()
-    for weights_file, layer in zip(filelist, model.layers):
-        filedir = os.path.join(loaddir, weights_file)
-        weights = np.load(filedir)
-        layer.set_weights(weights)
 
-load_weights(model, "svhn_weights")
-
-batch_size = 32
-num_epochs = 5
-masking = Masking(img_rows, img_cols, num_channels)
-for i in range(num_epochs):
-    print("epoch {}/{}".format(i+1, num_epochs))
-    masked_x_train = masking.mask_input(x_train)
-    model.fit_generator(datagen.flow(masked_x_train, y_train,
-            batch_size=batch_size),
-            epochs=1,
-            steps_per_epoch=np.ceil(x_train.shape[0] / batch_size),
-            validation_data=(x_test, y_test),
-            callbacks=[EarlyStopping(monitor='val_loss', patience=20, verbose=1)
-                ]
-        )
-    del masked_x_train
+def create_dir(dirname):
+    try:
+        os.mkdir(dirname)
+    except:
+        return
 
 save_weights(model, "svhn_weights")

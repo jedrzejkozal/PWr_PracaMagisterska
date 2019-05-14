@@ -36,6 +36,8 @@ class ReNetLayer(Layer):
 
         self.layer_horizontal_activations_permutarion = Permute((2, 1, 3))
 
+        self.lstm_weights_array_len = 3
+
 
     def build(self, input_shape):
         # Create a trainable weight variable for this layer.
@@ -47,6 +49,31 @@ class ReNetLayer(Layer):
         I = int(input_shape[2]) // self.w_p
 
         return (input_shape[0], J, I, 2*self.hidden_size)
+
+
+    def get_weights(self):
+        weights = []
+        weights.extend(self.LSTM_up_down.get_weights())
+        weights.extend(self.LSTM_down_up.get_weights())
+        weights.extend(self.LSTM_left_right.get_weights())
+        weights.extend(self.LSTM_right_left.get_weights())
+        self.lstm_weights_array_len = len(self.LSTM_up_down.get_weights())
+
+        return weights
+
+
+    def set_weights(self, weights):
+        if len(weights) != 4*self.lstm_weights_array_len:
+            raise Exception("wrong number of weights matrixes")
+
+        self.lstm_weights_array_len
+        self.LSTM_up_down.set_weights(weights[:self.lstm_weights_array_len])
+        self.LSTM_down_up.set_weights(weights[self.lstm_weights_array_len:2*self.lstm_weights_array_len])
+        self.LSTM_left_right.set_weights(weights[2*self.lstm_weights_array_len:3*self.lstm_weights_array_len])
+        self.LSTM_right_left.set_weights(weights[3*self.lstm_weights_array_len:])
+
+
+
 
 
     def call(self, inputs):
