@@ -700,17 +700,31 @@ Większość eksperymentów przeprowadzono na platformie google colab, która po
 
 Implementacja analizowanych modeli została wykonana przy pomocy biblioteki keras \cite{keras} z backendem tensorflow \cite{tensorflow}. W badaniach wykorzystano także biblioteki scikit-learn \cite{scikit-learn} oraz numpy \cite{numpy}. Wszystkie datasety zostały pobrane z wykorzystaniem publicznego API seriwsu kaggle.
 
-\subsection{Dobór hiperparametrów modelu}
+\subsection{Dobór struktury i hiperparametrów modelu}
 
-Aby zapewnić najlepsze osiągi porównywanych algorytmów z uwzględnieniem ograniczonej mocy obliczeniowej dokonano doboru wybranych hiperparametrów modeli. Mając na uwadze ograniczenia czasowe i obliczeniowe zdecydowano się wykorzystać zmodyfikowaną wersję alogorytmu Grid Search. Każdy z hiperparametrów dobierano osobno na podstawie przyjętego zakresu. Po wybraniu najlepszej wartości jednego z hiperparametrów przechodzono do następnego. Modyfikacja ta polega na zastąpieniu przeszukiwania zupełnego przyjętej dyskretnej przestrzeni hiperparametrów przez przeszukiwania zachłanne. W sytuacji gdy dostępne zasoby obliczeniowe są ograniczone jest to sposób na uniknięcie wielu niepotrzebnych obliczeń. Modele uczono przez 20 epok porównując osiągane wyniki. Do dalszych testów wybrano modele osiągające największą skuteczność (accuracy) na zbiorze testowym. Dokładna procedura doboru hiperparametrów została opisana w postaci poniższego algorytmu:
+Aby zapewnić najlepsze osiągi porównywanych algorytmów z uwzględnieniem ograniczonej mocy obliczeniowej dokonano doboru wybranych hiperparametrów modeli. Do zbioru optymalizowanych parametrów dla każdego zbioru uczącego należały:
+
+\begin{itemize}
+\item współczynik uczenia,
+\item współczynnik regularyzacji wybranych warstw,
+\item liczba warstw dokonujących ekstrakcji cech,
+\item liczba warstw w pełni połączonych,
+\item liczba neuronów w warstwach w dokonujących ekstrakcji cech,
+\item liczba neuronów w warstwach w pełni połączonych,
+\item współczynnik prawdopodobieństwa wykluczenia neuronu w procedurze dropout dla wybranych warstw.
+\end{itemize}
+
+Mając na uwadze ograniczenia dostępnej mocy obliczeniowej zdecydowano się wykorzystać zmodyfikowaną wersję alogorytmu Grid Search. Każdy z hiperparametrów dobierano osobno na podstawie przyjętego zakresu. Po wybraniu najlepszej wartości jednego z hiperparametrów przechodzono do następnego. Modyfikacja ta polega na zastąpieniu przeszukiwania zupełnego przyjętej dyskretnej przestrzeni hiperparametrów przez przeszukiwania zachłanne. W sytuacji gdy dostępne zasoby obliczeniowe są ograniczone jest to sposób na uniknięcie wielu niepotrzebnych obliczeń. Warto zwrócić uwagę, że jest to podejście naiwne, ponieważ zostaje przyjęte założenie o niezależności wpływu kontrolowanych czynników na proces uczenia.
+
+Modele uczono przez 20 epok porównując osiągane wyniki. Do dalszych testów wybrano modele osiągające największą skuteczność (accuracy) na zbiorze testowym. Dokładna procedura doboru hiperparametrów została opisana w postaci poniższego algorytmu:
 
 \begin{algorithm}[H]
 \SetAlgoLined
 \caption{Procedura doboru hiperparametrów}
-1. Dobór hiprametrów mających największy wpływ na proces uczenia i.e. parametrów mających wpływ na funckję strat - learning rate oraz współczynniki reugraryzacji l1 i l2\\
-2. Dobór liczby warstw odpowiedzialnych za ekstrakcję cech (warstwy ReNet, zmodyfikowana ReNet oraz konwolucyjna) wraz z prawdopodobieństwiem maskowania neuronu w warstwach Dropout\\
+1. Dobór hiprametrów mających największy wpływ na proces uczenia i.e. parametrów mających wpływ na funckję strat - learning rate oraz współczynniki reugraryzacji l1 i l2.\\
+2. Dobór liczby warstw odpowiedzialnych za ekstrakcję cech (warstwy ReNet, zmodyfikowana ReNet oraz konwolucyjna) wraz z prawdopodobieństwiem maskowania neuronu w warstwach Dropout.\\
 3. Dobór liczby neuronów w warstwach odpowiedzialnych za ekstrakcję cech.\\
-4. Dobór liczby neuronów w warstwach w pełni połączonych wraz z prawdopodobieństwem maskowania neuronu w warstwach Dropout\\
+4. Dobór liczby neuronów w warstwach w pełni połączonych wraz z prawdopodobieństwem maskowania neuronu w warstwach Dropout.\\
 \end{algorithm}
 
 Warto zwrócić uwagę, że w punkcie 4 powyższej procedury przyjęto, że każdy model posiada dwie warstwy w pełni połączone. W celu porównania architektury ReNet ze zaproponowaną modyfikacją oraz bez modyfikacji z sieciami konwolucyjnymi, modele powinny dysponować takimi samymi warstwami dokonującymi klasyfikacji na podstawie nauczonej reprezentacji. W szczególności badania te nie mają na celu uzyskanie jak najlepszych możliwych modeli do rozwiązania wybranych zagadnień, a jedynie porównanie zdolności modeli do ekstrachowania odpowiednich cech z obrazów.
