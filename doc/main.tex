@@ -21,6 +21,9 @@
 
 \newcommand{\bb}{\textbf}
 
+\newcommand{\specialcell}[2][c]{%
+  \begin{tabular}[#1]{@{}c@{}}#2\end{tabular}}
+
 \title{Analiza efektywności zastosowania sieci rekurencyjnych w zadaniu klasyfikacji}	
 \engtitle{Analysis of the effectiveness of recursive networks in the classification task}
 \author{Jędrzej Kozal}
@@ -597,8 +600,9 @@ Każda kolejna warstwa sieci ReNet korzysta z wyjścia poprzedniej warstwy. Sche
 \chapter{Przeprowadzone badania}
 
 \section{Metodyka badań}
+W niniejszej sekcji omówiono przyjęty podział badań, oraz omówiono metodologię badawczą przyjętą do ich zrealizowania.
 
-\section{Reprodukcja wcześniejszych wyników}
+\section{Reprodukcja wcześniejszych badań}
 
 Pierwszym eksperymentem jaki wykonano było zreprodukowanie wyników z \cite{DBLP:journals/corr/VisinKCMCB15}. Celem reprodukcji było potwierdzenie przesłanki do badań oraz sprawdzenie poprawności przygotowanej implementacji ReNet. Wykorzystano zbiory MNIST, CIFAR10 oraz SVHN \cite{svhn}. W niniejszej sekcji podano krótki opis stosowanej metodyki i uzyskane wyniki.
 
@@ -612,13 +616,50 @@ Dysponując zbiorem danych $d$ wylosowanym z pewnego nieznanego rozkładu $\math
 	err_d = \frac{t}{n}
 \end{equation}
 
-Przy założeniu, że $d$ zawiera próbki niezależne od siebie oraz od $h$ i liczba przykładów uczących $n$ w zbiorze uczącym $d$ jest większa od 30, $err_d$ jest najlepszym estymatorem $err_{\mathcal{D}}$. Przedział w którym wartość $err_{\mathcal{D}}$ znajduję się z prawdopodobieństwem około 95\% można wyznaczyć jako:
+gdzie $t$ to liczba błędnie zaklasyfikowanych przykładów z $n$ wszystkich przykładów w zbiorze uczącym $d$.
+Przy założeniu, że $d$ zawiera próbki niezależne od siebie oraz od $h$ i $n$ jest większe od 30, $err_d$ jest najlepszym estymatorem $err_{\mathcal{D}}$. Przedział w którym wartość $err_{\mathcal{D}}$ znajduję się z prawdopodobieństwem około 95\% można wyznaczyć jako:
 
 \begin{equation}
 	err_{d} \pm 1.96 \sqrt{\frac{err_{d}(1 - err_{d})}{n}} 
 \end{equation}
 
 Przedziały te zostały podane wraz z uzyskanymi w trakcie reprodukcji badań wartościami skuteczności na zbiorze testowym.
+
+\subsection{Wyniki reprodukcji}
+
+\begin{table}
+\centering
+\caption{Wyniki reprodukcji wcześniejszych badań}
+\label{tab:reproduction}
+\begin{tabular}{ |c|c|c|c| } 
+ \hline
+ nazwa zbioru & \specialcell{błąd uzyskany\\ we wcześniejszej pracy} & \specialcell{błąd uzyskany\\ dla przygotowanej implementacji} & \specialcell{przedział ufności} \\ 
+ \hline
+ \thead{mnist} & 0.0045 & 0.0628 & (0.0675, 0.0580) \\ 
+ \hline
+ \thead{cifar10} & 0.1235 & 0.3787 & (0.3882, 0.3691) \\ 
+ \hline
+ \thead{svhn} & 0.0238 & 0.5602 & (0.5662, 0.5541) \\ 
+ \hline
+\end{tabular}
+\end{table}
+
+Wynik reprodukcji został przedstawiony w tabeli \ref{tab:reproduction}. Wyraźnie widać, że wyniki uzyskane przez twórców architektury ReNet są lepsze niż wyniki uzyskane w tej pracy. Żaden z wcześniej uzyskanych wyników nie mieści się przedziale ufności błędu obecnej implementacji.
+
+Szczególnie niepokojące mogą być wartości błędu dla zbiorów cifar10 oraz svhn. W przypadku drugiego datasetu jest to związane z przerwaniem obliczeń po 5 epokach ze względu na brak pamięci. Model stosowany przy obecnej implementacji dla svhn był kosztowny pod względem pamięci i jego trenowanie przebiegało niezwykle wolno - ponad 2 godziny na epokę uczenia. Zaobserwowano znaczący spadek czasu uczenia sieci przy zastosowaniu RMSprop jak algorytmu optymalizacji, jednakże jego zastosowanie w tym przypadku nie byłoby wierną reprodukcją wcześniejszych badań. Przyczyną znacząco gorszych wyników uzyskanych dla cifar10 i svhn może być także dobór niewystarczająco dokładnych hiperparametrów sieci. Twórcy ReNet nie podali hiperparametrów stosowanych w ich eksperymentach, co znacząco utrudnia reprodukcję.
+
+W związku z uzyskanymi rezultatami nasuwa się pytanie czy przygotowana implementacja sieci ReNet jest błędna? Warto zwrócić uwagę na bardzo zbliżone wyniki uzyskane dla datasetu mnist. Dodatkowo wyżej wymienione powody słabych wyników nie muszą wskazywać na wadliwość implementacji. W celu dodatkowej weryfikacji przed przystąpieniem do dalszej pracy przygotowano test poprawności implementacji ReNet z wykorzystaniem pewnej własności. Przy odpowiednio dobranych wartościach wag i funkcji aktywacji sieć LSTM może w każdym kroku czasowym zwracać aktualną wartość podaną na wejście. Dla wcześniej przyjętej parametryzacji LSTM można przyjąć wartości wag:
+
+\begin{align*}
+	W_f &= \bb{0} \\
+	W_i &= \bb{0} \\
+	W_c &= [\bb{0},I] \\
+	W_o &= \bb{0}
+\end{align*}
+
+gdzie $\bb{0}$ oznacza macierz zerową, a $I$ macierz jednostkową.
+
+Następnie zastępując funckję aktywacji $tanh$ przez funkcję identycznościową, funkcje aktywacji dla bramki forget przez funkcję stałą $0$ oraz funkcje aktywacji dla bramek input i output gate przez funckję stałą $1$. Oczywiście keras w zależności od implementacji sieci LSTM może posiadać inną parametryzację, jednakże metodą prób i błędów można zaleźć konfigurację wag i funkcji aktywacji, która powoduje działanie LSTM jako funkcji identycznościowej w każdym kroku czasowym. Dzięki tak skonfigurowanej sieci LSTM, można zapisać ciąg przekształceń realizowanych przez warstwę ReNet i sprawdzić czy dla przygotowanych wejść dostajemy odpowiednie wartości na wyjściu. Przygotowano testy opierające się na tej własności i zostały one spełnione przez implementację ReNet. Daje to mocne przesłanki aby uważać, że implementacja jest poprawna pomimo wyników reprodukcji.
 
 \section{Opis eksperymentu}
 
@@ -655,7 +696,7 @@ W trakcie poszukiwania zbiorów danych odnotowano znaczący spadek jakość klas
 
 \subsection{Wykorzystane narzędzia i hardware}
 
-Większość eksperymentów przeprowadzono na platformie google colab, która pozwala na wykorzystanie maszyn wirtualnych z GPU i TPU do realizacji projektów naukowych. Ze względu na dynamiczną alokację maszyn wirtualnych dla każdej sesji nie można określić jaki model karty graficznej bądź TPU został wykorzystany do obliczeń. Reprodukcja badań z \cite{DBLP:journals/corr/VisinKCMCB15} została wykonana przy pomocy (komputer Lesia).
+Większość eksperymentów przeprowadzono na platformie google colab, która pozwala na wykorzystanie maszyn wirtualnych z GPU i TPU do realizacji projektów naukowych. Ze względu na dynamiczną alokację maszyn wirtualnych dla każdej sesji nie można określić jaki model karty graficznej bądź TPU został wykorzystany do obliczeń. Reprodukcja badań z \cite{DBLP:journals/corr/VisinKCMCB15} została wykonana przy pomocy komputera z procesorem IntelCore i7 8700 i kartą GTX 1070Ti.
 
 Implementacja analizowanych modeli została wykonana przy pomocy biblioteki keras \cite{keras} z backendem tensorflow \cite{tensorflow}. W badaniach wykorzystano także biblioteki scikit-learn \cite{scikit-learn} oraz numpy \cite{numpy}. Wszystkie datasety zostały pobrane z wykorzystaniem publicznego API seriwsu kaggle.
 
