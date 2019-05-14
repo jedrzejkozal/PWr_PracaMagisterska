@@ -602,6 +602,16 @@ Każda kolejna warstwa sieci ReNet korzysta z wyjścia poprzedniej warstwy. Sche
 \section{Metodyka badań}
 W niniejszej sekcji omówiono przyjęty podział badań, oraz omówiono metodologię badawczą przyjętą do ich zrealizowania.
 
+\subsection{Plan badań}
+Badania podzielono na trzy zasadnicze części. Pierwszą z nich stanowiła reprodukcja wyników z \cite{DBLP:journals/corr/VisinKCMCB15}. Druga część polegała na porównaniu sieci ReNet, zmodyfikowanej wersji ReNet oraz sieci konwolucyjnych. W pracy \cite{DBLP:journals/corr/VisinKCMCB15} zawarto informacje o wpływie wykorzystanej sieci rekurencyjnej na jakość klasyfikacji ReNet. Wykorzystanie LSTM i GRU daje bardzo podobne rezultaty, natomiast wykorzystanie RNN nie pozwala na uzyskanie tak dobrych wyników jak dla LSTM i GRU. W trzeciej części zbadano wpływ wykorzystanej sieci rekurencyjnej na zmodyfikowaną wersję ReNet.
+
+\subsection{Przyjęta metodyka porównywania modeli}
+W celu porównania jakości klasyfikacji porównano skuteczność klasyfikacji (accuracy), osiąganą na zbiorze testowym. W celu zredukowania wpływu wariancji estymatora na uzyskane wyniki zastosowano pięciokrotny sprawdzian krzyżowy. Każdy z algorytmów dysponował tymi samymi foldami jako zbiory testowe. 
+
+Modele trenowano przez 50 epok. Jako funckję strat przyjęto entropię krzyżową. W trakcie uczenia monitorowano wartość funkcji start na zbiorze testowym i przerywano uczenie w momencie wystąpienia overfitingu. Następnie przywracano wagi dla modelu osiągającego najniższą odnotowaną wartość funkcji strat, tak jak zasugerowano w \cite{Goodfellow-et-al-2016}. Dodatkowo wykorzystano proces śledzenia wartości funkcji strat dla zbioru testowego. W przypadku braku poprawy wartości przez 5 epok zmniejszano współczynnik uczenia dziesięciokrotnie. Porównano wyniki osiągane dla trzech algorytmów uczenia: SGD, RMSprop oraz Adam. Najlepsze rezultaty osiągnięto dla algorytmu Adam, przez co został on wybrany jako algorytm optymalizacji we wszystkich eksperymentach.
+
+Do ewaluacji statystycznej wyników uzyskanych w części drugiej i trzeciej badań wykorzystano test Friedmana z testami post-hoc Nemenyiego. 
+
 \section{Reprodukcja wcześniejszych badań}
 
 Pierwszym eksperymentem jaki wykonano było zreprodukowanie wyników z \cite{DBLP:journals/corr/VisinKCMCB15}. Celem reprodukcji było potwierdzenie przesłanki do badań oraz sprawdzenie poprawności przygotowanej implementacji ReNet. Wykorzystano zbiory MNIST, CIFAR10 oraz SVHN \cite{svhn}. W niniejszej sekcji podano krótki opis stosowanej metodyki i uzyskane wyniki.
@@ -644,11 +654,13 @@ Przedziały te zostały podane wraz z uzyskanymi w trakcie reprodukcji badań wa
 \end{tabular}
 \end{table}
 
-Wynik reprodukcji został przedstawiony w tabeli \ref{tab:reproduction}. Wyraźnie widać, że wyniki uzyskane przez twórców architektury ReNet są lepsze niż wyniki uzyskane w tej pracy. Żaden z wcześniej uzyskanych wyników nie mieści się przedziale ufności błędu obecnej implementacji.
+Wynik reprodukcji został przedstawiony w tabeli \ref{tab:reproduction}. Można z łatwością zauważyć, że wyniki uzyskane przez twórców architektury ReNet są lepsze niż wyniki uzyskane dla przygotowanej implementacji. Żaden z wcześniej uzyskanych wyników nie mieści się przedziale ufności błędu obecnej implementacji.
 
-Szczególnie niepokojące mogą być wartości błędu dla zbiorów cifar10 oraz svhn. W przypadku drugiego datasetu jest to związane z przerwaniem obliczeń po 5 epokach ze względu na brak pamięci. Model stosowany przy obecnej implementacji dla svhn był kosztowny pod względem pamięci i jego trenowanie przebiegało niezwykle wolno - ponad 2 godziny na epokę uczenia. Zaobserwowano znaczący spadek czasu uczenia sieci przy zastosowaniu RMSprop jak algorytmu optymalizacji, jednakże jego zastosowanie w tym przypadku nie byłoby wierną reprodukcją wcześniejszych badań. Przyczyną znacząco gorszych wyników uzyskanych dla cifar10 i svhn może być także dobór niewystarczająco dokładnych hiperparametrów sieci. Twórcy ReNet nie podali hiperparametrów stosowanych w ich eksperymentach, co znacząco utrudnia reprodukcję.
+Szczególnie niepokojące mogą być wartości błędu dla zbiorów cifar10 oraz svhn. W przypadku drugiego datasetu jest to związane z przerwaniem obliczeń po 5 epokach ze względu na brak pamięci. Model stosowany przy obecnej implementacji dla svhn wymagał wiele pamięci i jego trenowanie przebiegało niezwykle wolno. Czas uczenia jednej epoki wynosił  ponad 2 godziny. Zaobserwowano znaczący spadek czasu uczenia sieci przy wykorzystaniu RMSprop jak algorytmu optymalizacji. Zastosowanie w tym przypadku RMSprop wpłynęłoby na uzyskane wyniki, jednocześnie znacznie podważając wartość reprodukcji. Przyczyną znacząco gorszych wyników uzyskanych dla cifar10 i svhn może być także niewystarczająco dokładny dobór hiperparametrów sieci. Twórcy ReNet nie podali hiperparametrów takich jak współczynnik uczenia, czy prawdopodobieństwo wykluczenia neuronu w warstwie Dropout stosowanych w ich eksperymentach, co w tym przypadku utrudnia reprodukcję.
 
-W związku z uzyskanymi rezultatami nasuwa się pytanie czy przygotowana implementacja sieci ReNet jest błędna? Warto zwrócić uwagę na bardzo zbliżone wyniki uzyskane dla datasetu mnist. Dodatkowo wyżej wymienione powody słabych wyników nie muszą wskazywać na wadliwość implementacji. W celu dodatkowej weryfikacji przed przystąpieniem do dalszej pracy przygotowano test poprawności implementacji ReNet z wykorzystaniem pewnej własności. Przy odpowiednio dobranych wartościach wag i funkcji aktywacji sieć LSTM może w każdym kroku czasowym zwracać aktualną wartość podaną na wejście. Dla wcześniej przyjętej parametryzacji LSTM można przyjąć wartości wag:
+W związku z uzyskanymi rezultatami nasuwa się pytanie czy przygotowana implementacja sieci ReNet jest błędna? W tym momencie warto zwrócić uwagę na bardzo zbliżone wyniki oryginalnych badań i reprodukcji uzyskane dla datasetu mnist. Dodatkowo wyżej wymienione przypuszczalne powody słabych wyników nie muszą wskazywać na występowanie błędu w implementacji. 
+
+Przeprowadzono dodatkową weryfikację poprawności implementacji ReNet przed przystąpieniem do dalszej pracy. Aby przeprowadzić test, należy wykorzystać możliwość ustawiania wag sieci rekurencyjnych wewnątrz ReNet. Przy odpowiednio dobranych wartościach wag i funkcji aktywacji sieć LSTM może w każdym kroku czasowym zwracać aktualną wartość podaną na wejście. Dla wcześniej przyjętej parametryzacji LSTM można przyjąć wartości wag:
 
 \begin{align*}
 	W_f &= \bb{0} \\
@@ -659,13 +671,13 @@ W związku z uzyskanymi rezultatami nasuwa się pytanie czy przygotowana impleme
 
 gdzie $\bb{0}$ oznacza macierz zerową, a $I$ macierz jednostkową.
 
-Następnie zastępując funckję aktywacji $tanh$ przez funkcję identycznościową, funkcje aktywacji dla bramki forget przez funkcję stałą $0$ oraz funkcje aktywacji dla bramek input i output gate przez funckję stałą $1$. Oczywiście keras w zależności od implementacji sieci LSTM może posiadać inną parametryzację, jednakże metodą prób i błędów można zaleźć konfigurację wag i funkcji aktywacji, która powoduje działanie LSTM jako funkcji identycznościowej w każdym kroku czasowym. Dzięki tak skonfigurowanej sieci LSTM, można zapisać ciąg przekształceń realizowanych przez warstwę ReNet i sprawdzić czy dla przygotowanych wejść dostajemy odpowiednie wartości na wyjściu. Przygotowano testy opierające się na tej własności i zostały one spełnione przez implementację ReNet. Daje to mocne przesłanki aby uważać, że implementacja jest poprawna pomimo wyników reprodukcji.
+Następnie należy zastąpić funkcję aktywacji $tanh$ przez funkcję identycznościową $f(x) = x$, funkcje aktywacji dla bramki forget przez funkcję stałą $f(x) = 0$ oraz funkcje aktywacji dla bramek input i output gate przez funkcję stałą $f(x) = 1$. W zależności od stosowanej implementacji sieci LSTM może posiadać inną parametryzację. Mimo tego metodą prób i błędów można zaleźć konfigurację wag i funkcji aktywacji, która powoduje działanie LSTM jako funkcji identycznościowej w każdym kroku czasowym. Dzięki tak skonfigurowanej sieci LSTM, można zapisać ciąg przekształceń realizowanych przez warstwę ReNet i sprawdzić czy dla przygotowanych danych wejściowych uzyskano odpowiednie wartości na wyjściu. Przygotowano testy opierające się na tej własności. Implementacja ReNet pomyślnie przeszła wszystkie  testy. Daje to mocne przesłanki aby uważać, że implementacja jest poprawna pomimo wyników reprodukcji.
 
 \section{Opis eksperymentu}
 
 W niniejszej sekcji przedstawiono szczegóły konfiguracji eksperymentu. Opisano wykorzystane zbiory danych, hardware oraz inne narzędzia takie jak biblioteki. Dodatkowo omówiono przyjętą metodykę wyboru hiperparametrów modelu.
 
-\subsection{Zbióry danych}
+\subsection{Zbiory danych}
 
 \begin{table}
 \centering
@@ -686,23 +698,23 @@ W niniejszej sekcji przedstawiono szczegóły konfiguracji eksperymentu. Opisano
 \end{tabular}
 \end{table}
 
-Do przeprowadzenia eksperymentów wykorzystano datasety z różnych domen, mające przetestować zdolność badanych do ekstrakcji cech z obrazów. Zestawienie wykorzystanych zbiorów przedstawiono w tabeli \ref{tab:dataset}. Wykorzystano datasety o różnych liczbach obrazów, z obrazami o różnej wielkości oraz różnej liczbie klas.
+Do przeprowadzenia eksperymentów wykorzystano datasety z różnych domen, mające przetestować zdolność badanych sieci do ekstrakcji cech z obrazów. Zestawienie wykorzystanych zbiorów przedstawiono w tabeli \ref{tab:dataset}. Wykorzystano datasety o różnej liczności i różnych rozmiarach obrazów oraz różnej liczbie klas.
 
-W procesie przetwarzania wstępnego obrazy były przycinane do rozmiaru 64x64 lub 32x32. W przypadku datasetu Chest X-Ray dokonano konwersji do skali szarości, ponieważ informacja o kolorach w zdjęciach rentgenowskich nie wnosiła wiele informacji w porównaniu do skali szarości. Istotne jest także to, że przy przygotowanej implementacji sieci ReNet w przypadku pominięcia przycinania obrazu do małych rozmiarów model osiąga wielkość uniemożliwiającą trenowanie go na powszechnie dostępnych kartach graficznych, ze względu na brak pamięci. Daje to dość istotne ograniczenie obszaru zastosowań sieci ReNet. 
+W procesie przetwarzania wstępnego zmniejszono rozmiar obrazów do 64x64 lub 32x32 pikseli. W przypadku datasetu Chest X-Ray dokonano konwersji do skali szarości, ponieważ głębia kolorów nie wnosiła wiele informacji w zdjęciach rentgenowskich. Dla przygotowanej implementacji sieci ReNet zatosowanej do obrazów o dużych rozmiarach model osiąga wielkość uniemożliwiającą trenowanie go na powszechnie dostępnych kartach graficznych. Daje to istotne ograniczenie obszaru zastosowań sieci ReNet i jednocześnie definiuje konieczny krok przetwarzania wstępnego obrazów przed rozpoczęciem procesu uczenia. Nie wszystkie zbiory uczące można poddać zmniejszeniu rozmiaru obrazu bez utraty informacji mających wpływ na klasyfikację.
 
 Wykorzystane datasety są w różnym stopniu niezbalansowane. Problem ten rozwiązano przez zastosowanie undersamplingu zbioru treningowego do klasy zawierającej najmniejszą liczbę przykładów uczących. Rozwiązanie to zastosowano przy doborze hiperparametrów oraz przy sprawdzianie krzyżowym dla każdego foldu.
 
-W trakcie poszukiwania zbiorów danych odnotowano znaczący spadek jakość klasyfikacji modeli ReNet dla datasetów zawierających dużo klas i mało przykładów uczących przypadających na pojedynczą klasę takich jak \cite{fruits-dataset} czy \cite{face-dataset}. Nie zostały one wykorzystane w tej pracy, ponieważ celem pracy jest porównanie skuteczności modeli a nie wskazanie ich dziedzin zastosowań, niemniej jest to bardzo istotne odkrycie, które należy brać pod uwagę pracując z modelami ReNet.
+W trakcie poszukiwania zbiorów danych odnotowano znaczący spadek jakość klasyfikacji modeli ReNet dla datasetów zawierających dużo klas i mało przykładów uczących przypadających na pojedynczą klasę takich jak \cite{fruits-dataset} czy \cite{face-dataset}. Analiza problemu ReNet dla tej grupy zbiorów uczących wymaga głębszych badań i wnikliwej analizy problemu, jednakże nie jest to cel tej pracy. Z tego powodu wymienione datasety nie zostały wykorzystane w dalszych testach. 
 
 \subsection{Wykorzystane narzędzia i hardware}
 
-Większość eksperymentów przeprowadzono na platformie google colab, która pozwala na wykorzystanie maszyn wirtualnych z GPU i TPU do realizacji projektów naukowych. Ze względu na dynamiczną alokację maszyn wirtualnych dla każdej sesji nie można określić jaki model karty graficznej bądź TPU został wykorzystany do obliczeń. Reprodukcja badań z \cite{DBLP:journals/corr/VisinKCMCB15} została wykonana przy pomocy komputera z procesorem IntelCore i7 8700 i kartą GTX 1070Ti.
+Znaczna część eksperymentów została przeprowadzona na platformie Google Colab, która pozwala na wykorzystanie maszyn wirtualnych z GPU i TPU do realizacji projektów naukowych. Ze względu na dynamiczną alokację maszyn wirtualnych dla każdej sesji nie można określić jaki model karty graficznej bądź TPU został wykorzystany do obliczeń. Reprodukcja badań z \cite{DBLP:journals/corr/VisinKCMCB15} została wykonana przy pomocy komputera z procesorem IntelCore i7 8700 i kartą GTX 1070Ti.
 
 Implementacja analizowanych modeli została wykonana przy pomocy biblioteki keras \cite{keras} z backendem tensorflow \cite{tensorflow}. W badaniach wykorzystano także biblioteki scikit-learn \cite{scikit-learn} oraz numpy \cite{numpy}. Wszystkie datasety zostały pobrane z wykorzystaniem publicznego API seriwsu kaggle.
 
 \subsection{Dobór struktury i hiperparametrów modelu}
 
-Aby zapewnić najlepsze osiągi porównywanych algorytmów z uwzględnieniem ograniczonej mocy obliczeniowej dokonano doboru wybranych hiperparametrów modeli. Do zbioru optymalizowanych parametrów dla każdego zbioru uczącego należały:
+Aby zapewnić najlepsze osiągi porównywanych algorytmów z uwzględnieniem ograniczonej mocy obliczeniowej dokonano doboru wybranych hiperparametrów modeli. Do zbioru optymalizowanych parametrów dla każdego zbioru uczącego zaliczały się:
 
 \begin{itemize}
 \item współczynik uczenia,
@@ -714,26 +726,28 @@ Aby zapewnić najlepsze osiągi porównywanych algorytmów z uwzględnieniem ogr
 \item współczynnik prawdopodobieństwa wykluczenia neuronu w procedurze dropout dla wybranych warstw.
 \end{itemize}
 
-Mając na uwadze ograniczenia dostępnej mocy obliczeniowej zdecydowano się wykorzystać zmodyfikowaną wersję alogorytmu Grid Search. Każdy z hiperparametrów dobierano osobno na podstawie przyjętego zakresu. Po wybraniu najlepszej wartości jednego z hiperparametrów przechodzono do następnego. Modyfikacja ta polega na zastąpieniu przeszukiwania zupełnego przyjętej dyskretnej przestrzeni hiperparametrów przez przeszukiwania zachłanne. W sytuacji gdy dostępne zasoby obliczeniowe są ograniczone jest to sposób na uniknięcie wielu niepotrzebnych obliczeń. Warto zwrócić uwagę, że jest to podejście naiwne, ponieważ zostaje przyjęte założenie o niezależności wpływu kontrolowanych czynników na proces uczenia.
+Mając na uwadze ograniczenia dostępnej mocy obliczeniowej zdecydowano się wykorzystać zmodyfikowaną wersję alogorytmu Grid Search. Każdy z hiperparametrów dobierano osobno na podstawie przyjętego zakresu. Po wybraniu najlepszej wartości jednego z hiperparametrów dobierano wartość kolejnego. Modyfikacja ta polega na zastąpieniu przeszukiwania zupełnego przyjętej dyskretnej przestrzeni hiperparametrów przez przeszukiwania zachłanne. W sytuacji gdy dostępne zasoby obliczeniowe są ograniczone jest to sposób na uniknięcie wielu niepotrzebnych obliczeń. Warto zwrócić uwagę, że jest to podejście naiwne, ponieważ przyjęto założenie o niezależności wpływu kontrolowanych czynników na proces uczenia.
 
 Modele uczono przez 20 epok porównując osiągane wyniki. Do dalszych testów wybrano modele osiągające największą skuteczność (accuracy) na zbiorze testowym. Dokładna procedura doboru hiperparametrów została opisana w postaci poniższego algorytmu:
 
 \begin{algorithm}[H]
 \SetAlgoLined
 \caption{Procedura doboru hiperparametrów}
-1. Dobór hiprametrów mających największy wpływ na proces uczenia i.e. parametrów mających wpływ na funckję strat - learning rate oraz współczynniki reugraryzacji l1 i l2.\\
+1. Dobór hiprametrów mających największy wpływ na proces uczenia i.e. parametrów mających wpływ na funckję strat - współczynnik uczenia oraz współczynniki reugraryzacji l1 i l2.\\
 2. Dobór liczby warstw odpowiedzialnych za ekstrakcję cech (warstwy ReNet, zmodyfikowana ReNet oraz konwolucyjna) wraz z prawdopodobieństwiem maskowania neuronu w warstwach Dropout.\\
 3. Dobór liczby neuronów w warstwach odpowiedzialnych za ekstrakcję cech.\\
 4. Dobór liczby neuronów w warstwach w pełni połączonych wraz z prawdopodobieństwem maskowania neuronu w warstwach Dropout.\\
 \end{algorithm}
 
-Warto zwrócić uwagę, że w punkcie 4 powyższej procedury przyjęto, że każdy model posiada dwie warstwy w pełni połączone. W celu porównania architektury ReNet ze zaproponowaną modyfikacją oraz bez modyfikacji z sieciami konwolucyjnymi, modele powinny dysponować takimi samymi warstwami dokonującymi klasyfikacji na podstawie nauczonej reprezentacji. W szczególności badania te nie mają na celu uzyskanie jak najlepszych możliwych modeli do rozwiązania wybranych zagadnień, a jedynie porównanie zdolności modeli do ekstrachowania odpowiednich cech z obrazów.
+Warto zwrócić uwagę, że w punkcie 4 powyższej procedury przyjęto, że każdy model posiada dwie warstwy w pełni połączone. W celu porównania wybranych architektur, modele powinny dysponować taką samą liczbą warstw dokonujących klasyfikację na podstawie nauczonej reprezentacji. Badania te nie mają na celu uzyskanie jak najlepszych możliwych modeli do rozwiązania wybranych zagadnień, a jedynie porównanie zdolności modeli do ekstrachowania odpowiednich cech z obrazów.
 
-W punkcie 2 dobór liczby warstw jest połączony z doborem siły regularyzacji, ponieważ w niektórych przypadkach bardziej wskazane jest stosowanie głębszych modeli ze zwiększoną regularyzacją. Przyjęto też uproszczenie w punkcie 3. Dla sieci ReNet oraz ReNet z modyfikacją przyjęto tą samą liczbę neuronów w każdej warstwie. Taką samą strukturę modelu przyjęto w pracy wprowadzającej ReNet. Przyjęte ograniczenie pozwala ograniczyć liczbę poszukiwanych parametrów.
+W punktach 2 i 4 dobór liczby warstw jest połączony z doborem współczynnika regularyzacji, ponieważ w niektórych przypadkach bardziej wskazane jest stosowanie głębszych modeli ze zwiększoną regularyzacją. Nie zmienia to naiwności opisywanej metody. Głębokość sieci i współczynniki regularyzacji to dwa czynniki, o których wiadomo, że są ze sobą powiązane. Możliwe jest występowanie innych powiązanych czynników, których wzajemna relacja nie została uwzględniona w powyższej procedurze. 
 
-W przypadku parametrów odpowiadających za liczność neuronów w warstawach porówywano osiągane wyniki dla kolejnych potęg 2 z zakresu $[32, 4096]$. Gdy powyżej pewnej wartości sieć osiągała znacząco gorsze wyniki, przerywano proces poszukiwania i przechodzono do następnego hiperparametru badanego modelu. W przypadku parametrów odpowiedzialnych za proces uczenia wybierano parametry z zakresu $[10^{-2}, 10^{-8}]$ w skali logarytmicznej, ponownie przerywając poszukiwania, jeśli powyżej pewnego zakresu wyniki nie były poprawiane.
+Przyjęto też uproszczenie w punkcie 3. Dla sieci ReNet oraz ReNet z modyfikacją przyjęto tą samą liczbę neuronów w każdej warstwie. Takie samo rozwiązanie przyjęto w pracy wprowadzającej ReNet. Ograniczenie to pozwala zredukować liczbę poszukiwanych parametrów.
 
-Opisana procedura pozwala na zmniejszenie nakładu obliczeniowego potrzebnego do wyboru modelu, jednocześnie jest na tyle ustrukturyzowana, że nie powinna wpłynąć na reprodukowalność uzyskanych wyników. Otrzymany model nie będzie optymalnym rozwiązaniem w analizowanej przestrzeni, ale będzie wystarczająco dobry do przeprowadzenia porównania testów.
+Dla parametrów odpowiadających za liczność neuronów w warstawach porówywano osiągane wyniki dla kolejnych potęg 2 z zakresu $[32, 4096]$. W przypadku współczynnika uczenia oraz współczynników reugraryzacji l1 i l2 sprawdzano parametry z zakresu $[10^{-2}, 10^{-8}]$ w skali logarytmicznej.
+
+Opisana procedura pozwala na zmniejszenie nakładu obliczeniowego potrzebnego do wyboru modelu. Nie istnieje gwarancja, że otrzymany model jest optymalny w analizowanej przestrzeni, ale można liczyć, że będzie wystarczająco dobry do przeprowadzenia porównania.
 
 \begin{figure}
 \centering
@@ -742,9 +756,7 @@ Opisana procedura pozwala na zmniejszenie nakładu obliczeniowego potrzebnego do
 	\label{fig:hyperparams}
 \end{figure}
 
-Inne dostępne rozwiązania problemu doboru hiperametrów to wykorzystanie algorytmów Grid Search lub Random Search. Grid Search nie jest zalecaną metodą. Często hiperparametry mają różny wpływ na wyniki procesu uczenia. Maksimum optymalizowanej metryki może występować pomiędzy punktami tworzonej siatki, jak to zostało przedstawione na rys. \ref{fig:hyperparams}. W przypadku w którym jeden z hiperparametrów ma większy wpływ na osiągane wyniki siatka dla jego wartości powinna być o wiele gęstsza. Random Search unika tego problemu poprzez wybieranie losowych punktów z przestrzeni, przez co hiperparametry mające większy wpływ na proces uczenia są próbkowane we większej liczbie punktów i istnieje większa szansa na znalezienie efektywniejszej wartości. Wadą obu algorytmów jest eksponencjalnie rosnąca liczba prób dla kolejnych hiperparametrów.
-
-Dodatkowo porównano wyniki osiągane dla trzech algorytmów uczenia: SGD, RMSprop oraz Adam. Najlepsze rezultaty osiągnięto dla algorytmu Adam, przez co został on wybrany jako algorytm optymalizacji w dalszej części eksperymentów.
+Inne dostępne rozwiązania problemu doboru hiperametrów to wykorzystanie algorytmów Grid Search lub Random Search. Grid Search nie jest zalecaną metodą. Często hiperparametry mają różny wpływ na wyniki procesu uczenia. Maksimum optymalizowanej metryki może występować pomiędzy punktami tworzonej siatki, jak to zostało przedstawione na rys. \ref{fig:hyperparams}. W przypadku w którym jeden z hiperparametrów ma większy wpływ na osiągane wyniki siatka dla jego wartości powinna być o wiele gęstsza. Random Search unika tego problemu poprzez wybieranie losowych punktów z przestrzeni, przez co hiperparametry mające większy wpływ na proces uczenia są próbkowane w większej liczbie punktów i istnieje większa szansa na znalezienie efektywniejszej wartości. Wadą obu algorytmów jest liczba iteracji potrzebnych do przeszukania przestrzeni, eksponencjalnie rosnąca wraz ze wzrostem liczby hiperparametrów.
 
 
 \chapter{Wyniki}
