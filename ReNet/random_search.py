@@ -9,7 +9,6 @@ from keras.optimizers import Adam
 
 from Utils.SaveResults import *
 from Utils.LoadSVHN import *
-from Utils.ImageGeneratorWithMasking import *
 from Models.SVHNReproduction.SVHNModel import *
 
 
@@ -39,8 +38,7 @@ print("x_test: ", x_test.shape)
 print("y_test: ", y_test.shape)
 
 
-#datagen = ImageDataGenerator(width_shift_range=[-2.0, 0.0, 2.0])
-datagen = ImageDataGeneratorWithMasking(width_shift_range=[-2.0, 0.0, 2.0])
+datagen = ImageDataGenerator(width_shift_range=[-2.0, 0.0, 2.0])
 datagen.fit(x_train)
 
 
@@ -48,7 +46,7 @@ model = get_svhn_model()
 
 n = 100
 for i in range(n):
-    lr = 10**(np.random.uniform(-10.0, 0.0)
+    lr = 10.0**(np.random.uniform(-10.0, 0.0))
     beta_1 = np.random.randn()
     if beta_1 < 0.0:
         beta_1 = -1.0 * beta_1
@@ -69,17 +67,17 @@ for i in range(n):
     #workaround for how keras fit_generator works
     x_train_single_ex = x_train[0:1]
     y_train_single_ex = y_train[0:1]
-    model.fit(x_train_single_ex, y_train_single_ex, epochs=1)
+    model.fit(x_train_single_ex, y_train_single_ex, epochs=1, verbose=0)
     #model.summary()
 
     batch_size = 100
-    history = model.fit_generator(datagen.flow(x_train, y_train, batch_size=32),
+    history = model.fit_generator(datagen.flow(x_train, y_train, batch_size=batch_size),
                 epochs=1,
                 steps_per_epoch=np.ceil(x_train.shape[0] / batch_size),
                 validation_data=(x_test, y_test),
+                verbose=1,
                 callbacks=[EarlyStopping(monitor='val_loss', patience=5, verbose=1),
-                ]
+                ],
             )
-    print("history.history[loss]: ", history.history[loss])
 
-    print("tesing: lr: {}, beta1: {}, beta2: {}, loss: {}, acc: {}".format(lr, beta_1, beta_2, 0, 0))
+    print("{}/{} tesing: lr: {}, beta1: {}, beta2: {}, loss: {}, acc: {}".format(i+1, n, lr, beta_1, beta_2, history.history['loss'], history.history['categorical_accuracy']))

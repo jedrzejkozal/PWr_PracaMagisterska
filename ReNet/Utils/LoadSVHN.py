@@ -34,16 +34,19 @@ def load_SVHN(path):
     del x_extra
     del y_extra
 
-    x_train, y_train = reduce_imbalance(x_concat, y_concat,
-            samples_per_class=54395,
-            num_classes=10,
-            labels=[1, 2, 3, 4, 5, 6, 7, 8, 9, 10])
+    #x_train, y_train = reduce_imbalance(x_concat, y_concat,
+    #        samples_per_class=54395,
+    #        num_classes=10,
+    #        labels=[1, 2, 3, 4, 5, 6, 7, 8, 9, 10])
+
+    #del x_concat
+    #del y_concat
+
+    x_train = x_concat[:543949]
+    y_train = y_concat[:543949]
 
     del x_concat
     del y_concat
-
-    x_train = x_train[:543949]
-    y_train = y_train[:543949]
 
     x_test = np.load(join(path, 'x_test.npy'), allow_pickle=True, fix_imports=False)
     y_test = np.load(join(path, 'y_test.npy'), allow_pickle=True, fix_imports=False)

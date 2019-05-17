@@ -51,7 +51,7 @@ datagen.fit(x_train)
 
 model = get_svhn_model()
 model.compile(loss='categorical_crossentropy',
-        optimizer=Adam(lr=0.01, beta_1=0.9, beta_2=0.999, epsilon=10.0**-8.0),
+        optimizer=Adam(lr=0.001, beta_1=0.9, beta_2=0.999, epsilon=10.0**-8.0),
         metrics=['categorical_accuracy'])
 
 #just for model to figure out what is the shape of input tensors
@@ -78,7 +78,7 @@ def load_weights(model, loaddir):
 load_weights(model, "svhn_weights")
 
 batch_size = 32
-num_epochs = 5
+num_epochs = 3
 masking = Masking(img_rows, img_cols, num_channels)
 for i in range(num_epochs):
     print("epoch {}/{}".format(i+1, num_epochs))
@@ -92,5 +92,10 @@ for i in range(num_epochs):
                 ]
         )
     del masked_x_train
+
+del x_train
+del y_train
+del x_test
+del y_test
 
 save_weights(model, "svhn_weights")

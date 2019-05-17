@@ -19,7 +19,7 @@ def get_svhn_model():
     fully_conn_hidden_size = 4096
     model.add(Dense(fully_conn_hidden_size, activation='relu'))
     model.add(Dropout(0.1))
-    model.add(Dense(fully_conn_hidden_size, activation='relu', name='features'))
+    model.add(Dense(fully_conn_hidden_size+1, activation='relu', name='features'))
     model.add(Dropout(0.1))
 
     num_classes = 10
