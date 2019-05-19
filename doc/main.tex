@@ -14,10 +14,17 @@
 \usepackage[ruled,vlined]{algorithm2e}
 \usepackage{tikz}
 \usetikzlibrary{positioning}
-%test
 \usepackage{fourier} 
 \usepackage{array}
 \usepackage{makecell}
+%test
+\usepackage{multirow}
+\usepackage{rotating}
+
+\renewcommand\theadalign{bc}
+\renewcommand\theadfont{\bfseries}
+\renewcommand\theadgape{\Gape[4pt]}
+\renewcommand\cellgape{\Gape[4pt]}
 
 \newcommand{\bb}{\textbf}
 
@@ -645,11 +652,11 @@ Przedziały te zostały podane wraz z uzyskanymi w trakcie reprodukcji badań wa
  \hline
  nazwa zbioru & \specialcell{błąd uzyskany\\ we wcześniejszej pracy} & \specialcell{błąd uzyskany\\ dla przygotowanej implementacji} & \specialcell{przedział ufności} \\ 
  \hline
- \thead{mnist} & 0.0045 & 0.0628 & (0.0675, 0.0580) \\ 
+ \makecell{mnist} & 0.0045 & 0.0628 & (0.0675, 0.0580) \\ 
  \hline
- \thead{cifar10} & 0.1235 & 0.3787 & (0.3882, 0.3691) \\ 
+ \makecell{cifar10} & 0.1235 & 0.3787 & (0.3882, 0.3691) \\ 
  \hline
- \thead{svhn} & 0.0238 & 0.5602 & (0.5662, 0.5541) \\ 
+ \makecell{svhn} & 0.0238 & 0.5602 & (0.5662, 0.5541) \\ 
  \hline
 \end{tabular}
 \end{table}
@@ -687,13 +694,13 @@ W niniejszej sekcji przedstawiono szczegóły konfiguracji eksperymentu. Opisano
  \hline
  nazwa zbioru & liczba obrazów & liczba klas & szerokość & wysokość & źródło \\ 
  \hline
- \thead{Chest X-Ray\\ Images (Pneumonia)} & 5863 & 2 & $>$1500 & $>$1000 & \cite{xray-dataset}\\ 
+ \makecell{Chest X-Ray\\ Images (Pneumonia)} & 5863 & 2 & $>$1500 & $>$1000 & \cite{xray-dataset}\\ 
  \hline
- \thead{Flowers Recognition} & 4242 & 5 & 320 & 240 & \cite{flowers-dataset} \\ 
+ \makecell{Flowers Recognition} & 4242 & 5 & 320 & 240 & \cite{flowers-dataset} \\ 
  \hline
- \thead{Fashion MNIST} & 70000 & 10 & 28 & 28 & \cite{fashion-dataset} \\ 
+ \makecell{Fashion MNIST} & 70000 & 10 & 28 & 28 & \cite{fashion-dataset} \\ 
  \hline
- \thead{Natural Images} & 6899 & 8 & $>$200 & $>$50 & \cite{natural-img-dataset} \\ 
+ \makecell{Natural Images} & 6899 & 8 & $>$200 & $>$50 & \cite{natural-img-dataset} \\ 
  \hline
 \end{tabular}
 \end{table}
@@ -761,6 +768,102 @@ Inne dostępne rozwiązania problemu doboru hiperametrów to wykorzystanie algor
 
 \chapter{Wyniki}
 
+W niniejszym rozdziale przedstawiono wyniki uzyskane zgodnie z przyjętą i wcześniej opisaną metyką.
+\begin{table}
+\centering
+\caption{Zestawienie struktury wykorzystanych modeli - współczynniki wpływające na funkcję strat}
+\label{tab:hyperparams-coefs}
+\begin{tabular}{ |c|c|c|c|c| } 
+ \hline
+ dataset & algorytm & \makecell{współczynnik\\uczenia} & \makecell{współczynnik \\ reg. l1} & \makecell{współczynnik\\ reg. l2}  \\ 
+ \hline
+ \hline
+ \multirow{3}{*}{\makecell{Chest X-Ray\\ Images (Pneumonia)}} &
+ \multicolumn{1}{l}{ReNet} & \multicolumn{1}{l}{lr} & \multicolumn{1}{l}{l1} & \multicolumn{1}{l|}{l2} \\\cline{2-5} &
+ \multicolumn{1}{l}{zmodyf. ReNet} & \multicolumn{1}{l}{lr} & \multicolumn{1}{l}{l1} & \multicolumn{1}{l|}{l2} \\\cline{2-5} &
+ \multicolumn{1}{l}{conv} & \multicolumn{1}{l}{lr} & \multicolumn{1}{l}{l1} & \multicolumn{1}{l|}{l2} \\\hline
+ \hline
+ \multirow{3}{*}{\makecell{Flowers Recognition}} & 
+ \multicolumn{1}{l}{ReNet} & \multicolumn{1}{l}{lr} & \multicolumn{1}{l}{l1} & \multicolumn{1}{l|}{l2} \\\cline{2-5} &
+ \multicolumn{1}{l}{zmodyf. ReNet} & \multicolumn{1}{l}{lr} & \multicolumn{1}{l}{l1} & \multicolumn{1}{l|}{l2} \\\cline{2-5} &
+ \multicolumn{1}{l}{conv} & \multicolumn{1}{l}{lr} & \multicolumn{1}{l}{l1} & \multicolumn{1}{l|}{l2} \\\hline
+ \hline
+ \multirow{3}{*}{\makecell{Fashion MNIST}} & 
+ \multicolumn{1}{l}{ReNet} & \multicolumn{1}{l}{lr} & \multicolumn{1}{l}{l1} & \multicolumn{1}{l|}{l2} \\\cline{2-5} &
+ \multicolumn{1}{l}{zmodyf. ReNet} & \multicolumn{1}{l}{lr} & \multicolumn{1}{l}{l1} & \multicolumn{1}{l|}{l2} \\\cline{2-5} &
+ \multicolumn{1}{l}{conv} & \multicolumn{1}{l}{lr} & \multicolumn{1}{l}{l1} & \multicolumn{1}{l|}{l2} \\\hline
+ \hline
+ \multirow{3}{*}{\makecell{Natural Images}} & 
+ \multicolumn{1}{l}{ReNet} & \multicolumn{1}{l}{lr} & \multicolumn{1}{l}{l1} & \multicolumn{1}{l|}{l2} \\\cline{2-5} &
+ \multicolumn{1}{l}{zmodyf. ReNet} & \multicolumn{1}{l}{lr} & \multicolumn{1}{l}{l1} & \multicolumn{1}{l|}{l2} \\\cline{2-5} &
+ \multicolumn{1}{l}{conv} & \multicolumn{1}{l}{lr} & \multicolumn{1}{l}{l1} & \multicolumn{1}{l|}{l2} \\\hline
+\end{tabular}
+\end{table}
+
+\begin{table}
+\centering
+\caption{Zestawienie struktury wykorzystanych modeli - część odpowiedzialna za ekstrakcję cech}
+\label{tab:hyperparams-extraction}
+\begin{tabular}{ |c|c|c|c|c|c| } 
+ \hline
+ dataset & algorytm & \makecell{l. warstw\\ ekstrakcji} & \makecell{l. neuronów\\ w warstwach\\ ekstrakcji} & \makecell{rozm.\\patchy} & dropout \\ 
+ \hline
+ \hline
+ \multirow{3}{*}{\makecell{Chest X-Ray\\ Images (Pneumonia)}} &
+ \multicolumn{1}{l}{ReNet} & \multicolumn{1}{l}{lr} & \multicolumn{1}{l}{l1} & \multicolumn{1}{l}{l2} & \multicolumn{1}{l|}{ex} \\\cline{2-6} &
+ \multicolumn{1}{l}{zmodyf. ReNet} & \multicolumn{1}{l}{lr} & \multicolumn{1}{l}{l1} & \multicolumn{1}{l}{l2} & \multicolumn{1}{l|}{ex} \\\cline{2-6} &
+ \multicolumn{1}{l}{conv} & \multicolumn{1}{l}{lr} & \multicolumn{1}{l}{l1} & \multicolumn{1}{l}{l2} & \multicolumn{1}{l|}{ex} \\\hline
+ \hline
+ \multirow{3}{*}{\makecell{Flowers Recognition}} & 
+ \multicolumn{1}{l}{ReNet} & \multicolumn{1}{l}{lr} & \multicolumn{1}{l}{l1} & \multicolumn{1}{l}{l2} & \multicolumn{1}{l|}{ex} \\\cline{2-6} &
+ \multicolumn{1}{l}{zmodyf. ReNet} & \multicolumn{1}{l}{lr} & \multicolumn{1}{l}{l1} & \multicolumn{1}{l}{l2} & \multicolumn{1}{l|}{ex} \\\cline{2-6} &
+ \multicolumn{1}{l}{conv} & \multicolumn{1}{l}{lr} & \multicolumn{1}{l}{l1} & \multicolumn{1}{l}{l2} & \multicolumn{1}{l|}{ex} \\\hline
+ \hline
+ \multirow{3}{*}{\makecell{Fashion MNIST}} & 
+ \multicolumn{1}{l}{ReNet} & \multicolumn{1}{l}{lr} & \multicolumn{1}{l}{l1} & \multicolumn{1}{l}{l2} & \multicolumn{1}{l|}{ex} \\\cline{2-6} &
+ \multicolumn{1}{l}{zmodyf. ReNet} & \multicolumn{1}{l}{lr} & \multicolumn{1}{l}{l1} & \multicolumn{1}{l}{l2} & \multicolumn{1}{l|}{ex} \\\cline{2-6} &
+ \multicolumn{1}{l}{conv} & \multicolumn{1}{l}{lr} & \multicolumn{1}{l}{l1} & \multicolumn{1}{l}{l2} & \multicolumn{1}{l|}{ex} \\\hline
+ \hline
+ \multirow{3}{*}{\makecell{Natural Images}} & 
+ \multicolumn{1}{l}{ReNet} & \multicolumn{1}{l}{lr} & \multicolumn{1}{l}{l1} & \multicolumn{1}{l}{l2} & \multicolumn{1}{l|}{ex} \\\cline{2-6} &
+ \multicolumn{1}{l}{zmodyf. ReNet} & \multicolumn{1}{l}{lr} & \multicolumn{1}{l}{l1} & \multicolumn{1}{l}{l2} & \multicolumn{1}{l|}{ex} \\\cline{2-6} &
+ \multicolumn{1}{l}{conv} & \multicolumn{1}{l}{lr} & \multicolumn{1}{l}{l1} & \multicolumn{1}{l}{l2} & \multicolumn{1}{l|}{ex} \\\hline
+\end{tabular}
+\end{table}
+
+
+\begin{table}
+\centering
+\caption{Struktura wykorzystanych modeli - część odpowiedzialna za klasyfikację}
+\label{tab:hyperparams-classification}
+\begin{tabular}{ |c|c|c|c| } 
+ \hline
+  dataset & algorytm & \makecell{l. neuronów\\ w warstwach\\ klasyfikacji} & dropout  \\ 
+ \hline
+ \hline
+ \multirow{3}{*}{\makecell{Chest X-Ray\\ Images (Pneumonia)}} &
+ \multicolumn{1}{l}{ReNet} & \multicolumn{1}{l}{l n} & \multicolumn{1}{l|}{drop} \\\cline{2-4} &
+ \multicolumn{1}{l}{zmodyf. ReNet} & \multicolumn{1}{l}{l n} & \multicolumn{1}{l|}{drop} \\\cline{2-4} &
+ \multicolumn{1}{l}{conv} & \multicolumn{1}{l}{l n} & \multicolumn{1}{l|}{drop} \\\hline
+ \hline
+ \multirow{3}{*}{\makecell{Flowers Recognition}} & 
+ \multicolumn{1}{l}{ReNet} & \multicolumn{1}{l}{l n} & \multicolumn{1}{l|}{drop} \\\cline{2-4} &
+ \multicolumn{1}{l}{zmodyf. ReNet} & \multicolumn{1}{l}{l n} & \multicolumn{1}{l|}{drop} \\\cline{2-4} &
+ \multicolumn{1}{l}{conv} & \multicolumn{1}{l}{l n} & \multicolumn{1}{l|}{drop} \\\hline
+ \hline
+ \multirow{3}{*}{\makecell{Fashion MNIST}} & 
+ \multicolumn{1}{l}{ReNet} & \multicolumn{1}{l}{l n} & \multicolumn{1}{l|}{drop} \\\cline{2-4} &
+ \multicolumn{1}{l}{zmodyf. ReNet} & \multicolumn{1}{l}{l n} & \multicolumn{1}{l|}{drop} \\\cline{2-4} &
+ \multicolumn{1}{l}{conv} & \multicolumn{1}{l}{l n} & \multicolumn{1}{l|}{drop} \\\hline
+ \hline
+ \multirow{3}{*}{\makecell{Natural Images}} & 
+ \multicolumn{1}{l}{ReNet} & \multicolumn{1}{l}{l n} & \multicolumn{1}{l|}{drop} \\\cline{2-4} &
+ \multicolumn{1}{l}{zmodyf. ReNet} & \multicolumn{1}{l}{l n} & \multicolumn{1}{l|}{drop} \\\cline{2-4} &
+ \multicolumn{1}{l}{conv} & \multicolumn{1}{l}{l n} & \multicolumn{1}{l|}{drop} \\\hline
+\end{tabular}
+\end{table}
+
+Wybrane parametry modeli, uzyskane we wcześniej opisanym procesie doboru hiperparametrów zostały przedstawione w tabelach \ref{tab:hyperparams-coefs}, \ref{tab:hyperparams-extraction}, oraz \ref{tab:hyperparams-classification}.
 
 \chapter{Wnioski}
 
