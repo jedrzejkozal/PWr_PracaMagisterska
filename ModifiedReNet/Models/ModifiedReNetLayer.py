@@ -1,4 +1,5 @@
-from keras.layers import LSTM, Reshape, Permute, Dropout
+from keras.layers import SimpleRNN, LSTM, GRU
+from keras.layers import Reshape, Permute, Dropout
 from keras.layers import Layer
 from keras.layers import concatenate
 
@@ -6,14 +7,15 @@ from keras.layers import concatenate
 class ModifiedReNetLayer(Layer):
 
     def __init__(self, patch_size, hidden_size,
-            use_dropout=False, dropout_rate=None):
+            use_dropout=False, dropout_rate=None,
+            RNN_type=LSTM):
         super().__init__()
 
         self.patch_size = patch_size
         self.hidden_size = hidden_size
 
-        self.LSTM_forward = LSTM(hidden_size, return_sequences=True)
-        self.LSTM_backward = LSTM(hidden_size, return_sequences=True, go_backwards=True)
+        self.LSTM_forward = RNN_type(hidden_size, return_sequences=True)
+        self.LSTM_backward = RNN_type(hidden_size, return_sequences=True, go_backwards=True)
 
         self.use_dropout = use_dropout
         if use_dropout:
