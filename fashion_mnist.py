@@ -71,7 +71,7 @@ print(x_train_data.shape)
 print(x_test_data.shape)
 
 
-def get_reNet(lr=0.001, dense_reg=None, softmax_reg=None):
+def get_reNet(lr=0.001, dense_reg=l1(0.0000001), softmax_reg=l2(0.0000001)):
     model = Sequential()
 
     reNet_hidden_size = 256
@@ -82,8 +82,6 @@ def get_reNet(lr=0.001, dense_reg=None, softmax_reg=None):
 
     model.add(Flatten())
     fully_conn_hidden_size = 4096
-    #model.add(Dense(fully_conn_hidden_size, activation='relu'))
-    #model.add(Dropout(0.1))
     model.add(Dense(fully_conn_hidden_size, activation='relu', activity_regularizer=dense_reg))
     model.add(Dropout(0.1))
 
@@ -115,8 +113,6 @@ def get_modif_reNet(lr=0.001, dense_reg=None, softmax_reg=None):
 
     model.add(Flatten())
     fully_conn_hidden_size = 4096
-    #model.add(Dense(fully_conn_hidden_size, activation='relu'))
-    #model.add(Dropout(0.1))
     model.add(Dense(fully_conn_hidden_size, activation='relu', activity_regularizer=dense_reg))
     model.add(Dropout(0.1))
 
@@ -159,14 +155,14 @@ def get_conv(lr=0.001, dense_reg=None, softmax_reg=None):
 
 results = {}
 
-for learning_rate in [0.01, 0.001, 0.0001, 0.00001, 0.000001, 0.0000001, 0.00000001]:
+for learning_rate in [0.001, 0.0001, 0.00001, 0.000001, 0.0000001, 0.00000001]:
     print("learning_rate = ", learning_rate)
-    model = get_reNet(lr=learning_rate, dense_reg=None, softmax_reg=None)
+    model = get_modif_reNet(lr=learning_rate, dense_reg=None, softmax_reg=None)
 
     x_train_single_ex = x_train_data[0:1]
     y_train_single_ex = y_train_data[0:1]
     model.fit(x_train_single_ex, y_train_single_ex, epochs=1)
-    model.summary()
+    #model.summary()
 
     datagen = ImageDataGenerator(width_shift_range=[-2.0, 0.0, 2.0])
     datagen.fit(x_train_data)
@@ -182,9 +178,11 @@ for learning_rate in [0.01, 0.001, 0.0001, 0.00001, 0.000001, 0.0000001, 0.00000
             ]
     )
     loss, acc = tuple(model.evaluate(x_test, y_test, batch_size=batch_size))
+    print("learning_rate = ", learning_rate)
     print("best test loss", loss)
     print("best test acc: ", acc)
 
     results[learning_rate] = tuple(loss, acc)
+    print(results)
 
 print(results)
