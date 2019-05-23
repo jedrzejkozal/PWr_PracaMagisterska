@@ -615,7 +615,7 @@ Badania podzielono na trzy zasadnicze części. Pierwszą z nich stanowiła repr
 \subsection{Przyjęta metodyka porównywania modeli}
 W celu porównania jakości klasyfikacji porównano skuteczność klasyfikacji (accuracy), osiąganą na zbiorze testowym. W celu zredukowania wpływu wariancji estymatora na uzyskane wyniki zastosowano pięciokrotny sprawdzian krzyżowy. Każdy z algorytmów dysponował tymi samymi foldami jako zbiory testowe. 
 
-Modele trenowano przez 50 epok. Jako funckję strat przyjęto entropię krzyżową. W trakcie uczenia monitorowano wartość funkcji start na zbiorze testowym i przerywano uczenie w momencie wystąpienia overfitingu. Następnie przywracano wagi dla modelu osiągającego najniższą odnotowaną wartość funkcji strat, tak jak zasugerowano w \cite{Goodfellow-et-al-2016}. Dodatkowo wykorzystano proces śledzenia wartości funkcji strat dla zbioru testowego. W przypadku braku poprawy wartości przez 5 epok zmniejszano współczynnik uczenia dziesięciokrotnie. Porównano wyniki osiągane dla trzech algorytmów uczenia: SGD, RMSprop oraz Adam. Najlepsze rezultaty osiągnięto dla algorytmu Adam, przez co został on wybrany jako algorytm optymalizacji we wszystkich eksperymentach.
+Modele trenowano przez 50 epok, z rozmiarem batchy wynoszącym 32. Jako funkcję strat przyjęto entropię krzyżową. W trakcie uczenia monitorowano wartość funkcji start na zbiorze testowym i przerywano uczenie w momencie wystąpienia overfitingu. Następnie przywracano wagi dla modelu osiągającego najniższą odnotowaną wartość funkcji strat, tak jak zasugerowano w \cite{Goodfellow-et-al-2016}. Dodatkowo wykorzystano proces śledzenia wartości funkcji strat dla zbioru testowego. W przypadku braku poprawy wartości przez 5 epok zmniejszano współczynnik uczenia dziesięciokrotnie. Porównano wyniki osiągane dla trzech algorytmów uczenia: SGD, RMSprop oraz Adam. Najlepsze rezultaty osiągnięto dla algorytmu Adam, przez co został on wybrany jako algorytm optymalizacji we wszystkich eksperymentach.
 
 Do ewaluacji statystycznej wyników uzyskanych w części drugiej i trzeciej badań wykorzystano test Friedmana z testami post-hoc Nemenyiego. 
 
@@ -707,7 +707,7 @@ W niniejszej sekcji przedstawiono szczegóły konfiguracji eksperymentu. Opisano
 
 Do przeprowadzenia eksperymentów wykorzystano datasety z różnych domen, mające przetestować zdolność badanych sieci do ekstrakcji cech z obrazów. Zestawienie wykorzystanych zbiorów przedstawiono w tabeli \ref{tab:dataset}. Wykorzystano datasety o różnej liczności i różnych rozmiarach obrazów oraz różnej liczbie klas.
 
-W procesie przetwarzania wstępnego zmniejszono rozmiar obrazów do 64x64 lub 32x32 pikseli. W przypadku datasetu Chest X-Ray dokonano konwersji do skali szarości, ponieważ głębia kolorów nie wnosiła wiele informacji w zdjęciach rentgenowskich. Dla przygotowanej implementacji sieci ReNet zatosowanej do obrazów o dużych rozmiarach model osiąga wielkość uniemożliwiającą trenowanie go na powszechnie dostępnych kartach graficznych. Daje to istotne ograniczenie obszaru zastosowań sieci ReNet i jednocześnie definiuje konieczny krok przetwarzania wstępnego obrazów przed rozpoczęciem procesu uczenia. Nie wszystkie zbiory uczące można poddać zmniejszeniu rozmiaru obrazu bez utraty informacji mających wpływ na klasyfikację.
+W procesie przetwarzania wstępnego zmniejszono rozmiar obrazów do 64x64 lub 32x32 pikseli. Dla wszystkich datasetów zastosowano przesuwanie obrazów w poziomie o -2, 0 lub 2 piksele. Jest to procedura zastosowana w badaniach wprowadzających ReNet i ma na celu zredukowanie overfittingu. W przypadku datasetu Chest X-Ray dokonano konwersji do skali szarości, ponieważ głębia kolorów nie wnosiła wiele informacji w zdjęciach rentgenowskich. Wszystkie wejścia zostały znormalizowane do zerowej średniej i jednostkowej wariancji w celu ułatwienia optymalizacji modeli. Dla przygotowanej implementacji sieci ReNet zatosowanej do obrazów o dużych rozmiarach model osiąga wielkość uniemożliwiającą trenowanie go na powszechnie dostępnych kartach graficznych. Daje to istotne ograniczenie obszaru zastosowań sieci ReNet i jednocześnie definiuje konieczny krok przetwarzania wstępnego obrazów przed rozpoczęciem procesu uczenia. Nie wszystkie zbiory uczące można poddać zmniejszeniu rozmiaru obrazu bez utraty informacji mających wpływ na klasyfikację.
 
 Wykorzystane datasety są w różnym stopniu niezbalansowane. Problem ten rozwiązano przez zastosowanie undersamplingu zbioru treningowego do klasy zawierającej najmniejszą liczbę przykładów uczących. Rozwiązanie to zastosowano przy doborze hiperparametrów oraz przy sprawdzianie krzyżowym dla każdego foldu.
 
@@ -715,7 +715,7 @@ W trakcie poszukiwania zbiorów danych odnotowano znaczący spadek jakość klas
 
 \subsection{Wykorzystane narzędzia i hardware}
 
-Znaczna część eksperymentów została przeprowadzona na platformie Google Colab, która pozwala na wykorzystanie maszyn wirtualnych z GPU i TPU do realizacji projektów naukowych. Ze względu na dynamiczną alokację maszyn wirtualnych dla każdej sesji nie można określić jaki model karty graficznej bądź TPU został wykorzystany do obliczeń. Reprodukcja badań z \cite{DBLP:journals/corr/VisinKCMCB15} została wykonana przy pomocy komputera z procesorem IntelCore i7 8700 i kartą GTX 1070Ti.
+Znaczna część eksperymentów została przeprowadzona na platformie Google Colab oraz Google Cloud Platform z wykorzystaniem ai platform. Google Colab, która pozwala na wykorzystanie maszyn wirtualnych z GPU i TPU do realizacji projektów naukowych. Ze względu na dynamiczną alokację maszyn wirtualnych dla każdej sesji nie można określić jaki model karty graficznej bądź TPU został wykorzystany do obliczeń. Reprodukcja badań z \cite{DBLP:journals/corr/VisinKCMCB15} została wykonana przy pomocy komputera z procesorem IntelCore i7 8700 i kartą GTX 1070Ti.
 
 Implementacja analizowanych modeli została wykonana przy pomocy biblioteki keras \cite{keras} z backendem tensorflow \cite{tensorflow}. W badaniach wykorzystano także biblioteki scikit-learn \cite{scikit-learn} oraz numpy \cite{numpy}. Wszystkie datasety zostały pobrane z wykorzystaniem publicznego API seriwsu kaggle.
 
@@ -865,7 +865,40 @@ W niniejszym rozdziale przedstawiono wyniki uzyskane zgodnie z przyjętą i wcze
 
 Wybrane parametry modeli, uzyskane we wcześniej opisanym procesie doboru hiperparametrów zostały przedstawione w tabelach \ref{tab:hyperparams-coefs}, \ref{tab:hyperparams-extraction}, oraz \ref{tab:hyperparams-classification}.
 
+\section{Wizualizacja nauczonej reprezentacji}
+
+W celu porównania nauczonych reprezentacji zmodyfikowanej i niezmodyfikowanej architektury ReNet przygotowano wizualizacje aktywacji przedostatniej warstwy sieci. Wektor wyjścia dla każdego przykładu ze zbioru testowego poddano redukcji wymiarowości do dwóch wymiarów. Umożliwia to przedstawienie każdego elementu zbioru testowego na płaszczyźnie z zaznaczeniem klasy, do której należy przykład. Do redukcji wymiarowości wybrano algorytmy PCA i tSNE (cite tSNE). Wyniki przedstawiono na rys. \ref{fig:tSNE_ReNet} i \ref{fig:tSNE_modif_ReNet}.
+
+Z przedstawionych wizualizacji można przypuszczać, że nauczona reprezentacja nie jest liniowo separowalna i wiele przykładów o różnych klasach leży blisko siebie. Istnieją pewne skupiska przykładów dla których jedna z klas dominuje, jednakże skupiska te nie są tak jednolite i zunifikowane jak w przypadku modeli osiągających wyższą skuteczność.
+Ponieważ wizualizacje są efektem rzutowania z przestrzeni 4096-wymiarowej do przestrzeni dwuwymiarowej należy zachować szczególną ostrożność przy wyciąganiu wniosków co do geometrycznych zależności występujących w oryginalnej przestrzeni. W tym przypadku geometryczna intuicja wydaje się być poprawna ze względu na słabe wyniki sieci dla zbiorów uczących. Uzyskano dokładność rzędu 60\% na zbiorze testowym.
+
+Dziwny kształt dla PCA - z czego on wynika? Czy jest efektem regularyzacji l1?
+
+Warto zwrócić uwagę, na bardzo zbliżoną reprezentację dla obu metod. (I tutaj w zależności od tego jakie wyniki dla porównania czasowego i wyniki ogólnie).
+
+\begin{figure}
+\centering
+	\includegraphics[width=1.0\textwidth]{img/tSNE_ReNet.png}
+	\includegraphics[width=1.0\textwidth]{img/PCA_ReNet.png}
+	\caption{Wizualizacja reprezentacji nauczonej przez sieć ReNet. (Góra) Wizualizacja wyjścia przedostatniej warstwy sieci z wykorzystaniem tSNE. (Dół) Wizualizacja wyjścia przedostatniej warstwy sieci z wykorzystaniem PCA}
+	\label{fig:tSNE_ReNet}
+\end{figure}
+
+\begin{figure}
+\centering
+	\includegraphics[width=1.0\textwidth]{img/tSNE_modif_ReNet.png}
+	\includegraphics[width=1.0\textwidth]{img/PCA_modif_ReNet.png}
+	\caption{Wizualizacja reprezentacji nauczonej przez zmodyfikowaną sieć ReNet. (Góra) Wizualizacja wyjścia przedostatniej warstwy sieci z wykorzystaniem tSNE. (Dół) Wizualizacja wyjścia przedostatniej warstwy sieci z wykorzystaniem PCA}
+	\label{fig:tSNE_modif_ReNet}
+\end{figure}
+
 \chapter{Wnioski}
+
+Wygląda na to, że uzyskano przyśpieszenie działania ReNet przy zachowaniu zbliżonych osiągów. Pozwoliło to na stosowanie głębszych modeli. Oczywiście samo stoswanie głębszych modeli nie jest zaletą samą w sobie, ale zwiększona elastyczność. Przez to, że model ma mniej LSTM na warstwę można "bardziej precyzyjnie" dobierać liczbę warstw do problemu. 
+
+Wyniki tSNE i PCA cech stanowiących reprezentację nauczoną przez sieć: Wygląda na to, że wprowadzona modyfikacja wpływa w nieznaczny sposób na sposób uczenia reprezentacji.
+
+Czy uzyskane usprawnienia są wystarczające aby ReNet zyskało na praktycznym znaczeniu? Raczej nie - zbyt duże koszty nakładów obliczeniowych. Wymagane są dalsze usprawnienia w zakresie poprawy osiągów i wydajności sieci.
 
 Obszary dalszych badań:
 ReNet dla dużej liczby klas,
