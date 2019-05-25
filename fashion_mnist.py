@@ -71,7 +71,8 @@ print(x_train_data.shape)
 print(x_test_data.shape)
 
 
-def get_reNet(lr=0.001, dense_reg=l1(0.0000001), softmax_reg=l2(0.0000001), reNet_hidden_size = 128, fully_conn_hidden_size = 4096):
+def get_reNet(lr=0.001, dense_reg=l1(0.0000001), softmax_reg=l2(0.0000001),
+        reNet_hidden_size = 128, fully_conn_hidden_size = 4096):
     model = Sequential()
 
     model.add(ReNetLayer([[2, 2]], reNet_hidden_size,
@@ -151,6 +152,7 @@ def get_conv(lr=0.001, dense_reg=None, softmax_reg=None):
 
     return model
 
+"""
 results = {}
 
 for hidden_size in [128, 256, 512, 1024, 2048, 4096]:
@@ -184,3 +186,84 @@ for hidden_size in [128, 256, 512, 1024, 2048, 4096]:
     print(results)
 
 print(results)
+"""
+
+def train_on_fold(fold_num):
+    x = np.vstack([x_train_data, x_test_data])
+    y = np.hstack([convert_from_one_hot_to_labels(y_train_data), convert_from_one_hot_to_labels(y_test_data)])
+
+    train_indexes, test_indexes = get_splits(x, y)
+    indexes = train_indexes, test_indexes
+    x_train, y_train, x_test, y_test = get_fold(fold_num, x, y, indexes)
+
+    model = get_reNet()
+    loss, acc = test_model_on_fold(model, x_train, y_train, x_test, y_test)
+    print("fold_num = ", fold_num)
+    print("test loss", loss)
+    print("test acc: ", acc)
+
+
+def get_fold(fold_num, x, y, indexes):
+    fold_num = fold_num-1 #indexing from 0
+
+    train_indexes, test_indexes = indexes
+
+    x_train = x[train_indexes[fold_num]]
+    y_train = y[train_indexes[fold_num]]
+    x_test = x[test_indexes[fold_num]]
+    y_test = y[test_indexes[fold_num]]
+
+    x_train, y_train = undersample_to_lowest_cardinality_class(x_train, y_train)
+
+    y_train = to_categorical(y_train)
+    y_test = to_categorical(y_test)
+
+    return x_train, y_train, x_test, y_test
+
+
+def get_splits(x, y):
+    skf = StratifiedKFold(n_splits=5, shuffle=True, random_state=0)
+
+    train_indexes = []
+    test_indexes = []
+    for train_index, test_index in skf.split(x, y):
+        print("train_index: ", train_index)
+        print("test_index: ", test_index)
+        train_indexes.append(train_index)
+        test_indexes.append(test_index)
+
+    return train_indexes, test_indexes
+
+
+def test_model_on_fold(model, x_train, y_train, x_test, y_test):
+    x_train_single_ex = x_train[0:1]
+    y_train_single_ex = y_train[0:1]
+    model.fit(x_train_single_ex, y_train_single_ex, epochs=1)
+
+    #use multi-GPU model:
+    number_of_GPUs = 4
+    model = multi_gpu_model(model, gpus=number_of_GPUs)
+    model.compile(loss='categorical_crossentropy',
+            optimizer=Adam(lr=0.001),
+            metrics=['categorical_accuracy'])
+
+
+    datagen = ImageDataGenerator(width_shift_range=[-2.0, 0.0, 2.0])
+    datagen.fit(x_train)
+
+    batch_size = 32
+    model.fit_generator(datagen.flow(x_train, y_train,
+            batch_size=batch_size),
+            epochs=50,
+            steps_per_epoch=np.ceil(x_train.shape[0] / batch_size),
+            validation_data=(x_test, y_test),
+            callbacks=[EarlyStopping(monitor='val_loss', patience=20, verbose=1, restore_best_weights=True),
+                   ReduceLROnPlateau(monitor='val_loss', patience=5, verbose=1)
+            ]
+        )
+    loss, acc = tuple(model.evaluate(x_test, y_test, batch_size=batch_size))
+    return loss, acc
+
+
+if __name__ == "__main__":
+    train_on_fold(1)
