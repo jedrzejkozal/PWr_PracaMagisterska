@@ -71,17 +71,15 @@ print(x_train_data.shape)
 print(x_test_data.shape)
 
 
-def get_reNet(lr=0.001, dense_reg=l1(0.0000001), softmax_reg=l2(0.0000001)):
+def get_reNet(lr=0.001, dense_reg=l1(0.0000001), softmax_reg=l2(0.0000001), reNet_hidden_size = 128, fully_conn_hidden_size = 4096):
     model = Sequential()
 
-    reNet_hidden_size = 256
     model.add(ReNetLayer([[2, 2]], reNet_hidden_size,
             use_dropout=True, dropout_rate=0.1))
     model.add(ReNetLayer([[2, 2]], reNet_hidden_size,
             use_dropout=True, dropout_rate=0.1))
 
     model.add(Flatten())
-    fully_conn_hidden_size = 4096
     model.add(Dense(fully_conn_hidden_size, activation='relu', activity_regularizer=dense_reg))
     model.add(Dropout(0.1))
 
@@ -155,9 +153,10 @@ def get_conv(lr=0.001, dense_reg=None, softmax_reg=None):
 
 results = {}
 
-for learning_rate in [0.001, 0.0001, 0.00001, 0.000001, 0.0000001, 0.00000001]:
-    print("learning_rate = ", learning_rate)
-    model = get_modif_reNet(lr=learning_rate, dense_reg=None, softmax_reg=None)
+for hidden_size in [128, 256, 512, 1024, 2048, 4096]:
+    learning_rate = 0.001
+    reg = 0.0000001
+    model = get_reNet(lr=learning_rate, dense_reg=l1(reg), softmax_reg=l2(reg), fully_conn_hidden_size=hidden_size)
 
     x_train_single_ex = x_train_data[0:1]
     y_train_single_ex = y_train_data[0:1]
@@ -174,15 +173,14 @@ for learning_rate in [0.001, 0.0001, 0.00001, 0.000001, 0.0000001, 0.00000001]:
         steps_per_epoch=np.ceil(x_train.shape[0] / batch_size),
         validation_data=(x_test_data, y_test_data),
         callbacks=[EarlyStopping(monitor='val_loss', patience=20, verbose=1, restore_best_weights=True),
-                   ReduceLROnPlateau(monitor='val_loss', patience=5, verbose=1)
-            ]
-    )
-    loss, acc = tuple(model.evaluate(x_test, y_test, batch_size=batch_size))
-    print("learning_rate = ", learning_rate)
+                   ReduceLROnPlateau(monitor='val_loss', patience=5, verbose=1)])
+
+    loss, acc = tuple(model.evaluate(x_test_data, y_test_data, batch_size=batch_size))
+    print("fully_conn_hidden_size = ", hidden_size)
     print("best test loss", loss)
     print("best test acc: ", acc)
 
-    results[learning_rate] = tuple(loss, acc)
+    results[hidden_size] = tuple([loss, acc])
     print(results)
 
 print(results)
