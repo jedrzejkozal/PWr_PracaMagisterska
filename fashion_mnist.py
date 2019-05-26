@@ -10,6 +10,7 @@ from keras.callbacks import EarlyStopping, ReduceLROnPlateau
 from keras.optimizers import Adam
 from keras.models import Sequential
 from keras.regularizers import l1, l2
+from sklearn.model_selection import StratifiedKFold
 
 from ReNet.Models.ReNetLayer import *
 import sys
@@ -241,12 +242,11 @@ def test_model_on_fold(model, x_train, y_train, x_test, y_test):
     model.fit(x_train_single_ex, y_train_single_ex, epochs=1)
 
     #use multi-GPU model:
-    number_of_GPUs = 4
-    model = multi_gpu_model(model, gpus=number_of_GPUs)
-    model.compile(loss='categorical_crossentropy',
-            optimizer=Adam(lr=0.001),
-            metrics=['categorical_accuracy'])
-
+    #number_of_GPUs = 4
+    #model = multi_gpu_model(model, gpus=number_of_GPUs)
+    #model.compile(loss='categorical_crossentropy',
+    #        optimizer=Adam(lr=0.001),
+    #        metrics=['categorical_accuracy'])
 
     datagen = ImageDataGenerator(width_shift_range=[-2.0, 0.0, 2.0])
     datagen.fit(x_train)
@@ -266,4 +266,4 @@ def test_model_on_fold(model, x_train, y_train, x_test, y_test):
 
 
 if __name__ == "__main__":
-    train_on_fold(1)
+    train_on_fold(2)
