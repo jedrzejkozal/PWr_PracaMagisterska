@@ -20,6 +20,7 @@
 %test
 \usepackage{multirow}
 \usepackage{rotating}
+\usepackage{gensymb}
 
 \renewcommand\theadalign{bc}
 \renewcommand\theadfont{\bfseries}
@@ -600,8 +601,62 @@ Każda kolejna warstwa sieci ReNet korzysta z wyjścia poprzedniej warstwy. Sche
 
 \section{Krzywe wypełniające przestrzeń}
 
+\begin{figure}
+\centering
+	\includegraphics[width=0.9\textwidth]{img/peano_curve.png}
+	\caption{Pierwsze trzy elementy ciągu tworzącego krzywą Peano.} Źródło: https://en.wikipedia.org/wiki/File:Peanocurve.svg
+	\label{fig:peano}
+\end{figure}
+
+Krzywe wypełniające przestrzeń to krzywe, których punkty pokrywają wszystkie punkty należące do kwadratu jednostkowego. W szczególności jeśli określimy krzywą wypełniającą jaką funkcję, która jest określona na przedziale jednostkowym $[0, 1]$, to krzywa wypełniająca przestrzeń będzie definiować mapowanie z przestrzeni dwuwymiarowej do jednowymiarowej i odwrotnie. 
+
+Krzywe wypełniające przestrzeń są często określane przez rekurencyjny ciąg krzywych $k(n)$ ze zdefiniowanym pierwszym elementem $k(0)$ oraz sposobem konstruowania kolejnych krzywych:
+
+\begin{equation}
+	k(n+1) = f(k(n))
+\end{equation}
+
+Krzywa wypełniająca przestrzeń $\kappa$ jest wtedy następującą granicą:
+
+\begin{equation}
+	\kappa = \lim_{n \rightarrow + \infty } k(n)
+\end{equation}
+
+\paragraph{Krzywa Hilberta}
+
+\begin{figure}
+\centering
+	\includegraphics[width=0.9\textwidth]{img/hilbert_curve.png}
+	\caption{Pierwsze sześć elementy ciągu tworzącego krzywą Hilberta.} Nad górnymi obrazkami zostały umieszczone punkty, do których zostałyby przypisane charakterystyczne punkty obrazu. Warto zwrócić uwagę, że dla krzywej stopnia pierwszego punkt 3 zostałby zmapowany w ten sam przedział odcinka co punkty 9, 10, 11 i 12 dla krzywej stopnia drugiego. Źródło: https://upload.wikimedia.org/wikipedia/commons/thumb/a/a5/Hilbert\_curve.svg/400px-Hilbert\_curve.svg.png
+	\label{fig:hilbert}
+\end{figure}
+
+Krzywa Hilberta $\mathcal{H}$ to krzywa wypełniająca przestrzeń posiadająca fraktalną strukturę. Pierwszy element ciągu tworzącego krzywą jest zdefiniowany jako trzy połączone odcinki rozmieszczone na bokach kwadratu. Kolejny element ciągu można uzyskać poprzez podział przestrzeni na 4 części i umieszczenie w każdej z części odpowiednio rotowanego poprzedniego elementu ciągu. Elementy w lewej górnej i prawej górnej części zostają umieszczone bez rotacji. Element w lewej dolnej części zostaje umieszczony po obrocie o 90$\degree$ w prawo, a element w prawej dolnej części zostaje umieszczony po obrocie o 90$\degree$ w lewo. Proces uzyskiwania kolejnych elementów krzywej został przedstawiony na rys. \ref{fig:hilbert}.
+
+Każdy z punktów będący końcem odcinka tworzącego krzywą Hilberta można przyjąć jako piksel obrazu. Korzystając z tego założenia krzywa Hilberta definiuje sposób przejścia po obrazie i zamianie współrzędnych dwuwymiarowych na jednowymiarowe.
+
+Dodatkowo fraktalna struktura krzywej Hilberta powoduje, że odpowiednio wybrany fragment krzywej też jest krzywą Hilberta. Ta sama właściwość zachodzi dla elementu ciągu tworzącego krzywą, z tą różnicą, że wybrany fragment będzie krzywą mniejszego wymiaru. Fraktalna struktura powoduje również, że wraz ze wzrostem stopnia krzywej punkty znajdujące się w określonych częściach obrazu są mapowane do tych samych fragmentów krzywej. Własność ta została zademonstrowana na rys. \ref{fig:hilbert}.
+
 \section{Proponowana architektura sieci}
 
+Modyfikacja architektury ReNet proponowana w tej pracy to wykorzystanie krzywej Hilberta do zmapowania punktów obrazu do przestrzeni jednowymiarowej, co można zapisać jako:
+
+\begin{equation}
+	x^{h} = \mathcal{H}(x)
+\end{equation}
+
+Aby uzyskać redukcję rozmiaru obrazu jak w oryginalnej ReNet i warstwach Poolingowych sieci konwolucyjnych wykorzystano podział na patche w analogiczny sposób do ReNet. W przypadku zmodyfikowanej ReNet zdefiniowano patche jako zbiór następujących po sobie pikseli po transformacji obrazu do jednego wymiaru: $P^{h} = \{ p_{i}^h \}$, $P^{h} \in \mathbb{R}^{w_p \textrm{x} c}$. Piksele należącego do tego samego patcha są traktowane jako jedno wejście sieci rekurencyjnej. Tak jak w przypadku oryginalnej ReNet pozwala to na redukcję wymiarów obrazu.
+
+Zastąpiono cztery sieci rekurencyjne z warstwy ReNet dwiema sieciami rekurencyjnymi. Każda z sieci wykorzystuje wynik mapowania z dwóch wymiarów do jednego jako wejścia. Jedna z sieci przyjmuje wejścia w odwrotnej kolejności niż druga. Korzystając z notacji zdefiniowanej dla ReNet realizowane przekształcenie można zapisać jako:
+
+\begin{gather}
+	v_{i}^{F} = f_{FWD}(v_{i-1}^{F}, p_{i}^{h}) \\ \nonumber
+	v_{i}^{R} = f_{REV}(v_{i+1}^{F}, p_{i}^{h})
+\end{gather}
+
+Wyjście sieci stanowi konkatenacja obliczonych aktywacji w obu kierunkach. Możliwe jest wykorzystanie patcha o rozmiarze 1. W tym przypadku sieć oblicza aktywacje jak dwukierunkowa rekurencyjna sieć.
+
+Korzystając ze fraktalnych właściwości krzywej Hilberta elementy obrazu po zmapowaniu i obliczeniu aktywacji sieci rekurencyjnych powinny nadal odpowiadać obszarom oryginalnych obrazów. Zastąpienie czterech sieci rekurencyjnych z architektury ReNet przez dwie może wpłynąć na czas trenowania sieci lub na zwiększoną elastyczność przy doborze struktury modelu. W przypadku gdy dla podobnej liczby warstw ReNet i zmodyfikowanej ReNet uzyskiwane wyniki klasyfikacji będą porównywalne oczekiwane jest skrócenie czasu trenowania. W przypadku gdy zmodyfikowana sieć ReNet będzie miała mniejsze zdolności do wytworzenia wartościowej reprezentacji, można zwiększyć jej możliwości przez dodanie dodatkowej warstwy z rozmiarem patcha 1. Istnieje możliwość dodania warstwy sieci z ReNet z rozmiarem patcha (1,1), ale spowoduje to dodanie czterech sieci rekurencyjnych. Należy mieć na uwadze, że są to modele wymagające znaczących nakładów mocy obliczeniowej, więc zmniejszenie liczby sieci rekurencyjnych na warstwę powinno umożliwić bardziej precyzyjne dostosowanie modelu do rozwiązywanego problemu.
 
 
 \chapter{Przeprowadzone badania}
@@ -880,7 +935,7 @@ Warto zwrócić uwagę, na bardzo zbliżoną reprezentację dla obu metod. (I tu
 \centering
 	\includegraphics[width=1.0\textwidth]{img/tSNE_ReNet.png}
 	\includegraphics[width=1.0\textwidth]{img/PCA_ReNet.png}
-	\caption{Wizualizacja reprezentacji nauczonej przez sieć ReNet. (Góra) Wizualizacja wyjścia przedostatniej warstwy sieci z wykorzystaniem tSNE. (Dół) Wizualizacja wyjścia przedostatniej warstwy sieci z wykorzystaniem PCA}
+	\caption{Wizualizacja reprezentacji nauczonej przez sieć ReNet.} (Góra) Wizualizacja wyjścia przedostatniej warstwy sieci z wykorzystaniem tSNE. (Dół) Wizualizacja wyjścia przedostatniej warstwy sieci z wykorzystaniem PCA.
 	\label{fig:tSNE_ReNet}
 \end{figure}
 
@@ -888,7 +943,7 @@ Warto zwrócić uwagę, na bardzo zbliżoną reprezentację dla obu metod. (I tu
 \centering
 	\includegraphics[width=1.0\textwidth]{img/tSNE_modif_ReNet.png}
 	\includegraphics[width=1.0\textwidth]{img/PCA_modif_ReNet.png}
-	\caption{Wizualizacja reprezentacji nauczonej przez zmodyfikowaną sieć ReNet. (Góra) Wizualizacja wyjścia przedostatniej warstwy sieci z wykorzystaniem tSNE. (Dół) Wizualizacja wyjścia przedostatniej warstwy sieci z wykorzystaniem PCA}
+	\caption{Wizualizacja reprezentacji nauczonej przez zmodyfikowaną sieć ReNet.} (Góra) Wizualizacja wyjścia przedostatniej warstwy sieci z wykorzystaniem tSNE. (Dół) Wizualizacja wyjścia przedostatniej warstwy sieci z wykorzystaniem PCA.
 	\label{fig:tSNE_modif_ReNet}
 \end{figure}
 
