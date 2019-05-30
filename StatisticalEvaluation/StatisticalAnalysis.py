@@ -41,10 +41,10 @@ class StatisticalAnalysis:
 
 
     def evaluateH0Hypothesis(self, pvalue):
-        if pvalue < 0.04:
+        if pvalue < 0.05:
             print("Rejecting H0: no evidence to support hypothesis")
             return False
-        elif pvalue > 0.06:
+        elif pvalue > 0.05:
             print("Fail to reject H0: strong indication, that hypothesis is in line with data")
             return True
         else:
@@ -54,17 +54,10 @@ class StatisticalAnalysis:
 
     def doPostHocTesting(self, errorTable):
         print('\n\n')
-        #print("errorTable: ", errorTable)
-        #print("errorTable[0]: ", errorTable[0])
-        #print("errorTable[0][0]: ", errorTable[0][0])
 
         x = np.asarray([tuple(errorTable[0]),
             tuple(errorTable[1]),
             tuple(errorTable[2])])
-        #x = np.transpose(x[:, 0, :])
-        #res = sp.posthoc_nemenyi(x)
-        #print("x: ", x)
-        #print("x[0]: ", x[0])
 
         print("friedmanchisquare: ", friedmanchisquare(x[0], x[1], x[2]))
         nemenyi = NemenyiTestPostHoc(x)
@@ -72,6 +65,4 @@ class StatisticalAnalysis:
         print("meanRanks: ", meanRanks)
         print("pValues: \n", pValues)
 
-        #print("res:")
-        #print(res)
-        return str(pValues)
+        return pValues

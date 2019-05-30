@@ -1,7 +1,9 @@
 from numpy import float16, float32, float64, float_
 
 def save_tex_table(rows_list, filename):
-    path = "../doc/tab/"+filename+".tex"
+    if filename[-4:] != ".tex":
+        filename = filename + ".tex"
+    path = "../doc/tab/"+filename
     f = open(path, 'w')
     put_table_to_file(rows_list, f)
     f.close()
@@ -46,10 +48,10 @@ def is_float(t):
 def sanitize_float(number):
     number_str = str(number)
     if number_str.count('e-') == 0: #normal dot notation. not 1.0e-4
-        number_str = crop_to_two_decimal_places(number_str)
+        number_str = crop_to_three_decimal_places(number_str)
     return number_str
 
 
-def crop_to_two_decimal_places(number_str):
+def crop_to_three_decimal_places(number_str):
     dot_position = number_str.find('.')
-    return number_str[:dot_position+3]
+    return number_str[:dot_position+4]

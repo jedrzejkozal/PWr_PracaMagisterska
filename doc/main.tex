@@ -943,6 +943,20 @@ Na podstawie danych z tabeli \ref{tab:hyperparams-classification} można zauważ
     \label{table:cross_validation}
 \end{table}
 
+\begin{table}[ht]
+    \centering
+    \caption{Porównanie osiągniętych p-wartości oraz F-wartości dla testu Friedmana dokładności wybranych klasyfikatorów}
+    \input{tab/table_stats.tex}
+    \label{table:cross_validation}
+\end{table}
+
+\begin{table}[ht]
+    \centering
+    \caption{Porównanie osiągniętych p-wartości dla testów post-hoc}
+    \input{tab/table_post_hoc.tex}
+    \label{table:cross_validation}
+\end{table}
+
 \section{Wizualizacja nauczonej reprezentacji}
 
 W celu porównania nauczonych reprezentacji zmodyfikowanej i niezmodyfikowanej architektury ReNet przygotowano wizualizacje aktywacji przedostatniej warstwy sieci. Wektor wyjścia dla każdego przykładu ze zbioru testowego poddano redukcji wymiarowości do dwóch wymiarów. Umożliwia to przedstawienie każdego elementu zbioru testowego na płaszczyźnie z zaznaczeniem klasy, do której należy przykład. Do redukcji wymiarowości wybrano algorytmy PCA i tSNE \cite{tSNE}. Wyniki przedstawiono na rysunkach \ref{fig:tSNE_ReNet} i \ref{fig:tSNE_modif_ReNet}.
