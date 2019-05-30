@@ -763,7 +763,7 @@ W niniejszej sekcji przedstawiono szczegóły konfiguracji eksperymentu. Opisano
 
 Do przeprowadzenia eksperymentów wykorzystano datasety z różnych domen, mające przetestować zdolność badanych sieci do ekstrakcji cech z obrazów. Zestawienie wykorzystanych zbiorów przedstawiono w tabeli \ref{tab:dataset}. Wykorzystano datasety o różnej liczności i różnych rozmiarach obrazów oraz różnej liczbie klas.
 
-W procesie przetwarzania wstępnego zmniejszono rozmiar obrazów do 64x64 lub 32x32 pikseli. Dla wszystkich datasetów zastosowano przesuwanie obrazów w poziomie o -2, 0 lub 2 piksele. Jest to procedura zastosowana w badaniach wprowadzających ReNet i ma na celu zredukowanie overfittingu. W przypadku datasetu Chest X-Ray dokonano konwersji do skali szarości, ponieważ głębia kolorów nie wnosiła wiele informacji w zdjęciach rentgenowskich. Wszystkie wejścia zostały znormalizowane do zerowej średniej i jednostkowej wariancji w celu ułatwienia optymalizacji modeli. Dla przygotowanej implementacji sieci ReNet zatosowanej do obrazów o dużych rozmiarach model osiąga wielkość uniemożliwiającą trenowanie go na powszechnie dostępnych kartach graficznych. Daje to istotne ograniczenie obszaru zastosowań sieci ReNet i jednocześnie definiuje konieczny krok przetwarzania wstępnego obrazów przed rozpoczęciem procesu uczenia. Nie wszystkie zbiory uczące można poddać zmniejszeniu rozmiaru obrazu bez utraty informacji mających wpływ na klasyfikację.
+W procesie przetwarzania wstępnego zmieniano rozmiar obrazów do 64x64 lub 32x32 pikseli. Dla wszystkich datasetów zastosowano przesuwanie obrazów w poziomie o -2, 0 lub 2 piksele. Jest to procedura zastosowana w badaniach wprowadzających ReNet i ma na celu zredukowanie overfittingu. W przypadku datasetu Chest X-Ray dokonano konwersji do skali szarości, ponieważ głębia kolorów nie wnosiła wiele informacji w zdjęciach rentgenowskich. Wszystkie wejścia zostały znormalizowane do zerowej średniej i jednostkowej wariancji w celu ułatwienia optymalizacji modeli. Dla przygotowanej implementacji sieci ReNet zatosowanej do obrazów o dużych rozmiarach model osiąga wielkość uniemożliwiającą trenowanie go na powszechnie dostępnych kartach graficznych. Daje to istotne ograniczenie obszaru zastosowań sieci ReNet i jednocześnie definiuje konieczny krok przetwarzania wstępnego obrazów przed rozpoczęciem procesu uczenia. Nie wszystkie zbiory uczące można poddać zmniejszeniu rozmiaru obrazu bez utraty informacji mających wpływ na klasyfikację.
 
 Wykorzystane datasety są w różnym stopniu niezbalansowane. Problem ten rozwiązano przez zastosowanie undersamplingu zbioru treningowego do klasy zawierającej najmniejszą liczbę przykładów uczących. Rozwiązanie to zastosowano przy doborze hiperparametrów oraz przy sprawdzianie krzyżowym dla każdego foldu.
 
@@ -926,6 +926,16 @@ W niniejszym rozdziale przedstawiono wyniki uzyskane zgodnie z przyjętą i wcze
 
 Wybrane parametry modeli, uzyskane we wcześniej opisanym procesie doboru hiperparametrów zostały przedstawione w tabelach \ref{tab:hyperparams-coefs}, \ref{tab:hyperparams-extraction}, oraz \ref{tab:hyperparams-classification}.
 
+Z przedstawionych tabel można wyczytać kilka właściwości zastosowanych modeli. Pierwszym faktem, na który warto zwrócić uwagę, to regularyzacja wykorzystana w procesie uczenia.
+Dla wszystkich sieci współczynniki regularyzacji l1 były aplikowane do aktywacji pierwszej warstwy w pełni połączonej z funkcją aktywacji ReLu, a regularyzacja l2 została zaaplikowana do wag ostatniej warstwy połączonej z funkcją aktywacji softmax. Dla sieci ReNet współczynniki te są niekiedy wyższe dla sieci konwolucyjnych, jednakże w przypadku sieci konolucyjnych regularyzacja l2 została zaaplikowana również do warstw konwolucyjnych.
+W tabeli \ref{tab:hyperparams-extraction} można zauważyć niskie wartości dropoutu zaaplikowanego do warstw ReNet. Dla wyższych wartości odnotowano znaczący spadek wartości metryk. W przypadku warstw konwolucyjnych zastosowano Batch Normalization zamiast dropoutu. Normalizację ta występowała w sieci bezpośrednio po zaaplikowaniu nieliniowości (funkcji aktywacji) do aktywacji warstwy lub po zaaplikowaniu nieliniowości i MaxPoolingu. Zaaplikowanie Bartch Normalization do sieci ReNet skutkowało znacznym obniżeniem wartości obserwowanych metryk. 
+Dodatkowo można porównać wysokie współczynniki regularyzacji dropout dla sieci konwolucyjnych w tabeli \ref{tab:hyperparams-classification} z niskimi wartościami dla sieci ReNet. 
+Powodem uzyskania takich wartości jest różna zdolność modeli do uczenia się. W procesie uczenia na tych samych danych sieci ReNet znajdowały się często w reżimie niedouczenia, podczas gdy w przypadku sieci konwolucyjnych zastosowane techniki regularyzacji pozwalały uniknąć przeuczenia sieci. Można więc wnioskować, że dla wykorzystanych datasetów modele ReNet mają mniejsze capacity niż sieci konwolucyjne.
+
+Dla zbioru Natural Images wykorzystano znacznie głębszą architekturę modelu zmodyfikowanej sieci ReNet niż dla dwóch pozostałych modeli. Sieć ta miała problemy z nauczeniem się tego datasetu. Nie udało się ustalić powodu tego problemu.
+
+Na podstawie danych z tabeli \ref{tab:hyperparams-classification} można zauważyć, że ReNet wymagało znacznie większej liczby neuronów w warstwie w pełni połączonej niż inne architektury.
+
 \begin{table}[ht]
     \centering
     \caption{Wyniki uzyskane dla cross validacji dla 5 foldów}
@@ -978,6 +988,7 @@ Warto zwrócić uwagę, na bardzo zbliżoną reprezentację dla obu metod. (I tu
 	\label{fig:loss_modif_ReNet}
 \end{figure}
 
+Na podstawie wizualizacji z \cite{DBLP:journals/corr/abs-1712-09913} przygotowano wizualizację loss landscape archiektur ReNet i zmodyfikowanej ReNet.
 
 \chapter{Wnioski}
 
