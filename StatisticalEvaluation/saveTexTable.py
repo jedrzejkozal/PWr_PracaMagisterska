@@ -1,3 +1,4 @@
+from numpy import float16, float32, float64, float_
 
 def save_tex_table(rows_list, filename):
     path = "../doc/tab/"+filename+".tex"
@@ -33,4 +34,22 @@ def get_row_string(row):
 
 
 def sanitize(elem):
+    if is_float(type(elem)):
+        elem = sanitize_float(elem)
     return str(elem).replace("_", " ")
+
+
+def is_float(t):
+    return t == float16 or t == float32 or t == float64 or t == float_ or t == float
+
+
+def sanitize_float(number):
+    number_str = str(number)
+    if number_str.count('e-') == 0: #normal dot notation. not 1.0e-4
+        number_str = crop_to_two_decimal_places(number_str)
+    return number_str
+
+
+def crop_to_two_decimal_places(number_str):
+    dot_position = number_str.find('.')
+    return number_str[:dot_position+3]

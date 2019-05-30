@@ -42,10 +42,10 @@ print(acc_avrg)
 print(list(acc_avrg))
 
 table_to_save = [[' ', 'ReNet', 'modif ReNet', 'conv'],
-                ['x_ray'] + list(acc_avrg[0]),
-                ['flowers'] + list(acc_avrg[1]),
-                ['fashion mnist'] + list(acc_avrg[2]),
-                ['natural images'] + list(acc_avrg[3])]
+                ['\makecell{Chest X-Ray\\\\ Images (Pneumonia)}'] + list(acc_avrg[0]),
+                ['\makecell{Flowers Recognition}'] + list(acc_avrg[1]),
+                ['\makecell{Fashion MNIST}'] + list(acc_avrg[2]),
+                ['\makecell{Natural Images}'] + list(acc_avrg[3])]
 
 print(table_to_save)
 save_tex_table(table_to_save, 'cross_validation')
