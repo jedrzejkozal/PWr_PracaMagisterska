@@ -818,13 +818,14 @@ Opisana procedura pozwala na zmniejszenie nakładu obliczeniowego potrzebnego do
 	\label{fig:hyperparams}
 \end{figure}
 
-Inne dostępne rozwiązania problemu doboru hiperametrów to wykorzystanie algorytmów Grid Search lub Random Search. Grid Search nie jest zalecaną metodą. Często hiperparametry mają różny wpływ na wyniki procesu uczenia. Maksimum optymalizowanej metryki może występować pomiędzy punktami tworzonej siatki, jak to zostało przedstawione na rys. \ref{fig:hyperparams}. W przypadku w którym jeden z hiperparametrów ma większy wpływ na osiągane wyniki siatka dla jego wartości powinna być o wiele gęstsza. Random Search unika tego problemu poprzez wybieranie losowych punktów z przestrzeni, przez co hiperparametry mające większy wpływ na proces uczenia są próbkowane w większej liczbie punktów i istnieje większa szansa na znalezienie efektywniejszej wartości. Wadą obu algorytmów jest liczba iteracji potrzebnych do przeszukania przestrzeni, eksponencjalnie rosnąca wraz ze wzrostem liczby hiperparametrów.
+Inne dostępne rozwiązania problemu doboru hiperametrów to wykorzystanie algorytmów Grid Search lub Random Search. Grid Search nie jest zalecaną metodą. Często hiperparametry mają różny wpływ na wyniki procesu uczenia. Maksimum optymalizowanej metryki może występować pomiędzy punktami tworzonej siatki, jak to zostało przedstawione na rys. \ref{fig:hyperparams}. W przypadku w którym jeden z hiperparametrów ma większy wpływ na osiągane wyniki siatka dla jego wartości powinna być o wiele gęstsza. Random Search unika tego problemu poprzez wybieranie losowych punktów z przestrzeni, przez co hiperparametry mające większy wpływ na proces uczenia są próbkowane w większej liczbie punktów i istnieje większa szansa na znalezienie efektywniejszej wartości. Wadą obu algorytmów jest liczba iteracji potrzebnych do przeszukania przestrzeni, eksponencjalnie rosnąca wraz ze wzrostem liczby hiperparametrów i fakt, że w każdej iteracji nie wykorzystują wcześniej zdobytych informacji do poprawy osiągniętego wyniku.
 
 
 \chapter{Wyniki}
 
-W niniejszym rozdziale przedstawiono wyniki uzyskane zgodnie z przyjętą i wcześniej opisaną metyką.
-\begin{table}
+W niniejszym rozdziale przedstawiono wyniki uzyskane zgodnie z przyjętą i wcześniej opisaną metodologią.
+
+\begin{table}[ht]
 \centering
 \caption{Zestawienie struktury wykorzystanych modeli - współczynniki wpływające na funkcję strat}
 \label{tab:hyperparams-coefs}
@@ -834,60 +835,60 @@ W niniejszym rozdziale przedstawiono wyniki uzyskane zgodnie z przyjętą i wcze
  \hline
  \hline
  \multirow{3}{*}{\makecell{Chest X-Ray\\ Images (Pneumonia)}} &
- \multicolumn{1}{l}{ReNet} & \multicolumn{1}{l}{lr} & \multicolumn{1}{l}{l1} & \multicolumn{1}{l|}{l2} \\\cline{2-5} &
- \multicolumn{1}{l}{zmodyf. ReNet} & \multicolumn{1}{l}{lr} & \multicolumn{1}{l}{l1} & \multicolumn{1}{l|}{l2} \\\cline{2-5} &
- \multicolumn{1}{l}{conv} & \multicolumn{1}{l}{lr} & \multicolumn{1}{l}{l1} & \multicolumn{1}{l|}{l2} \\\hline
+ \multicolumn{1}{l}{ReNet} & \multicolumn{1}{l}{0.001} & \multicolumn{1}{l}{0.0000001} & \multicolumn{1}{l|}{0.000001} \\\cline{2-5} &
+ \multicolumn{1}{l}{zmodyf. ReNet} & \multicolumn{1}{l}{0.001} & \multicolumn{1}{l}{0.0001} & \multicolumn{1}{l|}{0.001} \\\cline{2-5} &
+ \multicolumn{1}{l}{conv} & \multicolumn{1}{l}{0.0001} & \multicolumn{1}{l}{0.0001} & \multicolumn{1}{l|}{0.00000001} \\\hline
  \hline
  \multirow{3}{*}{\makecell{Flowers Recognition}} & 
- \multicolumn{1}{l}{ReNet} & \multicolumn{1}{l}{lr} & \multicolumn{1}{l}{l1} & \multicolumn{1}{l|}{l2} \\\cline{2-5} &
- \multicolumn{1}{l}{zmodyf. ReNet} & \multicolumn{1}{l}{lr} & \multicolumn{1}{l}{l1} & \multicolumn{1}{l|}{l2} \\\cline{2-5} &
- \multicolumn{1}{l}{conv} & \multicolumn{1}{l}{lr} & \multicolumn{1}{l}{l1} & \multicolumn{1}{l|}{l2} \\\hline
+ \multicolumn{1}{l}{ReNet} & \multicolumn{1}{l}{0.001} & \multicolumn{1}{l}{0.00000001} & \multicolumn{1}{l|}{0.00000001} \\\cline{2-5} &
+ \multicolumn{1}{l}{zmodyf. ReNet} & \multicolumn{1}{l}{0.001} & \multicolumn{1}{l}{0.00000001} & \multicolumn{1}{l|}{0.00000001} \\\cline{2-5} &
+ \multicolumn{1}{l}{conv} & \multicolumn{1}{l}{0.001} & \multicolumn{1}{l}{0.00000001} & \multicolumn{1}{l|}{0.00000001} \\\hline
  \hline
  \multirow{3}{*}{\makecell{Fashion MNIST}} & 
- \multicolumn{1}{l}{ReNet} & \multicolumn{1}{l}{lr} & \multicolumn{1}{l}{l1} & \multicolumn{1}{l|}{l2} \\\cline{2-5} &
+ \multicolumn{1}{l}{ReNet} & \multicolumn{1}{l}{0.001} & \multicolumn{1}{l}{0.0000001} & \multicolumn{1}{l|}{0.0000001} \\\cline{2-5} &
  \multicolumn{1}{l}{zmodyf. ReNet} & \multicolumn{1}{l}{lr} & \multicolumn{1}{l}{l1} & \multicolumn{1}{l|}{l2} \\\cline{2-5} &
  \multicolumn{1}{l}{conv} & \multicolumn{1}{l}{lr} & \multicolumn{1}{l}{l1} & \multicolumn{1}{l|}{l2} \\\hline
  \hline
  \multirow{3}{*}{\makecell{Natural Images}} & 
- \multicolumn{1}{l}{ReNet} & \multicolumn{1}{l}{lr} & \multicolumn{1}{l}{l1} & \multicolumn{1}{l|}{l2} \\\cline{2-5} &
- \multicolumn{1}{l}{zmodyf. ReNet} & \multicolumn{1}{l}{lr} & \multicolumn{1}{l}{l1} & \multicolumn{1}{l|}{l2} \\\cline{2-5} &
- \multicolumn{1}{l}{conv} & \multicolumn{1}{l}{lr} & \multicolumn{1}{l}{l1} & \multicolumn{1}{l|}{l2} \\\hline
+ \multicolumn{1}{l}{ReNet} & \multicolumn{1}{l}{0.001} & \multicolumn{1}{l}{0.00000001} & \multicolumn{1}{l|}{0.00000001} \\\cline{2-5} &
+ \multicolumn{1}{l}{zmodyf. ReNet} & \multicolumn{1}{l}{0.001} & \multicolumn{1}{l}{0.000000001} & \multicolumn{1}{l|}{0.000000001} \\\cline{2-5} &
+ \multicolumn{1}{l}{conv} & \multicolumn{1}{l}{0.001} & \multicolumn{1}{l}{0.00000001} & \multicolumn{1}{l|}{0.00000001} \\\hline
 \end{tabular}
 \end{table}
 
-\begin{table}
+\begin{table}[ht]
 \centering
 \caption{Zestawienie struktury wykorzystanych modeli - część odpowiedzialna za ekstrakcję cech}
 \label{tab:hyperparams-extraction}
 \begin{tabular}{ |c|c|c|c|c|c| } 
  \hline
- dataset & algorytm & \makecell{l. warstw\\ ekstrakcji} & \makecell{l. neuronów\\ w warstwach\\ ekstrakcji} & \makecell{rozm.\\patchy} & dropout \\ 
+ dataset & algorytm & \makecell{l. warstw\\ ekstrakcji} & \makecell{l. neuronów\\ w warstwach\\ ekstrakcji} & \makecell{rozm. patchy/\\ rozmiar filtrów} & dropout \\ 
  \hline
  \hline
  \multirow{3}{*}{\makecell{Chest X-Ray\\ Images (Pneumonia)}} &
- \multicolumn{1}{l}{ReNet} & \multicolumn{1}{l}{lr} & \multicolumn{1}{l}{l1} & \multicolumn{1}{l}{l2} & \multicolumn{1}{l|}{ex} \\\cline{2-6} &
- \multicolumn{1}{l}{zmodyf. ReNet} & \multicolumn{1}{l}{lr} & \multicolumn{1}{l}{l1} & \multicolumn{1}{l}{l2} & \multicolumn{1}{l|}{ex} \\\cline{2-6} &
- \multicolumn{1}{l}{conv} & \multicolumn{1}{l}{lr} & \multicolumn{1}{l}{l1} & \multicolumn{1}{l}{l2} & \multicolumn{1}{l|}{ex} \\\hline
+ \multicolumn{1}{l}{ReNet} & \multicolumn{1}{l}{3} & \multicolumn{1}{l}{256} & \multicolumn{1}{l}{(2,2)-(2,2)-(2,2)} & \multicolumn{1}{l|}{0.1} \\\cline{2-6} &
+ \multicolumn{1}{l}{zmodyf. ReNet} & \multicolumn{1}{l}{3} & \multicolumn{1}{l}{256} & \multicolumn{1}{l}{4-4-4} & \multicolumn{1}{l|}{0.1} \\\cline{2-6} &
+ \multicolumn{1}{l}{conv} & \multicolumn{1}{l}{3} & \multicolumn{1}{l}{32-64-128} & \multicolumn{1}{l}{(4,4)-(2,2)-(2,2)} & \multicolumn{1}{l|}{-} \\\hline
  \hline
  \multirow{3}{*}{\makecell{Flowers Recognition}} & 
- \multicolumn{1}{l}{ReNet} & \multicolumn{1}{l}{lr} & \multicolumn{1}{l}{l1} & \multicolumn{1}{l}{l2} & \multicolumn{1}{l|}{ex} \\\cline{2-6} &
- \multicolumn{1}{l}{zmodyf. ReNet} & \multicolumn{1}{l}{lr} & \multicolumn{1}{l}{l1} & \multicolumn{1}{l}{l2} & \multicolumn{1}{l|}{ex} \\\cline{2-6} &
- \multicolumn{1}{l}{conv} & \multicolumn{1}{l}{lr} & \multicolumn{1}{l}{l1} & \multicolumn{1}{l}{l2} & \multicolumn{1}{l|}{ex} \\\hline
+ \multicolumn{1}{l}{ReNet} & \multicolumn{1}{l}{3} & \multicolumn{1}{l}{256} & \multicolumn{1}{l}{(2,2)-(2,2)-(2,2)} & \multicolumn{1}{l|}{0.1} \\\cline{2-6} &
+ \multicolumn{1}{l}{zmodyf. ReNet} & \multicolumn{1}{l}{3} & \multicolumn{1}{l}{256} & \multicolumn{1}{l}{4-4-4} & \multicolumn{1}{l|}{0.2} \\\cline{2-6} &
+ \multicolumn{1}{l}{conv} & \multicolumn{1}{l}{4} & \multicolumn{1}{l}{128-128-256-512} & \multicolumn{1}{l}{(4,4)-(4,4)-(2,2)-(2,2)} & \multicolumn{1}{l|}{-} \\\hline
  \hline
  \multirow{3}{*}{\makecell{Fashion MNIST}} & 
- \multicolumn{1}{l}{ReNet} & \multicolumn{1}{l}{lr} & \multicolumn{1}{l}{l1} & \multicolumn{1}{l}{l2} & \multicolumn{1}{l|}{ex} \\\cline{2-6} &
+ \multicolumn{1}{l}{ReNet} & \multicolumn{1}{l}{2} & \multicolumn{1}{l}{256} & \multicolumn{1}{l}{(2,2)-(2,2)} & \multicolumn{1}{l|}{0.1} \\\cline{2-6} &
  \multicolumn{1}{l}{zmodyf. ReNet} & \multicolumn{1}{l}{lr} & \multicolumn{1}{l}{l1} & \multicolumn{1}{l}{l2} & \multicolumn{1}{l|}{ex} \\\cline{2-6} &
  \multicolumn{1}{l}{conv} & \multicolumn{1}{l}{lr} & \multicolumn{1}{l}{l1} & \multicolumn{1}{l}{l2} & \multicolumn{1}{l|}{ex} \\\hline
  \hline
  \multirow{3}{*}{\makecell{Natural Images}} & 
- \multicolumn{1}{l}{ReNet} & \multicolumn{1}{l}{lr} & \multicolumn{1}{l}{l1} & \multicolumn{1}{l}{l2} & \multicolumn{1}{l|}{ex} \\\cline{2-6} &
- \multicolumn{1}{l}{zmodyf. ReNet} & \multicolumn{1}{l}{lr} & \multicolumn{1}{l}{l1} & \multicolumn{1}{l}{l2} & \multicolumn{1}{l|}{ex} \\\cline{2-6} &
- \multicolumn{1}{l}{conv} & \multicolumn{1}{l}{lr} & \multicolumn{1}{l}{l1} & \multicolumn{1}{l}{l2} & \multicolumn{1}{l|}{ex} \\\hline
+ \multicolumn{1}{l}{ReNet} & \multicolumn{1}{l}{2} & \multicolumn{1}{l}{128} & \multicolumn{1}{l}{(2,2)-(2,2)} & \multicolumn{1}{l|}{0.1} \\\cline{2-6} &
+ \multicolumn{1}{l}{zmodyf. ReNet} & \multicolumn{1}{l}{7} & \multicolumn{1}{l}{128} & \multicolumn{1}{l}{4-4-4-4-4-4-4} & \multicolumn{1}{l|}{0.1} \\\cline{2-6} &
+ \multicolumn{1}{l}{conv} & \multicolumn{1}{l}{3} & \multicolumn{1}{l}{64-128-256} & \multicolumn{1}{l}{(4,4)-(2,2)-(2,2)} & \multicolumn{1}{l|}{-} \\\hline
 \end{tabular}
 \end{table}
 
 
-\begin{table}
+\begin{table}[ht]
 \centering
 \caption{Struktura wykorzystanych modeli - część odpowiedzialna za klasyfikację}
 \label{tab:hyperparams-classification}
@@ -897,28 +898,35 @@ W niniejszym rozdziale przedstawiono wyniki uzyskane zgodnie z przyjętą i wcze
  \hline
  \hline
  \multirow{3}{*}{\makecell{Chest X-Ray\\ Images (Pneumonia)}} &
- \multicolumn{1}{l}{ReNet} & \multicolumn{1}{l}{l n} & \multicolumn{1}{l|}{drop} \\\cline{2-4} &
- \multicolumn{1}{l}{zmodyf. ReNet} & \multicolumn{1}{l}{l n} & \multicolumn{1}{l|}{drop} \\\cline{2-4} &
- \multicolumn{1}{l}{conv} & \multicolumn{1}{l}{l n} & \multicolumn{1}{l|}{drop} \\\hline
+ \multicolumn{1}{l}{ReNet} & \multicolumn{1}{l}{512} & \multicolumn{1}{l|}{0.1} \\\cline{2-4} &
+ \multicolumn{1}{l}{zmodyf. ReNet} & \multicolumn{1}{l}{512} & \multicolumn{1}{l|}{0.1} \\\cline{2-4} &
+ \multicolumn{1}{l}{conv} & \multicolumn{1}{l}{512} & \multicolumn{1}{l|}{0.5} \\\hline
  \hline
  \multirow{3}{*}{\makecell{Flowers Recognition}} & 
- \multicolumn{1}{l}{ReNet} & \multicolumn{1}{l}{l n} & \multicolumn{1}{l|}{drop} \\\cline{2-4} &
- \multicolumn{1}{l}{zmodyf. ReNet} & \multicolumn{1}{l}{l n} & \multicolumn{1}{l|}{drop} \\\cline{2-4} &
- \multicolumn{1}{l}{conv} & \multicolumn{1}{l}{l n} & \multicolumn{1}{l|}{drop} \\\hline
+ \multicolumn{1}{l}{ReNet} & \multicolumn{1}{l}{4096} & \multicolumn{1}{l|}{0.1} \\\cline{2-4} &
+ \multicolumn{1}{l}{zmodyf. ReNet} & \multicolumn{1}{l}{1024} & \multicolumn{1}{l|}{0.1} \\\cline{2-4} &
+ \multicolumn{1}{l}{conv} & \multicolumn{1}{l}{1024} & \multicolumn{1}{l|}{0.5} \\\hline
  \hline
  \multirow{3}{*}{\makecell{Fashion MNIST}} & 
- \multicolumn{1}{l}{ReNet} & \multicolumn{1}{l}{l n} & \multicolumn{1}{l|}{drop} \\\cline{2-4} &
+ \multicolumn{1}{l}{ReNet} & \multicolumn{1}{l}{4096} & \multicolumn{1}{l|}{0.1} \\\cline{2-4} &
  \multicolumn{1}{l}{zmodyf. ReNet} & \multicolumn{1}{l}{l n} & \multicolumn{1}{l|}{drop} \\\cline{2-4} &
  \multicolumn{1}{l}{conv} & \multicolumn{1}{l}{l n} & \multicolumn{1}{l|}{drop} \\\hline
  \hline
  \multirow{3}{*}{\makecell{Natural Images}} & 
- \multicolumn{1}{l}{ReNet} & \multicolumn{1}{l}{l n} & \multicolumn{1}{l|}{drop} \\\cline{2-4} &
- \multicolumn{1}{l}{zmodyf. ReNet} & \multicolumn{1}{l}{l n} & \multicolumn{1}{l|}{drop} \\\cline{2-4} &
- \multicolumn{1}{l}{conv} & \multicolumn{1}{l}{l n} & \multicolumn{1}{l|}{drop} \\\hline
+ \multicolumn{1}{l}{ReNet} & \multicolumn{1}{l}{4096} & \multicolumn{1}{l|}{0.1} \\\cline{2-4} &
+ \multicolumn{1}{l}{zmodyf. ReNet} & \multicolumn{1}{l}{256} & \multicolumn{1}{l|}{0.1} \\\cline{2-4} &
+ \multicolumn{1}{l}{conv} & \multicolumn{1}{l}{1024} & \multicolumn{1}{l|}{0.5} \\\hline
 \end{tabular}
 \end{table}
 
 Wybrane parametry modeli, uzyskane we wcześniej opisanym procesie doboru hiperparametrów zostały przedstawione w tabelach \ref{tab:hyperparams-coefs}, \ref{tab:hyperparams-extraction}, oraz \ref{tab:hyperparams-classification}.
+
+\begin{table}[ht]
+    \centering
+    \caption{Wyniki uzyskane dla cross validacji dla 5 foldów}
+    \input{tab/cross_validation.tex}
+    \label{table:cross_validation}
+\end{table}
 
 \section{Wizualizacja nauczonej reprezentacji}
 
@@ -947,6 +955,25 @@ Warto zwrócić uwagę, na bardzo zbliżoną reprezentację dla obu metod. (I tu
 	\label{fig:tSNE_modif_ReNet}
 \end{figure}
 
+\section{Wizualizacja loss landscape}
+
+\begin{figure}
+\centering
+	\includegraphics[width=1.0\textwidth]{img/loss_ReNet.png}
+	\includegraphics[width=1.0\textwidth]{img/loss_3d_ReNet.png}
+	\caption{Wizualizacja loss landscape zbioru testowego nauczonej sieci ReNet.}
+	\label{fig:loss_ReNet}
+\end{figure}
+
+\begin{figure}
+\centering
+	\includegraphics[width=1.0\textwidth]{img/loss_modif_ReNet.png}
+	\includegraphics[width=1.0\textwidth]{img/loss_3d_modif_ReNet.png}
+	\caption{Wizualizacja loss landscape zbioru testowego nauczonej zmodyfikowanej sieci ReNet.}
+	\label{fig:loss_ReNet}
+\end{figure}
+
+
 \chapter{Wnioski}
 
 Wygląda na to, że uzyskano przyśpieszenie działania ReNet przy zachowaniu zbliżonych osiągów. Pozwoliło to na stosowanie głębszych modeli. Oczywiście samo stoswanie głębszych modeli nie jest zaletą samą w sobie, ale zwiększona elastyczność. Przez to, że model ma mniej LSTM na warstwę można "bardziej precyzyjnie" dobierać liczbę warstw do problemu. 
@@ -954,6 +981,8 @@ Wygląda na to, że uzyskano przyśpieszenie działania ReNet przy zachowaniu zb
 Wyniki tSNE i PCA cech stanowiących reprezentację nauczoną przez sieć: Wygląda na to, że wprowadzona modyfikacja wpływa w nieznaczny sposób na sposób uczenia reprezentacji.
 
 Czy uzyskane usprawnienia są wystarczające aby ReNet zyskało na praktycznym znaczeniu? Raczej nie - zbyt duże koszty nakładów obliczeniowych. Wymagane są dalsze usprawnienia w zakresie poprawy osiągów i wydajności sieci.
+
+Przez duże koszty obliczeniowe ReNet wprowadza ograniczenia co do rozmiaru przetwarzanych obrazów. Ograniczenia te redukują liczbę cech dostępnych na wejściu sieci tym samym utrudniają uczenie. Mimo tych trudności modele takie jak sieci neuronowe lepiej sobie radzą z nauczeniem datasetów przedstawionych w tej pracy.
 
 Obszary dalszych badań:
 ReNet dla dużej liczby klas,
