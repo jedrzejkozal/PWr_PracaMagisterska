@@ -46,12 +46,13 @@ def is_float(t):
 
 
 def sanitize_float(number):
-    number_str = str(number)
-    if number_str.count('e-') == 0: #normal dot notation. not 1.0e-4
-        number_str = crop_to_three_decimal_places(number_str)
-    return number_str
+    return crop_to_three_decimal_places(str(number))
 
 
 def crop_to_three_decimal_places(number_str):
     dot_position = number_str.find('.')
-    return number_str[:dot_position+4]
+    if number_str.count('e-') == 0: #normal dot notation. not 1.0e-4
+        return number_str[:dot_position+4]
+    else:
+        e_position = number_str.find('e')
+        return number_str[:dot_position+4] + number_str[e_position:]

@@ -15,7 +15,7 @@ flowers = np.array([[0.5323325635103926, 0.5219399538106235, 0.5526011560693641,
 
 fashion_mnist = np.array([[0.8707142857142857, 0.8708571428571429, 0.8611, 0.8694285713604518, 0.8736428572109768],
                             [0.7, 0.7, 0.7, 0.7, 0.7],
-                            [0.9, 0.9, 0.9, 0.9, 0.9]])
+                            [0.93, 0.93, 0.93, 0.93, 0.93]])
 
 natural_images = np.array([[0.846710050657704, 0.8277858175693131, 0.841304347826087, 0.8511256354393609, 0.8474945533769063],
                             [0.7715112075629824, 0.7532561505065123, 0.741304347826087, 0.7378358750907771, 0.7763253449527959],
@@ -31,11 +31,6 @@ print("flowers_avrg = ", flowers_avrg)
 print("fashion_avrg = ", fashion_avrg)
 print("natural_avrg = ", natural_avrg)
 
-#in rows are avrg results on dataset for given algorithm
-acc_avrg = np.array([[1, 10, 1, 1],
-                    [20, 1, 20, 20],
-                    [50, 50, 50, 50]])
-
 acc_avrg = np.vstack([x_ray_avrg, flowers_avrg, fashion_avrg, natural_avrg])
 print(acc_avrg.T)
 
@@ -47,21 +42,62 @@ table_cross_validation = [[' ', 'ReNet', 'modif ReNet', 'conv'],
 
 save_tex_table(table_cross_validation, 'cross_validation')
 
-analysis = StatisticalAnalysis()
-statistic, pvalue, posthoc = analysis.testHypothesis(acc_avrg.T)
 
-print("statistic = ", statistic)
-print("pvalue = ", pvalue)
-print(posthoc)
+from scipy.stats import kruskal
+from scikit_posthocs import posthoc_conover
+
+#becouse tests for normality lose power when sample is small it's more safe to stay with non parametrical tests
+print("kruskal")
+x_ray_stat, x_ray_p_val = kruskal(x_ray[0], x_ray[1], x_ray[2])
+flowers_stat, flowers_p_val = kruskal(flowers[0], flowers[1], flowers[2])
+fashion_mnist_stat, fashion_mnist_p_val = kruskal(fashion_mnist[0], fashion_mnist[1], fashion_mnist[2])
+natural_images_stat, natural_images_p_val = kruskal(natural_images[0], natural_images[1], natural_images[2])
+print("\n\nxray:\n", x_ray_stat, x_ray_p_val)
+print("\n\nflowers:\n", flowers_stat, flowers_p_val)
+print("\n\nfashion mnist:\n", fashion_mnist_stat, fashion_mnist_p_val)
+print("\n\nnatural images:\n", natural_images_stat, natural_images_p_val)
+
+kruskal_table = [['dataset', 'wartość statystyki H', 'p-wartość'],
+            ['\makecell{Chest X-Ray\\\\ Images (Pneumonia)}', x_ray_stat, x_ray_p_val],
+            ['\makecell{Flowers Recognition}', flowers_stat, flowers_p_val],
+            ['\makecell{Fashion MNIST}', fashion_mnist_stat, fashion_mnist_p_val],
+            ['\makecell{Natural Images}', natural_images_stat, natural_images_p_val]]
+save_tex_table(kruskal_table, 'kruskal_table')
+
+posthoc_table = [['dataset', 'ReNet vs modif ReNet', 'ReNet vs conv', 'modif ReNet vs conv']]
+print(posthoc_conover([x_ray[0], x_ray[1]]))
+print(posthoc_conover([x_ray[0], x_ray[2]]))
+print(posthoc_conover([x_ray[1], x_ray[2]]))
+posthoc_table.append(['\makecell{Chest X-Ray\\\\ Images (Pneumonia)}',
+        posthoc_conover([x_ray[0], x_ray[1]])[0,1],
+        posthoc_conover([x_ray[0], x_ray[2]])[0,1],
+        posthoc_conover([x_ray[1], x_ray[2]])[0,1]])
 
 
-table_stats = [['wartość_statystki_Friedmana', statistic],
-                ['p-wartość', pvalue]]
-save_tex_table(table_stats, 'table_stats')
+print(posthoc_conover([flowers[0], flowers[1]]))
+print(posthoc_conover([flowers[0], flowers[2]]))
+print(posthoc_conover([flowers[1], flowers[2]]))
+posthoc_table.append(['\makecell{Flowers Recognition}',
+        posthoc_conover([flowers[0], flowers[1]])[0,1],
+        posthoc_conover([flowers[0], flowers[2]])[0,1],
+        posthoc_conover([flowers[1], flowers[2]])[0,1]])
 
-table_post_hoc = [[' ', 'ReNet', 'modif ReNet', 'conv'],
-                    ['ReNet'] + list(posthoc[0]),
-                    ['modif ReNet'] + list(posthoc[1]),
-                    ['conv'] + [posthoc[0][2], posthoc[1][2], 1]]
 
-save_tex_table(table_post_hoc, 'table_post_hoc')
+print(posthoc_conover([fashion_mnist[0], fashion_mnist[1]]))
+print(posthoc_conover([fashion_mnist[0], fashion_mnist[2]]))
+print(posthoc_conover([fashion_mnist[1], fashion_mnist[2]]))
+posthoc_table.append(['\makecell{Fashion MNIST}',
+        posthoc_conover([fashion_mnist[0], fashion_mnist[1]])[0,1],
+        posthoc_conover([fashion_mnist[0], fashion_mnist[2]])[0,1],
+        posthoc_conover([fashion_mnist[1], fashion_mnist[2]])[0,1]])
+
+
+print(posthoc_conover([natural_images[0], natural_images[1]]))
+print(posthoc_conover([natural_images[0], natural_images[2]]))
+print(posthoc_conover([natural_images[1], natural_images[2]]))
+posthoc_table.append(['\makecell{Natural Images}',
+        posthoc_conover([natural_images[0], natural_images[1]])[0,1],
+        posthoc_conover([natural_images[0], natural_images[2]])[0,1],
+        posthoc_conover([natural_images[1], natural_images[2]])[0,1]])
+
+save_tex_table(posthoc_table, 'posthoc_table')

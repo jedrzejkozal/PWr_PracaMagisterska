@@ -936,26 +936,30 @@ Dla zbioru Natural Images wykorzystano znacznie głębszą architekturę modelu 
 
 Na podstawie danych z tabeli \ref{tab:hyperparams-classification} można zauważyć, że ReNet wymagało znacznie większej liczby neuronów w warstwie w pełni połączonej niż inne architektury.
 
+\section{Porównanie skuteczności modeli}
+
 \begin{table}[ht]
     \centering
-    \caption{Wyniki uzyskane dla cross validacji dla 5 foldów}
+    \caption{Uśrednione wyniki uzyskane dla cross validacji dla 5 foldów}
     \input{tab/cross_validation.tex}
     \label{table:cross_validation}
 \end{table}
 
 \begin{table}[ht]
     \centering
-    \caption{Porównanie osiągniętych p-wartości oraz F-wartości dla testu Friedmana dokładności wybranych klasyfikatorów}
-    \input{tab/table_stats.tex}
-    \label{table:cross_validation}
+    \caption{Porównanie osiągniętych p-wartości oraz H-wartości dla testu Kruskala-Wallisa dokładności modeli}
+    \input{tab/kruskal_table.tex}
+    \label{table:kruskal}
 \end{table}
 
 \begin{table}[ht]
     \centering
-    \caption{Porównanie osiągniętych p-wartości dla testów post-hoc}
-    \input{tab/table_post_hoc.tex}
-    \label{table:cross_validation}
+    \caption{Zestawienie osiągniętych p-wartości dla testów post-hoc}
+    \input{tab/posthoc_table.tex}
+    \label{table:posthoc}
 \end{table}
+
+W pierwotnym projekcie eksperymentów zakładano wykorzystanie testu Friedmanna z testami post-hoc Nemenyiego. Test Friedmana wymaga zebrania wyników dla co najmniej 6 datasetów. Ze względu na ograniczenia czasowe nie udało się zebrać tylu wyników. Podjęto decyzję o przeanalizowaniu efektywności modeli dla każdego datasetu osobno. Testy na normalność rozkładu tracą moc wraz ze spadkiem liczby próbek. Po sprawdzianie krzyżowym 5-cio foldowym dysponowano pięcioma próbkami w obrębie jednego datasetu dla każdego algorytmu. Określenie czy uzyskane wyniki należą do rozkładu normalnego byłoby mało wiarygodne. Biorąc pod uwagę wszystkie czynniki podjęto decyzję o wykorzystanie nieparametrycznego testu Kruskala–Wallisa z testami post-hoc Conovera. Wyniki przedstawiono w tabelach \ref{table:kruskal} oraz \ref{table:posthoc}.
 
 \section{Wizualizacja nauczonej reprezentacji}
 
