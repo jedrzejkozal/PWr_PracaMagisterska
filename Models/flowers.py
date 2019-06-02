@@ -1,6 +1,6 @@
 from keras.optimizers import Adam
 from keras.models import Sequential
-from keras.layers import Floatten, Dense, Dropout
+from keras.layers import Flatten, Dense, Dropout
 from keras.regularizers import l1, l2
 
 from ReNet.Models.ReNetLayer import *

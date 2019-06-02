@@ -13,8 +13,12 @@ def do_tests(loaders, reNet_models, modif_reNet_models):
         x, y = loader.load()
         x, y = x[:100], y[:100]
 
-        avrg_epoch_time = measure_traning_time(reNet_model, x, y)
-        print("avrg_epoch_time = ", avrg_epoch_time)
+        epoch_time = measure_traning_time(reNet_model, x, y)
+        print(type(loader))
+        print("avrg_epoch_time = ", np.mean(epoch_time, axis=0))
+        print("all times:")
+        print(epoch_time)
+
 
 def measure_traning_time(model, x_train, y_train):
     timer = TimerCallback()
@@ -23,12 +27,11 @@ def measure_traning_time(model, x_train, y_train):
         batch_size=batch_size,
         epochs=50,
         callbacks=[timer])
-    results = sut.get_results()
-    return np.mean(results, axis=0)
+    return sut.get_results()
 
 
-loaders = [LoadXray(), LoadFlowers()] #, LoadNaturalImages(), LoadFashionMnist()]
-reNet_models = [get_xray_reNet(), get_flowers_reNet()] #, get_natural_img_reNet(), get_fashion_mnist_reNet()]
-modif_reNet_models = [get_xray_modif_reNet(), get_flowers_modif_reNet()] #, get_natural_img_reNet, get_fashion_mnist_modif_reNet()]
+loaders = [LoadXray(), LoadFlowers(), LoadNaturalImages(), LoadFashionMnist()]
+reNet_models = [get_xray_reNet(), get_flowers_reNet(), get_natural_img_reNet(), get_fashion_mnist_reNet()]
+modif_reNet_models = [get_xray_modif_reNet(), get_flowers_modif_reNet(), get_natural_img_reNet, get_fashion_mnist_modif_reNet()]
 
 do_tests(loaders, reNet_models, modif_reNet_models)
