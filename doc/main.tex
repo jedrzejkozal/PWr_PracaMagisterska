@@ -849,8 +849,8 @@ W niniejszym rozdziale przedstawiono wyniki uzyskane zgodnie z przyjętą i wcze
  \hline
  \multirow{3}{*}{\makecell{Fashion MNIST}} & 
  \multicolumn{1}{l}{ReNet} & \multicolumn{1}{l}{0.001} & \multicolumn{1}{l}{0.0000001} & \multicolumn{1}{l|}{0.0000001} \\\cline{2-5} &
- \multicolumn{1}{l}{zmodyf. ReNet} & \multicolumn{1}{l}{lr} & \multicolumn{1}{l}{l1} & \multicolumn{1}{l|}{l2} \\\cline{2-5} &
- \multicolumn{1}{l}{conv} & \multicolumn{1}{l}{lr} & \multicolumn{1}{l}{l1} & \multicolumn{1}{l|}{l2} \\\hline
+ \multicolumn{1}{l}{zmodyf. ReNet} & \multicolumn{1}{l}{0.001} & \multicolumn{1}{l}{0.00001} & \multicolumn{1}{l|}{0.00001} \\\cline{2-5} &
+ \multicolumn{1}{l}{conv} & \multicolumn{1}{l}{0.001} & \multicolumn{1}{l}{0.00000001} & \multicolumn{1}{l|}{0.00000001} \\\hline
  \hline
  \multirow{3}{*}{\makecell{Natural Images}} & 
  \multicolumn{1}{l}{ReNet} & \multicolumn{1}{l}{0.001} & \multicolumn{1}{l}{0.00000001} & \multicolumn{1}{l|}{0.00000001} \\\cline{2-5} &
@@ -882,8 +882,8 @@ W niniejszym rozdziale przedstawiono wyniki uzyskane zgodnie z przyjętą i wcze
  \hline
  \multirow{3}{*}{\makecell{Fashion MNIST}} & 
  \multicolumn{1}{l}{ReNet} & \multicolumn{1}{l}{2} & \multicolumn{1}{l}{256} & \multicolumn{1}{l}{(2,2)-(2,2)} & \multicolumn{1}{l|}{0.1} \\\cline{2-6} &
- \multicolumn{1}{l}{zmodyf. ReNet} & \multicolumn{1}{l}{lr} & \multicolumn{1}{l}{l1} & \multicolumn{1}{l}{l2} & \multicolumn{1}{l|}{ex} \\\cline{2-6} &
- \multicolumn{1}{l}{conv} & \multicolumn{1}{l}{lr} & \multicolumn{1}{l}{l1} & \multicolumn{1}{l}{l2} & \multicolumn{1}{l|}{ex} \\\hline
+ \multicolumn{1}{l}{zmodyf. ReNet} & \multicolumn{1}{l}{3} & \multicolumn{1}{l}{256} & \multicolumn{1}{l}{4-4-4} & \multicolumn{1}{l|}{0.1} \\\cline{2-6} &
+ \multicolumn{1}{l}{conv} & \multicolumn{1}{l}{5} & \multicolumn{1}{l}{32-32-64-64-128} & \multicolumn{1}{l}{(4,4)-(4,4)-(2,2)-(2,2)-(2,2)} & \multicolumn{1}{l|}{-} \\\hline
  \hline
  \multirow{3}{*}{\makecell{Natural Images}} & 
  \multicolumn{1}{l}{ReNet} & \multicolumn{1}{l}{2} & \multicolumn{1}{l}{128} & \multicolumn{1}{l}{(2,2)-(2,2)} & \multicolumn{1}{l|}{0.1} \\\cline{2-6} &
@@ -914,8 +914,8 @@ W niniejszym rozdziale przedstawiono wyniki uzyskane zgodnie z przyjętą i wcze
  \hline
  \multirow{3}{*}{\makecell{Fashion MNIST}} & 
  \multicolumn{1}{l}{ReNet} & \multicolumn{1}{l}{4096} & \multicolumn{1}{l|}{0.1} \\\cline{2-4} &
- \multicolumn{1}{l}{zmodyf. ReNet} & \multicolumn{1}{l}{l n} & \multicolumn{1}{l|}{drop} \\\cline{2-4} &
- \multicolumn{1}{l}{conv} & \multicolumn{1}{l}{l n} & \multicolumn{1}{l|}{drop} \\\hline
+ \multicolumn{1}{l}{zmodyf. ReNet} & \multicolumn{1}{l}{512} & \multicolumn{1}{l|}{0.1} \\\cline{2-4} &
+ \multicolumn{1}{l}{conv} & \multicolumn{1}{l}{1024} & \multicolumn{1}{l|}{0.7} \\\hline
  \hline
  \multirow{3}{*}{\makecell{Natural Images}} & 
  \multicolumn{1}{l}{ReNet} & \multicolumn{1}{l}{4096} & \multicolumn{1}{l|}{0.1} \\\cline{2-4} &
@@ -940,7 +940,7 @@ Na podstawie danych z tabeli \ref{tab:hyperparams-classification} można zauważ
 
 \begin{table}[ht]
     \centering
-    \caption{Uśrednione wyniki uzyskane dla cross validacji dla 5 foldów}
+    \caption{Uśrednione wyniki sprawdzianu krzyżowego dla 5 foldów}
     \input{tab/cross_validation.tex}
     \label{table:cross_validation}
 \end{table}
