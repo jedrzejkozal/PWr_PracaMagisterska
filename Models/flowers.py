@@ -4,12 +4,13 @@ from keras.layers import Flatten, Dense, Dropout
 from keras.regularizers import l1, l2
 
 from ReNet.Models.ReNetLayer import *
-from ModifiedReNet.Models.HilbertLayer import *
+from ModifiedReNet.Models.HilbertLayer.HilbertLayer import *
 from ModifiedReNet.Models.ModifiedReNetLayer import *
 
 
 def get_flowers_reNet(lr=0.001, dense_reg=l1(0.00000001), softmax_reg=l2(0.00000001)):
     model = Sequential()
+    num_classes = 5
 
     reNet_hidden_size = 256
     model.add(ReNetLayer([[2, 2]], reNet_hidden_size,
@@ -34,6 +35,7 @@ def get_flowers_reNet(lr=0.001, dense_reg=l1(0.00000001), softmax_reg=l2(0.00000
 
 def get_flowers_modif_reNet(lr=0.001, dense_reg=l1(0.00000001), softmax_reg=l2(0.0000001)):
     model = Sequential()
+    num_classes = 5
 
     reNet_hidden_size = 256
     model.add(HilbertLayer())

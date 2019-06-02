@@ -1,6 +1,6 @@
 from keras.layers import Layer, Reshape, concatenate
 
-from Models.HilbertLayer.HilbertCurve import *
+from ModifiedReNet.Models.HilbertLayer.HilbertCurve import *
 
 class HilbertLayer(Layer):
 

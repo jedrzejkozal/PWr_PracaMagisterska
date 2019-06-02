@@ -4,11 +4,12 @@ from keras.layers import Flatten, Dense, Dropout
 from keras.regularizers import l1, l2
 
 from ReNet.Models.ReNetLayer import *
-from ModifiedReNet.Models.HilbertLayer import *
+from ModifiedReNet.Models.HilbertLayer.HilbertLayer import *
 from ModifiedReNet.Models.ModifiedReNetLayer import *
 
 def get_xray_reNet(lr=0.001, dense_reg=l1(0.0000001), softmax_reg=l2(0.000001)):
     model = Sequential()
+    num_classes=2
 
     reNet_hidden_size = 256
     model.add(ReNetLayer([[2, 2]], reNet_hidden_size,
@@ -33,18 +34,16 @@ def get_xray_reNet(lr=0.001, dense_reg=l1(0.0000001), softmax_reg=l2(0.000001)):
 
 def get_xray_modif_reNet(lr=0.001, dense_reg=l1(0.0001), softmax_reg=l2(0.001)):
     model = Sequential()
+    num_classes=2
 
     reNet_hidden_size = 256
     model.add(HilbertLayer())
     model.add(ModifiedReNetLayer(4, reNet_hidden_size,
-         use_dropout=True, dropout_rate=0.1,
-         RNN_type=RNN_type))
+         use_dropout=True, dropout_rate=0.1))
     model.add(ModifiedReNetLayer(4, reNet_hidden_size,
-         use_dropout=True, dropout_rate=0.1,
-         RNN_type=RNN_type))
+         use_dropout=True, dropout_rate=0.1))
     model.add(ModifiedReNetLayer(4, reNet_hidden_size,
-         use_dropout=True, dropout_rate=0.1,
-         RNN_type=RNN_type))
+         use_dropout=True, dropout_rate=0.1))
     model.add(ModifiedReNetLayer(4, reNet_hidden_size))
     model.add(ModifiedReNetLayer(4, reNet_hidden_size))
 

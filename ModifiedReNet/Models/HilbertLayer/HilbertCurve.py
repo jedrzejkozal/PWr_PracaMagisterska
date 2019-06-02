@@ -1,6 +1,6 @@
 import numpy as np
 
-from Models.HilbertLayer.CommandsGenerator import *
+from ModifiedReNet.Models.HilbertLayer.CommandsGenerator import *
 
 class HilbertCurve(object):
 
