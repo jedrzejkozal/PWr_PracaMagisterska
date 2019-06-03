@@ -48,13 +48,28 @@
 
 \tableofcontents
 
+\newpage
+\begin{flushright}
+Pracę chciałbym dedykować mojej babci Leokadii, \\ za jej dyscyplinę, zorganizowanie i ciekawość świata. 
+\end{flushright}
+\newpage
+
+Wykaz skrótów:
+RNN - rekurencyjna sieć neuronowa (recurrent neural network)
+BPTT - propagacja wsteczna w czasie (back-propgation through time)
+LSTM - Long Short-Term Memory 
+
+Wykaz symboli matematycznych:
+$\odot$ - iloczyn Hadamarda
+\newpage
+
 \chapter{Wstęp}
 
 W niniejszym rozdziale zarysowano problematykę pracy i pokrótce omówiono zagadnienia, które będą wykorzystywane w dalszej części. Dokonano przeglądu literaturowego i opisano plan badań.
 
 \section{Wprowadzenie}
 
-Sekcji ta zawiera wprowadzenie podstawowych zagadnień, wykorzystywane w pracy, oraz nakreślono rys historyczny badań związanych z tematyką pracy.
+Sekcja ta zawiera wprowadzenie podstawowych zagadnień, wykorzystywanych w pracy, oraz nakreślona rys historyczny badań związanych z tematyką pracy.
 
 \subsection{Sieci neuronowe}
 
@@ -112,12 +127,12 @@ Sieci neuronowe to szeroka klasa modeli wykorzystywana najczęściej do zadania 
 	x_i = f(w_i u_i)
 \end{equation}
 
-Gdzie $x_i$ jest wyjściem $i$-tego neuronu w warstwie (nazywanym również aktywacją neuronu), $f$ jest funkcją aktywacji w warstwie do której należy neuron, $w_i$ jest wektorem wag $i$-tego neuronu a $u_i$ jest wektorem wejść $i$-tego neuronu. Nieliniowość całej operacji jest powodowana przez nieliniową funkcję aktywacji. W procesie uczenia definiowana jest funkcja strat (ang. loss function) $L$ opisująca w sposób ilościowy jak bardzo wyjście sieci neuronowej różni się od oczekiwanej wartości. Wartości funkcji strat są wykorzystywane do modyfikacji wag sieci neuronowej (algorytm wstecznej propagacji błędu), najczęściej z wykorzystaniem reguł gradientowych. Dzięki algorytmowi wstecznej propagacji możliwe jest uczenie wielowarstwowych sieci. Wyjście każdej warstwy stanowi zmodyfikowaną reprezentację oryginalnej przestrzeni. Przez nieliniowości i tworzenie reprezentacji przestrzeni cech, wielowarstwowe sieci neuronowe posiadają zdolność do generowania bardzo złożonych granice decyzyjne.
+Gdzie $x_i$ jest wyjściem $i$-tego neuronu w warstwie (nazywanym również aktywacją neuronu), $f$ jest funkcją aktywacji w warstwie do której należy neuron, $w_i$ jest wektorem wag $i$-tego neuronu a $u_i$ jest wektorem wejść $i$-tego neuronu. Nieliniowość całej operacji jest powodowana przez nieliniową funkcję aktywacji. W procesie uczenia definiowana jest funkcja strat (ang. loss function) $L$ opisująca w sposób ilościowy jak bardzo wyjście sieci neuronowej różni się od oczekiwanej wartości. Wartości funkcji strat są wykorzystywane do modyfikacji wag sieci neuronowej (algorytm wstecznej propagacji błędu), najczęściej z wykorzystaniem reguł gradientowych. Dzięki algorytmowi wstecznej propagacji możliwe jest uczenie wielowarstwowych sieci. Wyjście każdej warstwy stanowi zmodyfikowaną reprezentację oryginalnej przestrzeni. Przez nieliniowości i tworzenie reprezentacji przestrzeni cech, wielowarstwowe sieci neuronowe posiadają zdolność do generowania bardzo złożonych granic decyzyjnych.
 
-Sieci neuronowe są stosunkowo starą klasą modeli. Pierwsze prace w zakresie reguł uczenia pojawiły się latach 40 XX wieku \cite{McCulloch-Pitts} \cite{Hebb}. Rosenblat \cite{Rosenblatt} skonstruował perceptron - maszynę wykazującą zdolność nauki. Uważa się, że publikacja w które zbadano ogarniczenia perpceptoronu i udowodniono, że podejedyncza wartswa sieci nie jest w stanie nauczyć się funkcji XOR \cite{Perceptrons} zaczpoątkowała okres nazwany zimą sztucznej inteligencji (ang. AI Winter). Prawdziwym przełomem okazała się praca \cite{Rumelhart}, w której zaproponowano algorytm wstecznej propagacji błędów. Po publikacji tej zainteresowanie głębokimi sieciami neuronowymi zaczęło wzrastać. W \cite{Conv} zaproponowano warstwy konwolucyjne, które pozwoliły na łatwiejsze przetwarzanie obrazów przez sieci neuronowe. 
-Gwałtowny wzrost popularności sieci neuronowych w ostatnich latach można przypisać kilku czynnikom \cite{Goodfellow-et-al-2016}. Pierwszym z nich jest zwiększenie mocy obliczeniowej dostępnej dla praktyków i badaczy uczenia maszynowego, co pozwoliło na zwiększenie rozmiarów modeli i skrócenie czasu uczenia. Drugim czynnikiem jest pojawienie wielu obszernych zbiorów danych, powodowane przez rozpowszechnienie się internetu i urządzeń elektronicznych w życiu codziennym ludzi. Oba te czynniki pozwalają na skuteczne trenowanie modeli o większych pojemnościach, przeznaczonych do coraz bardziej złożonych zadań. Szczegółowy przegląd historii sieci neuronowych został podany w \cite{DBLP:journals/corr/Schmidhuber14}.
+Sieci neuronowe są stosunkowo starą klasą modeli. Pierwsze prace w zakresie reguł uczenia pojawiły się latach 40 XX wieku \cite{McCulloch-Pitts} \cite{Hebb}. Rosenblat \cite{Rosenblatt} w 1958 roku skonstruował perceptron - maszynę wykazującą zdolność nauki. Uważa się, że publikacja w które zbadano ogarniczenia perpceptoronu i udowodniono, że podejedyncza wartswa sieci nie jest w stanie nauczyć się funkcji XOR \cite{Perceptrons} zaczpoątkowała okres nazwany zimą sztucznej inteligencji (ang. AI Winter). Prawdziwym przełomem okazała się praca \cite{Rumelhart}, w której zaproponowano algorytm wstecznej propagacji błędów. Po publikacji tej zainteresowanie głębokimi sieciami neuronowymi zaczęło wzrastać. W \cite{Conv} zaproponowano warstwy konwolucyjne, które pozwoliły na łatwiejsze przetwarzanie obrazów przez sieci neuronowe. 
+Gwałtowny wzrost popularności sieci neuronowych w ostatnich latach można przypisać kilku czynnikom \cite{Goodfellow-et-al-2016}. Pierwszym z nich jest zwiększenie mocy obliczeniowej dostępnej dla praktyków i badaczy uczenia maszynowego, co pozwoliło na zwiększenie rozmiarów modeli i skrócenie czasu uczenia. Drugim czynnikiem jest pojawienie wielu obszernych zbiorów danych, związane z rozpowszechnieniem się internetu i urządzeń elektronicznych w życiu codziennym ludzi. Oba te czynniki pozwalają na skuteczniejsze trenowanie modeli o większych pojemnościach, przeznaczonych do coraz bardziej złożonych zadań. Szczegółowy przegląd historii sieci neuronowych został podany w \cite{DBLP:journals/corr/Schmidhuber14}.
 
-Można dopatrywać się powiązań między sposobem działania ludzkiego mózgu a sieciami neuronowymi. Podobieństwo to może być widoczne w sposobie działania synaps komórki nerowowej. Badacze podkreślają \cite{Goodfellow-et-al-2016}, że związek sieci neuronowych z biologią ma bardziej charakter luźnej inspiracji niż rzeczywistego modelu zjawisk zachodzących w ludzkim mózgu.
+Można dopatrywać się powiązań między sposobem działania ludzkiego mózgu a sieciami neuronowymi. Podobieństwo to może być widoczne w sposobie działania synaps komórki nerowowej. Badacze podkreślają \cite{Goodfellow-et-al-2016}, że związek sieci neuronowych z biologią ma bardziej charakter luźnej inspiracji niż rzeczywistego modelowania zjawisk zachodzących w ludzkim mózgu.
 
 \subsection{Rekurencyjne sieci neuronowe}
 
@@ -165,13 +180,13 @@ Można dopatrywać się powiązań między sposobem działania ludzkiego mózgu 
 
 
 Sieci feedforward posiadają stałą liczbę wejść i wyjść, przez co nie radzą sobie dobrze z przetwarzaniem danych występujących w ciągach (takich jak tekst, dźwięki czy ciągi czasowe). Istnieją podejścia umożliwiające przetwarzanie ciągów przez sieci feedforward, ale nie cechują się wysoką skutecznością. W celu zaadresowania tego problemu powstały sieci rekurencyjne (ang. Recurrent Neural Networks - RNN).
-Sieci Rekurencyjne zostały oparte na pracy Rumelharta \cite{RNN}. RNN posiadają ukryty stan, będący wektorem przekazywanym między poszczególnymi krokami czasowymi. Stan jest obliczany przez warstwą ukrytą sieci, której wartość jest obliczana nie tylko na podstawie aktualnego wejścia, ale też na podstawie poprzedniego stanu sieci (zob rys. \ref{fig:rnn}).
-Algorytm uczenia RNN - propagacja wsteczna w czasie (ang. Back-Propagation Through Time - BPTT) została przedstawiona w \cite{BPTT}.
-Udowodniono, że przy pewnych założeniach RNN są kompletne w sensie Turinga \cite{turing-complete}.
+Sieci Rekurencyjne zostały oparte na pracy Rumelharta \cite{RNN}. RNN posiadają ukryty stan, będący wektorem przekazywanym między poszczególnymi krokami czasowymi. Stan jest obliczany przez warstwą ukrytą sieci na podstawie aktualnego wejścia i stanu sieci z poprzedniego kroku czasowego - rys. \ref{fig:rnn}.
+Algorytm uczenia RNN - propagacja wsteczna w czasie (ang. Back-Propagation Through Time - BPTT) został przedstawiony w \cite{BPTT}.
+Udowodniono, że przy spełnieniu pewnych założeń RNN są kompletne w sensie Turinga \cite{turing-complete}.
 
 \subsubsection{Sieci dwukierunkowe}
 
-Wprowadzono wiele modyfikacji w zakresie zasad działania i strukturze RNN. 
+Wprowadzono wiele modyfikacji w zakresie zasad działania i struktury RNN. 
 W \cite{bidirectional} wprowadzono sieci dwukierunkowe przetwarzające sekwencje w dwóch kierunkach: od początku do końca i od końca do początku. Ostateczna wartość aktywacji dla n-tego elementu sekwencji jest obliczana na podstawie n-tych aktywacji dla obu kierunków.
 
 \subsubsection{LSTM}
@@ -182,10 +197,6 @@ RNN w swojej natywnej formie nie są w stanie nauczyć się długich zależnośc
 
 Gated Recurrent Unit (GRU) \cite{DBLP:journals/corr/ChoMGBSB14} jest modyfikacją LSTM. W wyniku zastosowanych uproszeńw strukturze komórki GRU wymaga mniejszej mocy obliczeniowej do treningu, kosztem mniej mocy modelu. LSTM i GRU uzyskują porównywalne wyniki w praktycznych zastosowaniach \cite{DBLP:journals/corr/ChungGCB14}. GRU została dokładniej opisana w dalszej części pracy.
 
-\subsubsection{Neuronowe Maszyny Turinga}
-
-Rozwinięciem idei wykorzystania pamięci do usprawnienia działania sieci rekurencyjnej są Neuronowe Maszyny Turinga \cite{DBLP:journals/corr/GravesWD14}. Neuronowe Maszyny Turinga korzystają z mechanizmu uwagi do wykonywania operacji na pamięci. Pamięć wykorzystana w tym modelu przypomina pamięć dostępną w komputerze i składa się z wielu wektorów, które można wykorzystać do odczytywania lub przechowywania informacji. Neuronowa Maszyna Turinga posiada dwie głowice: do zapisu i odczytu. Adresowanie pamięci odbywa się na podstawie zawartości (content-base addressing) lub położenia (location-base addressing). Jest to bardzo interesująca klasa modeli, która często posiada bardzo złożone grafy obliczeniowe. Ze względu na ograniczoną dostępną moc obliczeniową do przeprowadzenia badań Neuronowe Maszyny Turinga nie zostały wykorzystane w eksperymentach.
-
 \subsection{Zadanie klasyfikacji}
 
 Uczenie nadzorowane (ang. supervised learning) to dział uczenia maszyn w którym zbiór uczący składa się z par $\{x, d\}_{i=1}^N$, gdzie $x$ to wektor cech, $d$ to etykieta, a $N$ to liczność zbioru uczącego. W przypadku gdy każdej cechy istnieje osobna etykieta mówimy o silnym etykietowaniu. Gdy jedna etykieta opisuje wszystkie cechy z przykładu uczącego mówimy o słabym etykietowaniu. Przykładowo jeśli zadanie polega na rozpoznaniu samochodu na zdjęciu, mówimy o słabym etykietowaniu. Jeśli zadanie polega na zaznaczeniu wszystkich pikseli przedstawiających samochód na zdjęciu, mówimy o silnym etykietowaniu. Aby określić jakość działania algorytmu wprowadza się funkcję straty dla całego zbioru:
@@ -194,7 +205,7 @@ Uczenie nadzorowane (ang. supervised learning) to dział uczenia maszyn w który
 	\mathcal{L} = \sum_{i=1}^N L_i
 \end{equation}
 
-gdzie $L_i$ to wartość funkcji strat do pojedynczego przykładu uczącego. Zadanie klasyfikacji opiera się na przypisaniu przykładu uczącego $x$ do odpowiedniej klasy $k$. W procesie uczenia wybieramy hipotezę z przestrzeni hipotez $h \in \mathcal{H}$, która minimalizuje liczbę błędnie zaklasyfikowanych przykładów \cite{introduction-to-machine-learning}. Można to zapisać za pomocą 0-1 funkcji strat:
+gdzie $L_i$ to wartość funkcji strat dla pojedynczego przykładu uczącego. Zadanie klasyfikacji opiera się na przypisaniu przykładu uczącego $x$ do odpowiedniej klasy $k$. W procesie uczenia wybieramy hipotezę z przestrzeni hipotez $h \in \mathcal{H}$, która minimalizuje liczbę błędnie zaklasyfikowanych przykładów \cite{introduction-to-machine-learning}. Można to zapisać za pomocą 0-1 funkcji strat:
 
 \begin{equation}
 	E(x, d) = \sum_{i=1}^N 1(h(x_i) \neq d_i )
@@ -230,7 +241,7 @@ W tej sekcji dokonano przeglądu typowych zastosowań sieci rekurencyjnych oraz 
 \subsection{Zastosowania rekurencyjnych sieci neuronowych}
 
 Sieci Rekurencyjne znalazły wiele zastosowań w przetwarzaniu sekwencji. 
-Jednym z takich zastosowań może być przetwarzanie języka naturalnego (natural language processing - NLP), gdzie RNN znalazły zastosowanie w rozpoznawaniu mowy \cite{DBLP:journals/corr/abs-1303-5778}, \cite{speech_recognition}, \cite{speech_recognition1}, tłumaczeniu \cite{translate}, \cite{DBLP:journals/corr/ChoMGBSB14}, \cite{DBLP:journals/corr/BahdanauCB14}, \cite{DBLP:journals/corr/WuSCLNMKCGMKSJL16}, modelowniu języka \cite{DBLP:journals/corr/ChoMGBSB14}, generowaniu mowy \cite{DBLP:journals/corr/MehriKGKJSCB16} i generowaniu tekstu \cite{DBLP:journals/corr/Graves13} \cite{karpathy_RNN_blog}. 
+Jednym z nich może być przetwarzanie języka naturalnego (natural language processing - NLP), gdzie RNN znalazły zastosowanie w rozpoznawaniu mowy \cite{DBLP:journals/corr/abs-1303-5778}, \cite{speech_recognition}, \cite{speech_recognition1}, tłumaczeniu \cite{translate}, \cite{DBLP:journals/corr/ChoMGBSB14}, \cite{DBLP:journals/corr/BahdanauCB14}, \cite{DBLP:journals/corr/WuSCLNMKCGMKSJL16}, modelowniu języka \cite{DBLP:journals/corr/ChoMGBSB14}, generowaniu mowy \cite{DBLP:journals/corr/MehriKGKJSCB16} i generowaniu tekstu \cite{DBLP:journals/corr/Graves13} \cite{karpathy_RNN_blog}. 
 Innym polem zastosowań RNN jest rozpoznawanie pisma ręcznego \cite{handwriting_recognition}, \cite{handwriting_recognition2} lub jego generacja \cite{DBLP:journals/corr/Graves13}.
 RNN są także wykorzystywane do generowania obrazów \cite{DBLP:journals/corr/GregorDGW15} i muzyki \cite{DBLP:journals/corr/abs-1804-07300}.
 Autorzy \cite{DBLP:journals/corr/VinyalsL15} zaproponowali system do przeprowadzania rozmów zbudowany z wykorzystaniem RNN.
@@ -239,18 +250,18 @@ Sieci rekurencyjne są także wykorzystywane w połączeniu z innymi modelami np
 
 \subsection{Zastosowanie sieci rekurencyjnych do klasyfikacji obrazów}
 
-W \cite{DBLP:journals/corr/VisinKCMCB15} wykorzystano sieć rekurencyjną do klasyfikacji obrazów. Proponowany model ReNet wykorzystuje RNN do czterotnego trawersowania fragmentów obrazu w celu ekstrakcji cech, jako alternatywę dla warstw konwolucyjnych z poolingiem. W \cite{DBLP:journals/corr/abs-0705-2011} wprowadzono wielowymiarowe sieci rekurencyjne, które obliczały aktywację w danej komórce nie tylko na podstawie aktywacji z poprzedniej iteracji, ale także na podstawie wartości aktywacji sąsiadujących komórek w aktualnym kroku czasowym. Model wielowymiarowych RNN został wykorzystany w przypadku tej pracy do przeprowadzenia segmentacji obrazu. Idea ta została rozwinięta w \cite{DBLP:journals/corr/KalchbrennerDG15}, gdzie przedstawiono Grid LSTM, które rozszerzało standardowy model sieci LSTM do N-wymiarowych komórek ze współdzielonymi wektorami stanu i pamięci. Wielowymiarowe sieci rekurencyjne stanowią ciekawą klasę modeli, mogą jednak wymagać znaczących zasobów mocy obliczeniowej do przeprowadzenia procesu uczenia.
+W \cite{DBLP:journals/corr/VisinKCMCB15} wykorzystano sieć rekurencyjną do klasyfikacji obrazów. Proponowany model ReNet wykorzystuje RNN do czterotnego trawersowania fragmentów obrazu w celu ekstrakcji cech, jako alternatywę dla warstw konwolucyjnych z poolingiem. W \cite{DBLP:journals/corr/abs-0705-2011} wprowadzono wielowymiarowe sieci rekurencyjne, które obliczały aktywację w danej komórce nie tylko na podstawie aktywacji z poprzedniej iteracji, ale także na podstawie wartości aktywacji sąsiadujących komórek w aktualnym kroku czasowym. Model wielowymiarowych RNN został wykorzystany w przypadku tej pracy do przeprowadzenia segmentacji obrazu. Idea ta została rozwinięta w \cite{DBLP:journals/corr/KalchbrennerDG15}, gdzie przedstawiono Grid LSTM. Jest to model rozszerzający standardowy model sieci LSTM do N-wymiarowych komórek ze współdzielonymi wektorami stanu i pamięci. Wielowymiarowe sieci rekurencyjne stanowią ciekawą klasę modeli, mogą jednak wymagać znaczących zasobów mocy obliczeniowej do przeprowadzenia procesu uczenia.
 
 \section{Cel pracy}
 
-Celem pracy jest zbadanie skuteczności klasyfikacji zmodyfikowanej architektury ReNet. Proponowana modyfikacja polega na zastąpieniu czterech sieci rekurencyjnych dwiema sieciami rekurencyjnymi analizącymi obraz skonwertowany do jednowymiarowego ciągu otrzymanego z wykorzystaniem krzywych wypełniającej przestrzeń (ang. space-filling curves). Wyniki klasyfikacji wybranego zbioru danych zostaną porównane z oryginalną architekturą oraz wynikami osiąganymi dla sieci konwolucyjnych. Wykorzystanie dwóch sieci rekurencyjnych zamiast czterech powinno pozwolić na zmniejszenie liczby parametrów modelu. Mniejsza liczba parametrów może przekładać się na krótszy czas szkolenia i może pozwolić wykorzystanie modelu z większą liczbę neuronów w warstwach ukrytych modelu. Modyfikacja sieci będzie mieć wpływ na zdolność uczenia sieci, co oczywiście jest najciekawszym przedmiotem badań. W zakres eksperymentów będzie wchodziło również zbadanie wpływu różnych architektur sieci rekurencyjnych na uzyskiwane wyniki. Ze względu na ograniczoną dostępną moc obliczeniową hiperparametry modeli zostaną dobrane z wykorzystaniem podziału zbioru danych na zbiór uczący i zbiór testowy oraz wykorzystaniem algorytmu wyszukiwania sieciowego (ang. grid search). Dokładność klasyfikacji zostanie zmierzona z wykorzystaniem dokładności (ang. accuracy).
+Celem pracy jest zbadanie skuteczności klasyfikacji zmodyfikowanej architektury ReNet. Proponowana modyfikacja polega na zastąpieniu czterech sieci rekurencyjnych dwiema sieciami rekurencyjnymi analizącymi obraz skonwertowany do jednowymiarowego ciągu otrzymanego z wykorzystaniem krzywych wypełniającej przestrzeń (ang. space-filling curves). Wyniki klasyfikacji wybranego zbioru danych zostaną porównane z oryginalną architekturą oraz wynikami osiąganymi dla sieci konwolucyjnych. Wykorzystanie dwóch sieci rekurencyjnych zamiast czterech powinno pozwolić na zmniejszenie liczby parametrów modelu. Mniejsza liczba parametrów może przekładać się na krótszy czas szkolenia i może pozwolić wykorzystanie modelu z większą liczbę neuronów w warstwach ukrytych modelu. Modyfikacja sieci będzie mieć wpływ na zdolność uczenia sieci, co oczywiście jest najciekawszym przedmiotem badań. W zakres eksperymentów będzie wchodziło również zbadanie wpływu różnych architektur sieci rekurencyjnych na uzyskiwane wyniki. Hiperparametry modeli zostaną dobrane z wykorzystaniem podziału zbioru danych na zbiór uczący i zbiór testowy. Do doboru wartości hiperparametrów zostanie wykorzystany algorytm wyszukiwania sieciowego (ang. grid search) z modyfikacją polegającą na zastąpieniu przeszukiwania zupełnego przez przeszukiwanie zachłanne. Dokładność klasyfikacji zostanie zmierzona z wykorzystaniem dokładności na zbiorze testowym (ang. accuracy) i algorytmowi sprawdzianu krzyżowego.
 
-
+Rozdział ten zawierał wprowadzenie najistotniejszych terminów, wykorzystywanych w dalszych częściach oraz nakreślił problematykę pracy. W kolejnym rozdziale zostaną dokładniej omówione teoretyczne aspekty wprowadzonych pojęć.
 
 
 \chapter{Omówienie wybranych zagadnień teoretycznych}
 
-W niniejszym rozdziale zostały omówione teoretyczne podstawy wybranych algorytmów i struktur sieci, które zostały wykorzystane w badaniach.
+W niniejszym rozdziale zostały omówione teoretyczne podstawy wybranych algorytmów i struktur sieci, wykorzystanych w badaniach.
 
 \section{Rekurencyjna Sieć Neuronowa}
 
@@ -300,10 +311,7 @@ W trakcie uczenia sieci dokonuje się rozwinięcia (ang. unfolding) grafu oblicz
 \label{fig:unfolded}
 \end{figure}
 
-Co jest dwukrotnym zastosowaniem równania \ref{eq:basic-rnn} rekurencyjnie. Jako początkowy stan sieci $h_0$ najczęściej stosowany jest wektor zer. Rozwinięcie grafu pozwala na zamianę grafu cyklicznego na acykliczny, bardziej przypominający graf sieci feedforward. Przykładowy rozwinięty graf przedstawiono na rys. \ref{fig:unfolded}.
-
-
-Rozwinięty graf pozwala na zastosowanie reguł propagacji wstecznej i obliczenie gradientów funkcji strat. Jest więc to proces umożliwiający uczenie sieci rekurencyjnej.
+Co jest dwukrotnym zastosowaniem równania \ref{eq:basic-rnn} rekurencyjnie. Jako początkowy stan sieci $h_0$ najczęściej stosowany jest wektor zer. Rozwinięcie grafu pozwala na zamianę grafu cyklicznego na acykliczny, bardziej przypominający graf sieci feedforward. Przykładowy rozwinięty graf przedstawiono na rys. \ref{fig:unfolded}. Rozwinięty graf pozwala na zastosowanie reguł propagacji wstecznej i obliczenie gradientów funkcji strat. Jest więc to proces umożliwiający uczenie sieci rekurencyjnej.
 
 \begin{figure}
 \centering
@@ -332,7 +340,7 @@ Istnieje wiele modyfikacji wprowadzonych do struktury jednostki sieci rekurencyj
 
 \section{Propagacja wsteczna w czasie}
 
-Propagacja wsteczna w czasie to algorytm dedykowany do uczenia sieci rekurencyjnych. Polega on na wykorzystaniu rozwiniętej formy grafu obliczeniowego sieci rekurencyjnej i zastosowaniu propagacji wstecznej, z uwzględnieniem faktu współdzielenia parametrów - każda jednostka rekurencyjna operuje na tym samym zestawie parametrów.
+Propagacja wsteczna w czasie to algorytm dedykowany do uczenia sieci rekurencyjnych. Polega on na wykorzystaniu rozwiniętej formy grafu obliczeniowego sieci rekurencyjnej i zastosowaniu propagacji wstecznej, z uwzględnieniem faktu współdzielenia parametrów - każda jednostka rekurencyjna korzysta z tego samego zestawu parametrów.
 
 \begin{figure}
 \centering
@@ -435,7 +443,7 @@ to wtedy zachodzi:
 	\forall_{t} ||\frac{\partial h_{t}}{\partial h_{t-1}}||_2 \leq \gamma \frac{1}{\gamma} = 1
 \end{equation}
 
-co oznacza, że przy obliczaniu iloczynu powyższych jakobianów w równaniu \ref{eq:BPTT_product} uzyskamy jako wynik bardzo małe wartości i nastąpi znikanie gradientów. Analogiczne rozumowanie może zostać przeprowadzone dla wybuchających gradientów i zmienionej definicji $\gamma$. W dwóch pozostałych sekcjach tego rozdziału omówiono struktury komórki sieci rekurencyjnej, które pozwalają na uniknięcie problemu znikających gradientów. 
+co oznacza, że przy obliczaniu iloczynu jakobianów w równaniu \ref{eq:BPTT_product} uzyskamy jako wynik bardzo małe wartości i nastąpi znikanie gradientów. Analogiczne rozumowanie może zostać przeprowadzone dla wybuchających gradientów i zmienionej definicji $\gamma$. W dwóch pozostałych sekcjach tego rozdziału omówiono struktury komórki sieci rekurencyjnej, które pozwalają na uniknięcie problemu znikających gradientów. 
 
 
 \section{LSTM}
@@ -447,7 +455,7 @@ co oznacza, że przy obliczaniu iloczynu powyższych jakobianów w równaniu \re
 	\label{fig:lstm}
 \end{figure}
 
-LSTM jest jedną z popularniejszych architektur RNN. Hochreiter i Schmidhuber zaproponowali architekturę Long Short-Term Memory (LSTM) \cite{LSTM} w 1997. Zwykła sieć RNN składa się jedynie ze stanu sieci $h$, oraz wejścia $x$, które są wejściem warstwy ukrytej sieci. Wyjście warstwy ukrytej jest wyjściem sieci. Struktura komórki LSTM jest bardziej skomplikowana i składa się z wektora stanu sieci $h$, komórki pamięci $C$, oraz czterech ukrytych warstw sieci. Schemat ze strukturą sieci został przedstawiony na rys. \ref{fig:lstm}.
+LSTM jest jedną z popularniejszych architektur RNN. Hochreiter i Schmidhuber zaproponowali architekturę Long Short-Term Memory (LSTM) \cite{LSTM} w 1997. Zwykła sieć RNN składa się jedynie ze stanu sieci $h$, oraz wejścia $x$. Obie te wartości są wejściem warstwy ukrytej sieci. Wyjście warstwy ukrytej jest wyjściem sieci. Struktura komórki LSTM jest bardziej skomplikowana i składa się z wektora stanu sieci $h$, komórki pamięci $C$, oraz czterech ukrytych warstw sieci. Schemat ze strukturą sieci został przedstawiony na rys. \ref{fig:lstm}.
 
 Warstwy sieci LSTM z sigmoidalnymi funkcjami aktywacji są nazywane bramkami multiplikatywnymi. Sigmoidalna funkcja aktywacji jest opisywana za pomocą wzoru:
 
@@ -511,7 +519,7 @@ W swojej pracy \cite{LSTM} Hochreiter i Schmidhuber odnoszą się do wcześniejs
 	\label{fig:gru}
 \end{figure}
 
-Struktura komórki Gated Reccurent Unit (GRU) została wprowadzona w \cite{DBLP:journals/corr/ChoMGBSB14}. Komórka GRU w znacznym stopniu przypomina strukturę komórki LSTM. GRU również wykorzystuje bramki multiplikatywne do obliczania wartości stanu ukrytego w kolejnych krokach czasowych. Znacząca różnica polega na zastosowaniu dwóch bramek zamiast trzech, pełniących inne funkcje. Ciąg operacji realizowanych przez bramki i warstwy ukryte GRU omówiono poniżej.
+Struktura komórki Gated Reccurent Unit (GRU) została wprowadzona w \cite{DBLP:journals/corr/ChoMGBSB14}. Komórka GRU w znacznym stopniu przypomina strukturę komórki LSTM. GRU również wykorzystuje bramki multiplikatywne do obliczania wartości stanu ukrytego w kolejnych krokach czasowych. Różnica polega na zastosowaniu dwóch bramek zamiast trzech, pełniących inne funkcje. Ciąg operacji realizowanych przez bramki i warstwy ukryte GRU omówiono poniżej.
 
 Pierwsza bramka stosowana w ciągu przekształceń to reset gate, której aktywacje są obliczane jako:
 
@@ -1048,6 +1056,8 @@ Przez duże koszty obliczeniowe zakres zastosowań ReNet jest mocno ograniczony 
 Dalsze badania w zakresie sieci ReNet mogą obejmować zbadanie zastosowania tej architektury do zbiorów zawierających dużo klas i mało przykładów uczących na klasę. W trakcie pracy odnotowano, że stosowane modele osiągają skuteczność na poziome klasyfikatora losowego, podczas gdy sieci konwolucyjne na tych samych danych osiągały wyższą skuteczność. Ciekawym eksperymentem może być zredukowanie rozmiaru patrzy do rozmiaru pojedynczego piksela i zastosowanie warstw Batch Normalisation. Dodatkowo można zbadać jak zachowa się sieć ReNet przy stosowaniu zwiększającej się liczby neurownów w kolejnych warstwach, tak jak ma to miejsce w sieciach konwolucyjnych.
 
 W przypadku zmodyfikowanej sieci ReNet właściowści krzywej Hilberta mogą pozwolić na zmianę rozmiarów obrazów i sprawdzenia jak sieć nauczona dla mniejszych obrazów poradzi sobie z większymi obrazami. Tego typu manipulacje są ograniczone przez ścisłe wymagania struktury sieci, można je jednak obejść przez zastosowanie dodatkowej warstwy ReNet lub MaxPooling.
+
+W początkowym projekcie eksperymentu zakładano przeprowadzenie badań wpływu zastosowanej sieci rekurencyjnej na wyniki klasyfikacji ReNet z modyfikacją. Jednakże ograniczenia czasowe nie pozwoliły na zrealizowanie tego celu i pozostaje on otwartym problemem badawczym.
 
 \section{Podziękowania}
 
