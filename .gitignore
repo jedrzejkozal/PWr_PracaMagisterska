@@ -24,3 +24,10 @@ experiments/logs
 *.npz
 ReNet/SVHNdataset/*
 HyperparamsSearch/*_hyperparams.log
+paper/main.aux
+paper/main.bbl
+paper/main.blg
+paper/main.log
+paper/main.out
+paper/main.pdf
+paper/main.synctex.gz
