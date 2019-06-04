@@ -49,19 +49,20 @@
 \tableofcontents
 
 \newpage
-\begin{flushright}
-Pracę chciałbym dedykować mojej babci Leokadii, \\ za jej dyscyplinę, zorganizowanie i ciekawość świata. 
-\end{flushright}
-\newpage
+%\begin{flushright}
+%Pracę chciałbym dedykować mojej babci Leokadii, \\ za jej %dyscyplinę, zorganizowanie i ciekawość świata. 
+%\end{flushright}
+%\newpage
 
-Wykaz skrótów:
-RNN - rekurencyjna sieć neuronowa (recurrent neural network)
-BPTT - propagacja wsteczna w czasie (back-propgation through time)
-LSTM - Long Short-Term Memory 
+%Wykaz skrótów:\\
+%RNN - rekurencyjna sieć neuronowa (recurrent neural network)\\
+%BPTT - propagacja wsteczna w czasie (back-propgation through time)\\
+%LSTM - Long Short-Term Memory \\
+%GRU - Gated Reccurent Unit \\
 
-Wykaz symboli matematycznych:
-$\odot$ - iloczyn Hadamarda
-\newpage
+%Wykaz symboli matematycznych: \\
+%$\odot$ - iloczyn Hadamarda \\
+%\newpage
 
 \chapter{Wstęp}
 
@@ -254,14 +255,12 @@ W \cite{DBLP:journals/corr/VisinKCMCB15} wykorzystano sieć rekurencyjną do kla
 
 \section{Cel pracy}
 
-Celem pracy jest zbadanie skuteczności klasyfikacji zmodyfikowanej architektury ReNet. Proponowana modyfikacja polega na zastąpieniu czterech sieci rekurencyjnych dwiema sieciami rekurencyjnymi analizącymi obraz skonwertowany do jednowymiarowego ciągu otrzymanego z wykorzystaniem krzywych wypełniającej przestrzeń (ang. space-filling curves). Wyniki klasyfikacji wybranego zbioru danych zostaną porównane z oryginalną architekturą oraz wynikami osiąganymi dla sieci konwolucyjnych. Wykorzystanie dwóch sieci rekurencyjnych zamiast czterech powinno pozwolić na zmniejszenie liczby parametrów modelu. Mniejsza liczba parametrów może przekładać się na krótszy czas szkolenia i może pozwolić wykorzystanie modelu z większą liczbę neuronów w warstwach ukrytych modelu. Modyfikacja sieci będzie mieć wpływ na zdolność uczenia sieci, co oczywiście jest najciekawszym przedmiotem badań. W zakres eksperymentów będzie wchodziło również zbadanie wpływu różnych architektur sieci rekurencyjnych na uzyskiwane wyniki. Hiperparametry modeli zostaną dobrane z wykorzystaniem podziału zbioru danych na zbiór uczący i zbiór testowy. Do doboru wartości hiperparametrów zostanie wykorzystany algorytm wyszukiwania sieciowego (ang. grid search) z modyfikacją polegającą na zastąpieniu przeszukiwania zupełnego przez przeszukiwanie zachłanne. Dokładność klasyfikacji zostanie zmierzona z wykorzystaniem dokładności na zbiorze testowym (ang. accuracy) i algorytmowi sprawdzianu krzyżowego.
-
-Rozdział ten zawierał wprowadzenie najistotniejszych terminów, wykorzystywanych w dalszych częściach oraz nakreślił problematykę pracy. W kolejnym rozdziale zostaną dokładniej omówione teoretyczne aspekty wprowadzonych pojęć.
+Celem pracy jest zbadanie skuteczności klasyfikacji zmodyfikowanej architektury ReNet. Proponowana modyfikacja polega na zastąpieniu czterech sieci rekurencyjnych dwiema sieciami rekurencyjnymi analizącymi obraz skonwertowany do jednowymiarowego ciągu otrzymanego z wykorzystaniem krzywych wypełniającej przestrzeń (ang. space-filling curves). Wyniki klasyfikacji wybranego zbioru danych zostaną porównane z oryginalną architekturą oraz wynikami osiąganymi dla sieci konwolucyjnych. Wykorzystanie dwóch sieci rekurencyjnych zamiast czterech powinno pozwolić na zmniejszenie liczby parametrów modelu. Mniejsza liczba parametrów może przekładać się na krótszy czas szkolenia i może pozwolić wykorzystanie modelu z większą liczbę neuronów w warstwach ukrytych modelu. Modyfikacja sieci będzie mieć wpływ na zdolność uczenia sieci, co oczywiście jest najciekawszym przedmiotem badań. W zakres eksperymentów będzie wchodziło również zbadanie wpływu różnych architektur sieci rekurencyjnych na uzyskiwane wyniki. Hiperparametry modeli zostaną dobrane z wykorzystaniem podziału zbioru danych na zbiór uczący i zbiór testowy. Do doboru wartości hiperparametrów zostanie wykorzystany algorytm wyszukiwania sieciowego (ang. grid search) z modyfikacją polegającą na zastąpieniu przeszukiwania zupełnego przez przeszukiwanie zachłanne. Dokładność klasyfikacji zostanie zmierzona z wykorzystaniem dokładności na zbiorze testowym (ang. accuracy) i algorytmowi sprawdzianu krzyżowego. Po wprowadzeniu najistotniejszych terminów wykorzystywanych w dalszych częściach pracy oraz nakreśleniu problematyki w następnym rozdziale zostaną dokładniej omówione teoretyczne aspekty wprowadzonych pojęć.
 
 
 \chapter{Omówienie wybranych zagadnień teoretycznych}
 
-W niniejszym rozdziale zostały omówione teoretyczne podstawy wybranych algorytmów i struktur sieci, wykorzystanych w badaniach.
+W rozdziale tym zostały omówione teoretyczne podstawy wybranych algorytmów i struktur sieci, wykorzystanych w badaniach.
 
 \section{Rekurencyjna Sieć Neuronowa}
 
@@ -316,7 +315,7 @@ Co jest dwukrotnym zastosowaniem równania \ref{eq:basic-rnn} rekurencyjnie. Jak
 \begin{figure}
 \centering
 	\includegraphics[width=0.9\textwidth]{img/LSTM3-SimpleRNN.png}
-	\caption{Schemat podstawowej jednostki sieci rekurencyjnej, korzystającej z funkcji aktywacji $tanhh$.} Źródło: http://colah.github.io/posts/2015-08-Understanding-LSTMs/
+	\caption{Schemat podstawowej jednostki sieci rekurencyjnej, korzystającej z funkcji aktywacji $tanhh$.} Źródło: \cite{colah}.
 	\label{fig:simple_rnn}
 \end{figure}
 
@@ -451,7 +450,7 @@ co oznacza, że przy obliczaniu iloczynu jakobianów w równaniu \ref{eq:BPTT_pr
 \begin{figure}
 \centering
 	\includegraphics[width=0.90\textwidth]{img/lstm_colah.png}
-	\caption{Schemat komórki LSTM.} Źródło: http://colah.github.io/posts/2015-08-Understanding-LSTMs/
+	\caption{Schemat komórki LSTM.} Źródło: \cite{colah}.
 	\label{fig:lstm}
 \end{figure}
 
@@ -502,7 +501,7 @@ Bramka ta służy do określania sposobu w jaki zostanie zaktualizowany stan $h$
 \begin{figure}
 \centering
 	\includegraphics[width=0.90\textwidth]{img/LSTM3-C-line.png}
-	\caption{Schemat komórki LSTM z zaznaczoną komórką pamięci.} Źródło: http://colah.github.io/posts/2015-08-Understanding-LSTMs/. W przypadku propagacji wstecznej przy cofaniu się przez graf obliczeniowy sieci węzły odpowiadające operacji dodawania propagują wartość błędu bez modyfikacji wartości. Węzły w grafie odpowiadające operacji mnożenia powodują przemnożenie wartości dotychczasowego błędu przez drugi argument. W tym przypadku realizowana operacja to $C_t = f_t \odot C_{t-1} + i_t \odot \tilde{C}_t$. W wyniku propagacji wstecznej uzyskujemy pochodną $\frac{\partial L}{\partial C_t}$. Opearcja dodawnia nie zmienia wartość błędu, więc $\frac{\partial L}{\partial (f_t \odot C_{t-1})} = \frac{\partial L}{\partial C_t}$. Przy operacji mnożenia pochodna cząstkowa względem $C_{t-1}$ wynosi $\frac{\partial C_t}{\partial C_{t-1}} = f_t$. Błąd propagowany przez komórkę pamięci ma ostateczną wartość: $\frac{\partial L}{\partial C_{t-1}} = \frac{\partial L}{\partial C_t} f_t$. Ze względu na zbiór wartości funkcji sigmoidalnej $f_t \in (0, 1)$ wartość propagowanego błędu nadal jest pomniejszana w każdym kroku. Intuicyjnie wartość błędu jest zmniejszana w takim samym stopniu jak wartość sygnału przy normalnym przejściu przez forget gate (decyzja w jakim stopniu informacje nie są istotne w aktualnym kontekście). Zaproponowana architektura unika jednakże obliczania pochodnej względem funkcji aktywacji sigmoidalnej (pochodna funkcji sigmoidalnej: $\frac{d \sigma}{dx} = \sigma (x)(1 - \sigma (x)$) przy propagacji wstecznej błędu, co powoduje wolniejsze zmniejszanie wartości sygnału błędu. 
+	\caption{Schemat komórki LSTM z zaznaczoną komórką pamięci.} W przypadku propagacji wstecznej przy cofaniu się przez graf obliczeniowy sieci węzły odpowiadające operacji dodawania propagują wartość błędu bez modyfikacji wartości. Węzły w grafie odpowiadające operacji mnożenia powodują przemnożenie wartości dotychczasowego błędu przez drugi argument. W tym przypadku realizowana operacja to $C_t = f_t \odot C_{t-1} + i_t \odot \tilde{C}_t$. W wyniku propagacji wstecznej uzyskujemy pochodną $\frac{\partial L}{\partial C_t}$. Opearcja dodawnia nie zmienia wartość błędu, więc $\frac{\partial L}{\partial (f_t \odot C_{t-1})} = \frac{\partial L}{\partial C_t}$. Przy operacji mnożenia pochodna cząstkowa względem $C_{t-1}$ wynosi $\frac{\partial C_t}{\partial C_{t-1}} = f_t$. Błąd propagowany przez komórkę pamięci ma ostateczną wartość: $\frac{\partial L}{\partial C_{t-1}} = \frac{\partial L}{\partial C_t} f_t$. Ze względu na zbiór wartości funkcji sigmoidalnej $f_t \in (0, 1)$ wartość propagowanego błędu nadal jest pomniejszana w każdym kroku. Intuicyjnie wartość błędu jest zmniejszana w takim samym stopniu jak wartość sygnału przy normalnym przejściu przez forget gate (decyzja w jakim stopniu informacje nie są istotne w aktualnym kontekście). Zaproponowana architektura unika jednakże obliczania pochodnej względem funkcji aktywacji sigmoidalnej (pochodna funkcji sigmoidalnej: $\frac{d \sigma}{dx} = \sigma (x)(1 - \sigma (x)$) przy propagacji wstecznej błędu, co powoduje wolniejsze zmniejszanie wartości sygnału błędu. Źródło: \cite{colah}. 
 	\label{fig:lstm-mem-cell}
 \end{figure}
 
@@ -515,7 +514,7 @@ W swojej pracy \cite{LSTM} Hochreiter i Schmidhuber odnoszą się do wcześniejs
 \begin{figure}
 \centering
 	\includegraphics[width=0.5\textwidth]{img/LSTM3-var-GRU.png}
-	\caption{Schemat komórki GRU.} Źródło: http://colah.github.io/posts/2015-08-Understanding-LSTMs/
+	\caption{Schemat komórki GRU.} Źródło: \cite{colah}.
 	\label{fig:gru}
 \end{figure}
 
@@ -548,9 +547,7 @@ gdzie $W_z$ i $U_z$ to wagi skojarzone z update gate. Update gate jest wykorzyst
 \end{equation}
 
 
-Update gate odpowiada za określanie w jakim stopniu stan ukryty sieci z poprzedniego kroku $h_{t-1}$ jest nadal aktualny. Informacja ta jest wykorzystywana również do określenia w jakim stopniu $\tilde{h_t}$ może zastąpić $h_{t-1}$. Jest to znacząca zmiana w porównaniu do LSTM, gdzie do określania aktualności poprzedniego stanu i wyliczonego w aktualnym kroku służyły dwie osobne bramki. Schemat komórki GRU został przedstawiony na rys \ref{fig:gru}.
-
-
+Update gate odpowiada za określanie w jakim stopniu stan ukryty sieci z poprzedniego kroku $h_{t-1}$ jest nadal aktualny. Informacja ta jest wykorzystywana również do określenia w jakim stopniu $\tilde{h_t}$ może zastąpić $h_{t-1}$. Jest to znacząca zmiana w porównaniu do LSTM, gdzie do określania aktualności poprzedniego stanu i wyliczonego w aktualnym kroku służyły dwie osobne bramki. Schemat komórki GRU został przedstawiony na rys \ref{fig:gru}. Teoretyczne aspekty podstawowych pojęć omawianych w pracy i wprowadzona notacja posłużą w kolejnym rozdziale do wprowadzenia architektury ReNet wraz ze omówieniem wprowadzonej modyfikacji. 
 
 
 
@@ -563,11 +560,11 @@ W niniejszym rozdziale omówiono architekturę sieci ReNet i modyfikacje jakie z
 \begin{figure}
 \centering
 	\includegraphics[width=0.5\textwidth]{img/ReNet.png}
-	\caption{Schemat działania warstwy sieci ReNet.} Źródło: https://arxiv.org/abs/1505.00393
+	\caption{Schemat działania warstwy sieci ReNet.} Źródło: \cite{DBLP:journals/corr/VisinKCMCB15}.
 	\label{fig:ReNet-single-layer}
 \end{figure}
 
-Sieci ReNet \cite{DBLP:journals/corr/VisinKCMCB15} są alternatywą dla sieci konwolucyjnych w zadaniu rozpoznawania obrazów. Warstwy konwolucyjne realizują operację nakładania maski na tensor wejściowy, przez co informacje na wyjściu warstwy mają charakter lokalny. Sieć konwolucyjna w normalnym przypadku nie jest w stanie wykorzystać w pojedynczej warstwie informacji na temat całego obrazu. ReNet jest sposobem na zaadresowanie tej kwestii poprzez wykorzystanie sieci rekurencyjnej do obliczania aktywacji warstwy sieci z wykorzystaniem informacji zawartej w całym obrazie.
+Sieci ReNet \cite{DBLP:journals/corr/VisinKCMCB15} są alternatywą dla sieci konwolucyjnych w zadaniu rozpoznawania obrazów. Warstwy konwolucyjne realizują operację nakładania filtrów na tensor wejściowy, przez co informacje na wyjściu warstwy mają charakter lokalny. Warstwa konwolucyjna w normalnym przypadku nie jest w stanie wykorzystać informacji zawartej w całym obrazie. ReNet jest sposobem na zaadresowanie tej kwestii poprzez wykorzystanie sieci rekurencyjnej do obliczania aktywacji warstwy sieci z wykorzystaniem informacji zawartej w całym obrazie.
 
 Każda warstwa ReNet składa się z czterech sieci rekurencyjnych, które skanują obraz w czterech kierunkach: z góry na dół, od dołu do góry, z lewej do prawej oraz z prawej do lewej (rys. \ref{fig:ReNet-single-layer}). Wejściem każdej z sieci jest zbiór pikseli o niewielkich rozmiarach rozmiarach (ang. patch). W każdym kroku aktywacja warstwy ReNet jest obliczana na podstawie poprzedniego stanu sieci i aktualnie analizowanego zbioru pikseli. 
 
@@ -584,7 +581,7 @@ gdzie $w, h$ to rozmiary obrazu, a $c$ to liczba kanałów dla każdego piksela 
 	J=\frac{h}{h_p} \nonumber
 \end{gather}
 
-gdzie $w_p$ i $h_p$ to wysokość i szerokość patha. Zbiór wszystkich patchy obrazu wejściowego jest dany jako: $P = \{p_{i,j}\}, P \in \mathbb{R}^{w_p \textrm{x} h_p \textrm{x} c}$. Pionowe przejście sieci po wszystkich patchach obrazu można zapisać jako funkcję aktywacji sieci rekurencyjnej:
+gdzie $w_p$ i $h_p$ to wysokość i szerokość patha. Zbiór wszystkich patchy obrazu wejściowego jest dany jako: $P = \{p_{i,j}\}, P \in \mathbb{R}^{w_p \textrm{x} h_p \textrm{x} c}$. Pionowe przejście sieci po wszystkich patchach obrazu można zapisać jako funkcję aktualnego patcha i aktywacji poprzedniego patcha:
 
 \begin{gather}
     v_{i,j}^{F} = f_{VFWD} (v_{i,j-1}^F, p_{i,j}), \\
@@ -593,7 +590,7 @@ gdzie $w_p$ i $h_p$ to wysokość i szerokość patha. Zbiór wszystkich patchy 
 
 gdzie $f_{VFWD} (v_{i,j-1}^F, p_{i,j})$ to aktywacja sieci rekurencyjnej lub aktywacja komórki LSTM lub GRU. Wyjście po przejściu pionowym stanowi tensor $V = \{v_{i,j}\}_{i=1,...,I}^{j=1,...,J}$, będący mapą cech. Każdy element wyjścia $v_{i,j} \in \mathbb{R}^{2d}$ stanowi konkatenację aktywacji przejścia z góry na dół i z dołu na górę, gdzie $d$ to liczba jednostek rekurencyjnych wykorzystanych dla jednego patcha. Tensor $V$ jest wejściem dla drugiego elementu warstwy sieci realizującego przejście poziome. Operacja przejścia poziomego jest zdefiniowana analogicznie przez obliczenie aktywacji $f_{HFWD}, f_{HREV}$. Wynikiem tej operacji jest tensor $H = \{h_{i,j}\}$. 
 
-Ostatecznie przekształcenie $\Phi$ realizowane przez całą warstwę sieci może zostać zapisane z wykorzystaniem wprowadzonych oznaczeń jako:
+Ostatecznie przekształcenie $\Phi$ realizowane przez całą warstwę sieci ReNet może zostać zapisane z wykorzystaniem wprowadzonych oznaczeń jako:
 
 \begin{equation}
 	\Phi: X \rightarrow V \rightarrow H
@@ -602,30 +599,30 @@ Ostatecznie przekształcenie $\Phi$ realizowane przez całą warstwę sieci moż
 \begin{figure}
 \centering
 	\includegraphics[width=0.9\textwidth]{img/ReNetArch.png}
-	\caption{Schemat przepływu informacji w sieci ReNet.} Model ten został wykorzystany przez twórców architektury dla zbioru SVHN. Powyższy schemat przedstawia sieć z trzema warstwami ReNet, dwoma w pełni połączonymi warstwami oraz warstwą softmax. Każda warstwa ReNet składa się z dwóch etapów: sieci skanujących obraz w kierunku góra-dół, dół-góra oraz lewo-prawo, prawo-lewo. Rozmiar patchy sieci w każdej warstwie wynosi 2x2. Warto zauważyć, że rozmiar patchy przy skanowaniu sieci w kierunku poziomym musi wynosić 1x1, aby aktwacje obliczane przy przejściu poziomym dotyczyły tej samej części obrazu co przy przejściu pionowym (w trakcie przejścia pionowego patch o rozmiarze 2x2xc zostaje zamieniony na aktywacje sieci 1x1xd, gdzie d to liczba neuronów w warstwie). Liczba neuronów sieci rekurencyjnej dla pojedynczego przejścia wynosi 256. Aktywacje każdego neuronu ukrytego są łączone dla przejść w przeciwnych kierunkach, więc wyjście po dwóch przejściach jest tensorem o rozmiarach $I,J,2d$. W każdej warstwie następuje zmniejszenie wymiarów obrazu, co powoduje brak konieczności stosowania poolingu po warstwie ReNet. Warstwy w pełni połączone zawierają 4096 neuronów i wykorzystują funkcję aktywacji ReLu. Źródło: https://arxiv.org/abs/1505.00393
+	\caption{Schemat przepływu informacji w sieci ReNet.} Model ten został wykorzystany przez twórców architektury dla zbioru SVHN. Powyższy schemat przedstawia sieć z trzema warstwami ReNet, dwoma w pełni połączonymi warstwami oraz warstwą softmax. Obliczenia przeprowadzane w warstwie ReNet składają się z dwóch etapów: sieci skanujących obraz w kierunku góra-dół, dół-góra oraz lewo-prawo, prawo-lewo. W zastosowanej sieci rozmiar patchy w każdej warstwie wynosi 2x2. Warto zauważyć, że rozmiar patchy przy skanowaniu sieci w kierunku poziomym musi wynosić 1x1, aby aktwacje obliczane przy przejściu poziomym dotyczyły tej samej części obrazu co przy przejściu pionowym (w trakcie przejścia pionowego patch o rozmiarze 2x2xc zostaje zamieniony na aktywacje sieci 1x1x2d, gdzie d to liczba neuronów ukrytych w sieci rekurencyjnej - w tym wypadku d = 256). Aktywacje neuronów ukrytych są łączone dla przejść w przeciwnych kierunkach, więc wyjście po dwóch przejściach jest tensorem o rozmiarach $I,J,2d$. W każdej warstwie następuje zmniejszenie wymiarów obrazu. Efektem jest brak konieczności stosowania poolingu po warstwie ReNet. Warstwy w pełni połączone zawierają 4096 neuronów i wykorzystują funkcję aktywacji ReLu. Źródło: \cite{DBLP:journals/corr/VisinKCMCB15}
 	\label{fig:ReNet}
 \end{figure}
 
-Każda kolejna warstwa sieci ReNet korzysta z wyjścia poprzedniej warstwy. Schemat działania sieci dla przykładowego zbioru danych, wraz z omówieniem realizowanych operacji został przedstawiony na rysunku \ref{fig:ReNet}.
+Każda kolejna warstwa sieci ReNet korzysta z wyjścia poprzedniej warstwy. Schemat działania sieci dla przykładowego obrazu, wraz z omówieniem realizowanych operacji został przedstawiony na rysunku \ref{fig:ReNet}.
 
 \section{Krzywe wypełniające przestrzeń}
 
 \begin{figure}
 \centering
 	\includegraphics[width=0.9\textwidth]{img/peano_curve.png}
-	\caption{Pierwsze trzy elementy ciągu tworzącego krzywą Peano.} Źródło: https://en.wikipedia.org/wiki/File:Peanocurve.svg
+	\caption{Pierwsze trzy elementy ciągu tworzącego krzywą Peano.} Źródło: \cite{peano}.
 	\label{fig:peano}
 \end{figure}
 
-Krzywe wypełniające przestrzeń to krzywe, których punkty pokrywają wszystkie punkty należące do kwadratu jednostkowego. W szczególności jeśli określimy krzywą wypełniającą jaką funkcję, która jest określona na przedziale jednostkowym $[0, 1]$, to krzywa wypełniająca przestrzeń będzie definiować mapowanie z przestrzeni dwuwymiarowej do jednowymiarowej i odwrotnie. 
+Krzywe wypełniające przestrzeń to krzywe, które przedstawione na płaszczyźnie zawierają wszystkie punkty z kwadratu jednostkowego. W szczególności jeśli określimy krzywą wypełniającą jaką funkcję, która jest określona na przedziale jednostkowym $[0, 1]$, to krzywa wypełniająca przestrzeń będzie definiować mapowanie z przestrzeni dwuwymiarowej do jednowymiarowej i odwrotnie. 
 
-Krzywe wypełniające przestrzeń są często określane przez rekurencyjny ciąg krzywych $k(n)$ ze zdefiniowanym pierwszym elementem $k(0)$ oraz sposobem konstruowania kolejnych krzywych:
+Krzywa wypełniająca przestrzeń $\kappa$ może zostać określona określane przez rekurencyjny ciąg krzywych $k(n)$ ze zdefiniowanym pierwszym elementem $k(0)$ oraz sposobem konstruowania kolejnych:
 
 \begin{equation}
 	k(n+1) = f(k(n))
 \end{equation}
 
-Krzywa wypełniająca przestrzeń $\kappa$ jest wtedy następującą granicą:
+$\kappa$ jest wtedy następującą granicą:
 
 \begin{equation}
 	\kappa = \lim_{n \rightarrow + \infty } k(n)
@@ -635,8 +632,8 @@ Krzywa wypełniająca przestrzeń $\kappa$ jest wtedy następującą granicą:
 
 \begin{figure}
 \centering
-	\includegraphics[width=0.9\textwidth]{img/hilbert_curve.png}
-	\caption{Pierwsze sześć elementy ciągu tworzącego krzywą Hilberta.} Nad górnymi obrazkami zostały umieszczone punkty, do których zostałyby przypisane charakterystyczne punkty obrazu. Warto zwrócić uwagę, że dla krzywej stopnia pierwszego punkt 3 zostałby zmapowany w ten sam przedział odcinka co punkty 9, 10, 11 i 12 dla krzywej stopnia drugiego. Źródło: https://upload.wikimedia.org/wikipedia/commons/thumb/a/a5/Hilbert\_curve.svg/400px-Hilbert\_curve.svg.png
+	\includegraphics[width=1.0\textwidth]{img/hilbert_curve.png}
+	\caption{Pierwsze sześć elementy ciągu tworzącego krzywą Hilberta.} Nad górnymi obrazkami zostały umieszczone punkty, do których zostałyby przypisane charakterystyczne punkty obrazu. Warto zwrócić uwagę, że dla krzywej stopnia pierwszego punkt 3 zostałby zmapowany w ten sam przedział odcinka co punkty 9, 10, 11 i 12 dla krzywej stopnia drugiego. Źródło: \cite{hilbert}.
 	\label{fig:hilbert}
 \end{figure}
 
@@ -644,7 +641,7 @@ Krzywa Hilberta $\mathcal{H}$ to krzywa wypełniająca przestrzeń posiadająca 
 
 Każdy z punktów będący końcem odcinka tworzącego krzywą Hilberta można przyjąć jako piksel obrazu. Korzystając z tego założenia krzywa Hilberta definiuje sposób przejścia po obrazie i zamianie współrzędnych dwuwymiarowych na jednowymiarowe.
 
-Dodatkowo fraktalna struktura krzywej Hilberta powoduje, że odpowiednio wybrany fragment krzywej też jest krzywą Hilberta. Ta sama właściwość zachodzi dla elementu ciągu tworzącego krzywą, z tą różnicą, że wybrany fragment będzie krzywą mniejszego wymiaru. Fraktalna struktura powoduje również, że wraz ze wzrostem stopnia krzywej punkty znajdujące się w określonych częściach obrazu są mapowane do tych samych fragmentów krzywej. Własność ta została zademonstrowana na rys. \ref{fig:hilbert}.
+Dodatkowo fraktalna struktura krzywej Hilberta powoduje, że odpowiednio wybrany fragment krzywej też jest krzywą Hilberta. Ta sama właściwość zachodzi dla elementu ciągu tworzącego krzywą, z tą różnicą, że wybrany fragment będzie poprzednim elementem ciągu. Fraktalna struktura powoduje również, że wraz ze wzrostem stopnia krzywej punkty znajdujące się w określonych częściach obrazu są mapowane do tych samych fragmentów krzywej. Własność ta została zademonstrowana na rys. \ref{fig:hilbert}.
 
 \section{Proponowana architektura sieci}
 
@@ -654,7 +651,7 @@ Modyfikacja architektury ReNet proponowana w tej pracy to wykorzystanie krzywej 
 	x^{h} = \mathcal{H}(x)
 \end{equation}
 
-Aby uzyskać redukcję rozmiaru obrazu jak w oryginalnej ReNet i warstwach Poolingowych sieci konwolucyjnych wykorzystano podział na patche w analogiczny sposób do ReNet. W przypadku zmodyfikowanej ReNet zdefiniowano patche jako zbiór następujących po sobie pikseli po transformacji obrazu do jednego wymiaru: $P^{h} = \{ p_{i}^h \}$, $P^{h} \in \mathbb{R}^{w_p \textrm{x} c}$. Piksele należącego do tego samego patcha są traktowane jako jedno wejście sieci rekurencyjnej. Tak jak w przypadku oryginalnej ReNet pozwala to na redukcję wymiarów obrazu.
+Aby uzyskać redukcję rozmiaru obrazu jak w oryginalnej ReNet i warstwach Poolingowych sieci konwolucyjnych wykorzystano podział na patche w analogiczny sposób do ReNet. W przypadku zmodyfikowanej ReNet zdefiniowano patche jako zbiór następujących po sobie pikseli po transformacji obrazu do jednego wymiaru: $P^{h} = \{ p_{i}^h \}$, $P^{h} \in \mathbb{R}^{w_p \textrm{x} c}$. Piksele należącego do tego samego patcha są traktowane jako jedno wejście sieci rekurencyjnej.
 
 Zastąpiono cztery sieci rekurencyjne z warstwy ReNet dwiema sieciami rekurencyjnymi. Każda z sieci wykorzystuje wynik mapowania z dwóch wymiarów do jednego jako wejścia. Jedna z sieci przyjmuje wejścia w odwrotnej kolejności niż druga. Korzystając z notacji zdefiniowanej dla ReNet realizowane przekształcenie można zapisać jako:
 
@@ -663,42 +660,42 @@ Zastąpiono cztery sieci rekurencyjne z warstwy ReNet dwiema sieciami rekurencyj
 	v_{i}^{R} = f_{REV}(v_{i+1}^{F}, p_{i}^{h})
 \end{gather}
 
-Wyjście sieci stanowi konkatenacja obliczonych aktywacji w obu kierunkach. Możliwe jest wykorzystanie patcha o rozmiarze 1. W tym przypadku sieć oblicza aktywacje jak dwukierunkowa rekurencyjna sieć.
+Wyjście sieci stanowi konkatenacja obliczonych aktywacji w obu kierunkach. Możliwe jest wykorzystanie patcha o rozmiarze 1. W tym przypadku sieć oblicza aktywacje jak dwukierunkowa sieć rekurencyjna.
 
-Korzystając ze fraktalnych właściwości krzywej Hilberta elementy obrazu po zmapowaniu i obliczeniu aktywacji sieci rekurencyjnych powinny nadal odpowiadać obszarom oryginalnych obrazów. Zastąpienie czterech sieci rekurencyjnych z architektury ReNet przez dwie może wpłynąć na czas trenowania sieci lub na zwiększoną elastyczność przy doborze struktury modelu. W przypadku gdy dla podobnej liczby warstw ReNet i zmodyfikowanej ReNet uzyskiwane wyniki klasyfikacji będą porównywalne oczekiwane jest skrócenie czasu trenowania. W przypadku gdy zmodyfikowana sieć ReNet będzie miała mniejsze zdolności do wytworzenia wartościowej reprezentacji, można zwiększyć jej możliwości przez dodanie dodatkowej warstwy z rozmiarem patcha 1. Istnieje możliwość dodania warstwy sieci z ReNet z rozmiarem patcha (1,1), ale spowoduje to dodanie czterech sieci rekurencyjnych. Należy mieć na uwadze, że są to modele wymagające znaczących nakładów mocy obliczeniowej, więc zmniejszenie liczby sieci rekurencyjnych na warstwę powinno umożliwić bardziej precyzyjne dostosowanie modelu do rozwiązywanego problemu.
+Korzystając z fraktalnych właściwości krzywej Hilberta elementy obrazu po zmapowaniu i obliczeniu aktywacji sieci rekurencyjnych powinny nadal odpowiadać obszarom oryginalnych obrazów. Zastąpienie czterech sieci rekurencyjnych z architektury ReNet przez dwie może wpłynąć na czas trenowania sieci lub na zwiększoną elastyczność przy doborze struktury modelu. W przypadku gdy dla podobnej liczby warstw ReNet i zmodyfikowanej ReNet uzyskiwane wyniki klasyfikacji będą porównywalne oczekiwane jest skrócenie czasu trenowania. W przypadku gdy zmodyfikowana sieć ReNet będzie miała mniejsze zdolności do wytworzenia wartościowej reprezentacji, można zwiększyć jej możliwości przez dodanie dodatkowej warstwy z rozmiarem patcha 1. Istnieje możliwość dodania warstwy sieci z ReNet z rozmiarem patcha (1,1), ale spowoduje to dodanie czterech sieci rekurencyjnych. Należy mieć na uwadze, że są to modele wymagające znaczących nakładów mocy obliczeniowej, więc zmniejszenie liczby sieci rekurencyjnych na warstwę powinno umożliwić bardziej precyzyjne dostosowanie modelu do rozwiązywanego problemu. Dysponując opisem modeli zastosowanych w pracy i teoretycznymi podstawami wprowadzonymi w dwóch minionych rozdziałach można przystąpić do opisu przeprowadzonych eksperymentów.
 
 
 \chapter{Przeprowadzone badania}
+
+Rozdział ten zawiera opis metodyki prowadzenia badań wraz z przyjętym planem. Zawarto w nim także wyniki reprodukcji wyników z  pracy wprowadzającej ReNet, opis zbiorów danych i procedurę doboru hiperparametrów modeli.
 
 \section{Metodyka badań}
 W niniejszej sekcji omówiono przyjęty podział badań, oraz omówiono metodologię badawczą przyjętą do ich zrealizowania.
 
 \subsection{Plan badań}
-Badania podzielono na trzy zasadnicze części. Pierwszą z nich stanowiła reprodukcja wyników z \cite{DBLP:journals/corr/VisinKCMCB15}. Druga część polegała na porównaniu sieci ReNet, zmodyfikowanej wersji ReNet oraz sieci konwolucyjnych. W pracy \cite{DBLP:journals/corr/VisinKCMCB15} zawarto informacje o wpływie wykorzystanej sieci rekurencyjnej na jakość klasyfikacji ReNet. Wykorzystanie LSTM i GRU daje bardzo podobne rezultaty, natomiast wykorzystanie RNN nie pozwala na uzyskanie tak dobrych wyników jak dla LSTM i GRU. W trzeciej części zbadano wpływ wykorzystanej sieci rekurencyjnej na zmodyfikowaną wersję ReNet.
+Badania podzielono na trzy zasadnicze części. Pierwszą z nich stanowiła reprodukcja wyników z \cite{DBLP:journals/corr/VisinKCMCB15}. Druga część polegała na porównaniu sieci ReNet, zmodyfikowanej wersji ReNet oraz sieci konwolucyjnych. W \cite{DBLP:journals/corr/VisinKCMCB15} zawarto informacje o wpływie wykorzystanej sieci rekurencyjnej na jakość klasyfikacji ReNet. W trzeciej części badań planowano zbadać wpływ wykorzystanej sieci rekurencyjnej na zmodyfikowaną wersję ReNet.
 
-\subsection{Przyjęta metodyka porównywania modeli}
+\subsection{Przyjęte metryki i sposób uczenia sieci}
 W celu porównania jakości klasyfikacji porównano skuteczność klasyfikacji (accuracy), osiąganą na zbiorze testowym. W celu zredukowania wpływu wariancji estymatora na uzyskane wyniki zastosowano pięciokrotny sprawdzian krzyżowy. Każdy z algorytmów dysponował tymi samymi foldami jako zbiory testowe. 
 
-Modele trenowano przez 50 epok, z rozmiarem batchy wynoszącym 32. Jako funkcję strat przyjęto entropię krzyżową. W trakcie uczenia monitorowano wartość funkcji start na zbiorze testowym i przerywano uczenie w momencie wystąpienia overfitingu. Następnie przywracano wagi dla modelu osiągającego najniższą odnotowaną wartość funkcji strat, tak jak zasugerowano w \cite{Goodfellow-et-al-2016}. Dodatkowo wykorzystano proces śledzenia wartości funkcji strat dla zbioru testowego. W przypadku braku poprawy wartości przez 5 epok zmniejszano współczynnik uczenia dziesięciokrotnie. Porównano wyniki osiągane dla trzech algorytmów uczenia: SGD, RMSprop oraz Adam. Najlepsze rezultaty osiągnięto dla algorytmu Adam, przez co został on wybrany jako algorytm optymalizacji we wszystkich eksperymentach.
-
-Do ewaluacji statystycznej wyników uzyskanych w części drugiej i trzeciej badań wykorzystano test Friedmana z testami post-hoc Nemenyiego. 
+Modele trenowano przez 50 epok, z rozmiarem batchy 32. Jako funkcję strat przyjęto entropię krzyżową. W trakcie uczenia monitorowano wartość funkcji start na zbiorze testowym i przerywano uczenie w momencie wystąpienia overfitingu, zgodnie z algorytmem w \cite{Goodfellow-et-al-2016}. Po wystąpieniu overfittingu i przerwaniu uczenia przywracano wagi dla modelu osiągającego najniższą odnotowaną wartość funkcji strat. Zmniejszano współczynnik uczenia po 5 epokach bez poprawy wartości funkcji strat dla zbioru testowego. Porównano wyniki osiągane dla trzech algorytmów uczenia: SGD, RMSprop oraz Adam. Najlepsze rezultaty osiągnięto dla algorytmu Adam, przez co został on wybrany jako algorytm optymalizacji we wszystkich eksperymentach.
 
 \section{Reprodukcja wcześniejszych badań}
 
-Pierwszym eksperymentem jaki wykonano było zreprodukowanie wyników z \cite{DBLP:journals/corr/VisinKCMCB15}. Celem reprodukcji było potwierdzenie przesłanki do badań oraz sprawdzenie poprawności przygotowanej implementacji ReNet. Wykorzystano zbiory MNIST, CIFAR10 oraz SVHN \cite{svhn}. W niniejszej sekcji podano krótki opis stosowanej metodyki i uzyskane wyniki.
+Pierwszym eksperymentem jaki wykonano było zreprodukowanie wyników z \cite{DBLP:journals/corr/VisinKCMCB15}. Celem reprodukcji było sprawdzenie poprawności przygotowanej implementacji ReNet. Wykorzystano zbiory MNIST, CIFAR10 oraz SVHN \cite{svhn}. W niniejszej sekcji podano krótki opis stosowanej metodyki i uzyskane wyniki.
 
 \subsection{Statystyczna ewaluacja wyników}
 
-Reprodukcja badań nie stanowi zasadniczej części badań. Z tego względu uproszczono proces zbierania wyników. Podane rezultaty są wynikiem pojedynczego procesu uczenia, bez powtarzania prób. W \cite{tom-mitchell-machine-learning} podano sposób analizy błędu pojedynczego pomiaru skuteczności algorytmu.
+Reprodukcja badań nie stanowi zasadniczej części badań. Z tego względu uproszczono proces zbierania wyników. Podane rezultaty są wynikiem pojedynczego procesu uczenia, bez powtarzania prób. W \cite{tom-mitchell-machine-learning} podano metody analizy błędu pojedynczego pomiaru skuteczności algorytmu.
 
-Dysponując zbiorem danych $d$ wylosowanym z pewnego nieznanego rozkładu $\mathcal{D}$ chcemy oszacować rzeczywisty błąd $err_{\mathcal{D}}$ popełniany przy przez hipotezę $h$ dla dowolnego datasetu wylosowanego z $\mathcal{D}$. Błąd popełniony na datasetcie $err_d$, dany jest wzorem:
+Chcemy oszacować rzeczywisty błąd $err_{\mathcal{D}}$ popełniany przy przez hipotezę $h$ dla dowolonej próbki z rozkładu generującego dane $\mathcal{D}$ (ang. datagenerating distribution). W przypadku gdy $\mathcal{D}$ nie jest znane dysponujemy zbiorem danych $d$ wylosowanym z $\mathcal{D}$. Błąd popełniony przez $h$ na datasetcie $d$ dany jest wzorem:
 
 \begin{equation}
 	err_d = \frac{t}{n}
 \end{equation}
 
-gdzie $t$ to liczba błędnie zaklasyfikowanych przykładów z $n$ wszystkich przykładów w zbiorze uczącym $d$.
-Przy założeniu, że $d$ zawiera próbki niezależne od siebie oraz od $h$ i $n$ jest większe od 30, $err_d$ jest najlepszym estymatorem $err_{\mathcal{D}}$. Przedział w którym wartość $err_{\mathcal{D}}$ znajduję się z prawdopodobieństwem około 95\% można wyznaczyć jako:
+gdzie $t$ to liczba błędnie zaklasyfikowanych przykładów z $n$ wszystkich przykładów w zbiorze $d$.
+Przy założeniu, że $d$ zawiera próbki niezależne od siebie i $n$ jest większe od 30, $err_d$ jest najlepszym estymatorem $err_{\mathcal{D}}$. Przedział w którym wartość $err_{\mathcal{D}}$ znajduję się z prawdopodobieństwem około 95\% można wyznaczyć jako:
 
 \begin{equation}
 	err_{d} \pm 1.96 \sqrt{\frac{err_{d}(1 - err_{d})}{n}} 
@@ -725,13 +722,15 @@ Przedziały te zostały podane wraz z uzyskanymi w trakcie reprodukcji badań wa
 \end{tabular}
 \end{table}
 
-Wynik reprodukcji został przedstawiony w tabeli \ref{tab:reproduction}. Można z łatwością zauważyć, że wyniki uzyskane przez twórców architektury ReNet są lepsze niż wyniki uzyskane dla przygotowanej implementacji. Żaden z wcześniej uzyskanych wyników nie mieści się przedziale ufności błędu obecnej implementacji.
+Wynik reprodukcji został przedstawiony w tabeli \ref{tab:reproduction}. Można z łatwością zauważyć, że wartości accuracy uzyskanej przez twórców architektury ReNet są lepsze niż wyniki uzyskane dla przygotowanej implementacji. Żaden z wcześniej uzyskanych wyników nie mieści się przedziale ufności błędu obecnej implementacji.
 
-Szczególnie niepokojące mogą być wartości błędu dla zbiorów cifar10 oraz svhn. W przypadku drugiego datasetu jest to związane z przerwaniem obliczeń po 5 epokach ze względu na brak pamięci. Model stosowany przy obecnej implementacji dla svhn wymagał wiele pamięci i jego trenowanie przebiegało niezwykle wolno. Czas uczenia jednej epoki wynosił  ponad godzinę. Zaobserwowano znaczący spadek czasu uczenia sieci przy wykorzystaniu RMSprop jak algorytmu optymalizacji. Zastosowanie w tym przypadku RMSprop wpłynęłoby na uzyskane wyniki, jednocześnie znacznie podważając wartość reprodukcji. Przyczyną znacząco gorszych wyników uzyskanych dla cifar10 i svhn może być także niewystarczająco dokładny dobór hiperparametrów sieci. Twórcy ReNet nie podali hiperparametrów takich jak współczynnik uczenia, czy prawdopodobieństwo wykluczenia neuronu w warstwie Dropout stosowanych w ich eksperymentach, co w tym przypadku utrudnia reprodukcję.
+Szczególnie niepokojące mogą być wartości błędu dla zbiorów cifar10 oraz svhn. W przypadku drugiego datasetu jest to związane z przerwaniem obliczeń po 5 epokach ze względu na brak pamięci. Model stosowany przy obecnej implementacji dla svhn wymagał wiele pamięci i jego trenowanie przebiegało niezwykle wolno. Czas uczenia jednej epoki wynosił  ponad godzinę. Zaobserwowano znaczący spadek czasu uczenia sieci przy wykorzystaniu RMSprop jak algorytmu optymalizacji. Zastosowanie w tym przypadku RMSprop wpłynęłoby na uzyskane wyniki, jednocześnie znacznie podważając wartość reprodukcji. Przyczyną znacząco gorszych wyników uzyskanych dla cifar10 i svhn może być także niewystarczająco dokładny dobór hiperparametrów sieci. Twórcy ReNet nie podali hiperparametrów takich jak współczynnik uczenia, czy prawdopodobieństwo wykluczenia neuronu w warstwie Dropout stosowanych w ich eksperymentach, co w tym przypadku znacząco utrudnia reprodukcję.
 
 W związku z uzyskanymi rezultatami nasuwa się pytanie czy przygotowana implementacja sieci ReNet jest błędna? W tym momencie warto zwrócić uwagę na bardzo zbliżone wyniki oryginalnych badań i reprodukcji uzyskane dla datasetu mnist. Dodatkowo wyżej wymienione przypuszczalne powody słabych wyników nie muszą wskazywać na występowanie błędu w implementacji. 
 
-Przeprowadzono dodatkową weryfikację poprawności implementacji ReNet przed przystąpieniem do dalszej pracy. Aby przeprowadzić test, należy wykorzystać możliwość ustawiania wag sieci rekurencyjnych wewnątrz ReNet. Przy odpowiednio dobranych wartościach wag i funkcji aktywacji sieć LSTM może w każdym kroku czasowym zwracać aktualną wartość podaną na wejście. Dla wcześniej przyjętej parametryzacji LSTM można przyjąć wartości wag:
+\subsection{Testowanie poprawności implementacji}
+
+Przeprowadzono dodatkową weryfikację poprawności implementacji ReNet przed przystąpieniem do dalszej pracy. Aby przeprowadzić test, należy wykorzystać możliwość ustawiania wag sieci rekurencyjnych zawartych w warstwie ReNet. Przy odpowiednio dobranych wartościach wag i funkcjach aktywacji sieć LSTM może działać jak mapowanie identycznościowe w każdym kroku czasowym. Oznacza to, że w każdym kroku czasowym wyjście sieci  będzie aktualną wartość wejścia. Dla wcześniej przyjętej parametryzacji LSTM można przyjąć wartości wag:
 
 \begin{align*}
 	W_f &= \bb{0} \\
@@ -746,7 +745,7 @@ Następnie należy zastąpić funkcję aktywacji $tanh$ przez funkcję identyczn
 
 \section{Opis eksperymentu}
 
-W niniejszej sekcji przedstawiono szczegóły konfiguracji eksperymentu. Opisano wykorzystane zbiory danych, hardware oraz inne narzędzia takie jak biblioteki. Dodatkowo omówiono przyjętą metodykę wyboru hiperparametrów modelu.
+W niniejszej sekcji przedstawiono szczegóły konfiguracji eksperymentu. Opisano wykorzystane zbiory danych, hardware, biblioteki oraz inne narzędzia. Dodatkowo omówiono przyjętą metodykę wyboru hiperparametrów modelu.
 
 \subsection{Zbiory danych}
 
@@ -769,23 +768,23 @@ W niniejszej sekcji przedstawiono szczegóły konfiguracji eksperymentu. Opisano
 \end{tabular}
 \end{table}
 
-Do przeprowadzenia eksperymentów wykorzystano datasety z różnych domen, mające przetestować zdolność badanych sieci do ekstrakcji cech z obrazów. Zestawienie wykorzystanych zbiorów przedstawiono w tabeli \ref{tab:dataset}. Wykorzystano datasety o różnej liczności i różnych rozmiarach obrazów oraz różnej liczbie klas.
+Do przeprowadzenia eksperymentów wykorzystano datasety z różnych domen, mające przetestować zdolność badanych sieci do ekstrakcji istotnych cech z obrazów. Zestawienie wykorzystanych zbiorów przedstawiono w tabeli \ref{tab:dataset}. Wykorzystano datasety o różnej liczności i różnych rozmiarach obrazów oraz różnej liczbie klas.
 
-W procesie przetwarzania wstępnego zmieniano rozmiar obrazów do 64x64 lub 32x32 pikseli. Dla wszystkich datasetów zastosowano przesuwanie obrazów w poziomie o -2, 0 lub 2 piksele. Jest to procedura zastosowana w badaniach wprowadzających ReNet i ma na celu zredukowanie overfittingu. W przypadku datasetu Chest X-Ray dokonano konwersji do skali szarości, ponieważ głębia kolorów nie wnosiła wiele informacji w zdjęciach rentgenowskich. Wszystkie wejścia zostały znormalizowane do zerowej średniej i jednostkowej wariancji w celu ułatwienia optymalizacji modeli. Dla przygotowanej implementacji sieci ReNet zatosowanej do obrazów o dużych rozmiarach model osiąga wielkość uniemożliwiającą trenowanie go na powszechnie dostępnych kartach graficznych. Daje to istotne ograniczenie obszaru zastosowań sieci ReNet i jednocześnie definiuje konieczny krok przetwarzania wstępnego obrazów przed rozpoczęciem procesu uczenia. Nie wszystkie zbiory uczące można poddać zmniejszeniu rozmiaru obrazu bez utraty informacji mających wpływ na klasyfikację.
+Dla wszystkich datasetów zastosowano przesuwanie obrazów w poziomie o -2, 0 lub 2 piksele. Jest to procedura zastosowana w badaniach wprowadzających ReNet i ma na celu zredukowanie overfittingu. W przypadku datasetu Chest X-Ray dokonano konwersji do skali szarości, ponieważ głębia kolorów nie wnosiła wiele informacji w zdjęciach rentgenowskich. Wszystkie wejścia zostały znormalizowane do zerowej średniej i jednostkowej wariancji w celu ułatwienia optymalizacji modeli. W procesie przetwarzania wstępnego zmieniano rozmiar obrazów do 64x64 lub 32x32 pikseli. Dla przygotowanej implementacji sieci ReNet zatosowanej do obrazów o dużych rozmiarach model osiąga wielkość uniemożliwiającą trenowanie go na powszechnie dostępnych kartach graficznych. Daje to istotne ograniczenie obszaru zastosowań sieci ReNet i jednocześnie definiuje konieczny krok przetwarzania wstępnego obrazów przed rozpoczęciem procesu uczenia. Nie wszystkie zbiory uczące można poddać zmniejszeniu rozmiaru obrazu bez utraty informacji mających wpływ na klasyfikację.
 
 Wykorzystane datasety są w różnym stopniu niezbalansowane. Problem ten rozwiązano przez zastosowanie undersamplingu zbioru treningowego do klasy zawierającej najmniejszą liczbę przykładów uczących. Rozwiązanie to zastosowano przy doborze hiperparametrów oraz przy sprawdzianie krzyżowym dla każdego foldu.
 
-W trakcie poszukiwania zbiorów danych odnotowano znaczący spadek jakość klasyfikacji modeli ReNet dla datasetów zawierających dużo klas i mało przykładów uczących przypadających na pojedynczą klasę takich jak \cite{fruits-dataset} czy \cite{face-dataset}. Analiza problemu ReNet dla tej grupy zbiorów uczących wymaga głębszych badań i wnikliwej analizy problemu, jednakże nie jest to cel tej pracy. Z tego powodu wymienione datasety nie zostały wykorzystane w dalszych testach. 
+W trakcie poszukiwania zbiorów danych odnotowano znaczący spadek jakości klasyfikacji modeli ReNet dla datasetów zawierających dużo klas i mało przykładów uczących przypadających na pojedynczą klasę takich jak \cite{fruits-dataset} czy \cite{face-dataset}. Analiza problemu ReNet dla tej grupy zbiorów uczących wymaga głębszych badań i wnikliwej analizy problemu, jednakże nie jest to cel tej pracy. Z tego powodu wymienione datasety nie zostały wykorzystane w dalszych testach. 
 
 \subsection{Wykorzystane narzędzia i hardware}
 
-Znaczna część eksperymentów została przeprowadzona na platformie Google Colab oraz Google Cloud Platform z wykorzystaniem ai platform. Google Colab, która pozwala na wykorzystanie maszyn wirtualnych z GPU i TPU do realizacji projektów naukowych. Ze względu na dynamiczną alokację maszyn wirtualnych dla każdej sesji nie można określić jaki model karty graficznej bądź TPU został wykorzystany do obliczeń. Reprodukcja badań z \cite{DBLP:journals/corr/VisinKCMCB15} została wykonana przy pomocy komputera z procesorem IntelCore i7 8700 i kartą GTX 1070Ti.
+Znaczna część eksperymentów została przeprowadzona na platformie Google Colab oraz Google Cloud Platform z wykorzystaniem AI platform. Google Colab pozwala na wykorzystanie maszyn wirtualnych z GPU i TPU do realizacji projektów naukowych. Ze względu na dynamiczną alokację maszyn wirtualnych dla każdej sesji nie można określić jaki model karty graficznej bądź TPU został wykorzystany do obliczeń. Reprodukcja badań z \cite{DBLP:journals/corr/VisinKCMCB15} oraz pomiar czasu uczenia modeli zostały wykonane przy pomocy komputera z procesorem IntelCore i7 8700 i kartą graficzną GTX 1070Ti.
 
 Implementacja analizowanych modeli została wykonana przy pomocy biblioteki keras \cite{keras} z backendem tensorflow \cite{tensorflow}. W badaniach wykorzystano także biblioteki scikit-learn \cite{scikit-learn} oraz numpy \cite{numpy}. Wszystkie datasety zostały pobrane z wykorzystaniem publicznego API seriwsu kaggle.
 
 \subsection{Dobór struktury i hiperparametrów modelu}
 
-Aby zapewnić najlepsze osiągi porównywanych algorytmów z uwzględnieniem ograniczonej mocy obliczeniowej dokonano doboru wybranych hiperparametrów modeli. Do zbioru optymalizowanych parametrów dla każdego zbioru uczącego zaliczały się:
+Aby zapewnić najlepsze osiągi porównywanych algorytmów z uwzględnieniem ograniczonej mocy obliczeniowej dokonano doboru wybranych hiperparametrów modeli. Do zbioru optymalizowanych parametrów dla każdego datasetu zaliczały się:
 
 \begin{itemize}
 \item współczynik uczenia,
@@ -805,16 +804,16 @@ Modele uczono przez 20 epok porównując osiągane wyniki. Do dalszych testów w
 \SetAlgoLined
 \caption{Procedura doboru hiperparametrów}
 1. Dobór hiprametrów mających największy wpływ na proces uczenia i.e. parametrów mających wpływ na funckję strat - współczynnik uczenia oraz współczynniki reugraryzacji l1 i l2.\\
-2. Dobór liczby warstw odpowiedzialnych za ekstrakcję cech (warstwy ReNet, zmodyfikowana ReNet oraz konwolucyjna) wraz z prawdopodobieństwiem maskowania neuronu w warstwach Dropout.\\
+2. Dobór liczby warstw odpowiedzialnych za ekstrakcję cech (warstwy ReNet, zmodyfikowana ReNet lub konwolucyjne) wraz z prawdopodobieństwiem maskowania neuronu w warstwach Dropout.\\
 3. Dobór liczby neuronów w warstwach odpowiedzialnych za ekstrakcję cech.\\
 4. Dobór liczby neuronów w warstwach w pełni połączonych wraz z prawdopodobieństwem maskowania neuronu w warstwach Dropout.\\
 \end{algorithm}
 
-Warto zwrócić uwagę, że w punkcie 4 powyższej procedury przyjęto, że każdy model posiada dwie warstwy w pełni połączone. W celu porównania wybranych architektur, modele powinny dysponować taką samą liczbą warstw dokonujących klasyfikację na podstawie nauczonej reprezentacji. Badania te nie mają na celu uzyskanie jak najlepszych możliwych modeli do rozwiązania wybranych zagadnień, a jedynie porównanie zdolności modeli do ekstrachowania odpowiednich cech z obrazów.
+Warto zwrócić uwagę, że w punkcie 4 powyższej procedury przyjęto, że każdy model posiada dwie warstwy w pełni połączone. W celu porównania wybranych architektur, modele powinny dysponować taką samą liczbą warstw dokonujących klasyfikację na podstawie nauczonej reprezentacji. Badania nie mają na celu uzyskanie jak najlepszych możliwych modeli do rozwiązania wybranych problemów, a jedynie porównanie zdolności modeli do ekstrachowania odpowiednich cech z obrazów.
 
 W punktach 2 i 4 dobór liczby warstw jest połączony z doborem współczynnika regularyzacji, ponieważ w niektórych przypadkach bardziej wskazane jest stosowanie głębszych modeli ze zwiększoną regularyzacją. Nie zmienia to naiwności opisywanej metody. Głębokość sieci i współczynniki regularyzacji to dwa czynniki, o których wiadomo, że są ze sobą powiązane. Możliwe jest występowanie innych powiązanych czynników, których wzajemna relacja nie została uwzględniona w powyższej procedurze. 
 
-Przyjęto też uproszczenie w punkcie 3. Dla sieci ReNet oraz ReNet z modyfikacją przyjęto tą samą liczbę neuronów w każdej warstwie. Takie samo rozwiązanie przyjęto w pracy wprowadzającej ReNet. Ograniczenie to pozwala zredukować liczbę poszukiwanych parametrów.
+Przyjęto uproszczenie w punkcie 3. Dla sieci ReNet oraz ReNet z modyfikacją przyjęto tą samą liczbę neuronów w każdej warstwie. Takie samo rozwiązanie przyjęto w pracy wprowadzającej ReNet. Ograniczenie to pozwala zredukować liczbę poszukiwanych parametrów.
 
 Dla parametrów odpowiadających za liczność neuronów w warstawach porówywano osiągane wyniki dla kolejnych potęg 2 z zakresu $[32, 4096]$. W przypadku współczynnika uczenia oraz współczynników reugraryzacji l1 i l2 sprawdzano parametry z zakresu $[10^{-2}, 10^{-8}]$ w skali logarytmicznej.
 
@@ -823,11 +822,11 @@ Opisana procedura pozwala na zmniejszenie nakładu obliczeniowego potrzebnego do
 \begin{figure}
 \centering
 	\includegraphics[width=0.8\textwidth]{img/grid_search.png}
-	\caption{Porównanie Grid Search i Random Search.} Źródło: https:\/\/i.stack.imgur.com\/cIDuR.png
+	\caption{Porównanie Grid Search i Random Search.} Źródło: \cite{Bergstra:2012:RSH:2503308.2188395}.
 	\label{fig:hyperparams}
 \end{figure}
 
-Inne dostępne rozwiązania problemu doboru hiperametrów to wykorzystanie algorytmów Grid Search lub Random Search. Grid Search nie jest zalecaną metodą. Często hiperparametry mają różny wpływ na wyniki procesu uczenia. Maksimum optymalizowanej metryki może występować pomiędzy punktami tworzonej siatki, jak to zostało przedstawione na rys. \ref{fig:hyperparams}. W przypadku w którym jeden z hiperparametrów ma większy wpływ na osiągane wyniki siatka dla jego wartości powinna być o wiele gęstsza. Random Search unika tego problemu poprzez wybieranie losowych punktów z przestrzeni, przez co hiperparametry mające większy wpływ na proces uczenia są próbkowane w większej liczbie punktów i istnieje większa szansa na znalezienie efektywniejszej wartości. Wadą obu algorytmów jest liczba iteracji potrzebnych do przeszukania przestrzeni, eksponencjalnie rosnąca wraz ze wzrostem liczby hiperparametrów i fakt, że w każdej iteracji nie wykorzystują wcześniej zdobytych informacji do poprawy osiągniętego wyniku.
+Inne dostępne rozwiązania problemu doboru hiperametrów to wykorzystanie algorytmów Grid Search lub Random Search. Grid Search nie jest zalecaną metodą. Często hiperparametry mają różny wpływ na wyniki procesu uczenia. Maksimum optymalizowanej metryki może występować pomiędzy punktami tworzonej siatki, jak to zostało przedstawione na rys. \ref{fig:hyperparams}. W przypadku w którym jeden z hiperparametrów ma większy wpływ na osiągane wyniki należy zwiększyć liczbę przeszukiwanych punktów. Random Search unika tego problemu przez wybieranie losowych punktów z przestrzeni, przez co hiperparametry mające większy wpływ na proces uczenia są próbkowane w większej liczbie punktów i istnieje większa szansa na znalezienie efektywniejszej wartości. Wadą obu algorytmów jest duża liczba iteracji potrzebnych do przeszukania przestrzeni, rosnąca wraz ze wzrostem liczby hiperparametrów i brak wykorzystywania wcześniej zdobytych informacji do poprawy osiągniętego wyniku. W rozdziale tym przedstawiono stosowaną metodykę oraz narzędzia wykorzystane w przeprowadzonych eksperymentach. W kolejnym rozdziale zostaną przedstawione wyniki uzyskane zgodnie z metodyką opisaną w tym rozdziale.
 
 
 \chapter{Wyniki}
@@ -934,15 +933,14 @@ W niniejszym rozdziale przedstawiono wyniki uzyskane zgodnie z przyjętą i wcze
 
 Wybrane parametry modeli, uzyskane we wcześniej opisanym procesie doboru hiperparametrów zostały przedstawione w tabelach \ref{tab:hyperparams-coefs}, \ref{tab:hyperparams-extraction}, oraz \ref{tab:hyperparams-classification}.
 
-Z przedstawionych tabel można wyczytać kilka właściwości zastosowanych modeli. Pierwszym faktem, na który warto zwrócić uwagę, to regularyzacja wykorzystana w procesie uczenia.
-Dla wszystkich sieci współczynniki regularyzacji l1 były aplikowane do aktywacji pierwszej warstwy w pełni połączonej z funkcją aktywacji ReLu, a regularyzacja l2 została zaaplikowana do wag ostatniej warstwy połączonej z funkcją aktywacji softmax. Dla sieci ReNet współczynniki te są niekiedy wyższe dla sieci konwolucyjnych, jednakże w przypadku sieci konolucyjnych regularyzacja l2 została zaaplikowana również do warstw konwolucyjnych.
-W tabeli \ref{tab:hyperparams-extraction} można zauważyć niskie wartości dropoutu zaaplikowanego do warstw ReNet. Dla wyższych wartości odnotowano znaczący spadek wartości metryk. W przypadku warstw konwolucyjnych zastosowano Batch Normalization zamiast dropoutu. Normalizację ta występowała w sieci bezpośrednio po zaaplikowaniu nieliniowości (funkcji aktywacji) do aktywacji warstwy lub po zaaplikowaniu nieliniowości i MaxPoolingu. Zaaplikowanie Bartch Normalization do sieci ReNet skutkowało znacznym obniżeniem wartości obserwowanych metryk. 
-Dodatkowo można porównać wysokie współczynniki regularyzacji dropout dla sieci konwolucyjnych w tabeli \ref{tab:hyperparams-classification} z niskimi wartościami dla sieci ReNet. 
-Powodem uzyskania takich wartości jest różna zdolność modeli do uczenia się. W procesie uczenia na tych samych danych sieci ReNet znajdowały się często w reżimie niedouczenia, podczas gdy w przypadku sieci konwolucyjnych zastosowane techniki regularyzacji pozwalały uniknąć przeuczenia sieci. Można więc wnioskować, że dla wykorzystanych datasetów modele ReNet mają mniejsze capacity niż sieci konwolucyjne.
+Z przedstawionych tabel można wywnioskować kilka właściwości zastosowanych modeli. Pierwszym faktem, na który warto zwrócić uwagę to regularyzacja wykorzystana w procesie uczenia.
+Dla wszystkich sieci współczynniki regularyzacji l1 były aplikowane do aktywacji pierwszej warstwy w pełni połączonej z funkcją aktywacji ReLu, a regularyzacja l2 została zaaplikowana do wag ostatniej warstwy połączonej z funkcją aktywacji softmax. Dla sieci ReNet współczynniki te są niekiedy wyższe niż dla sieci konwolucyjnych, jednakże w przypadku sieci konolucyjnych regularyzacja l2 została zaaplikowana również do warstw konwolucyjnych.
+W tabeli \ref{tab:hyperparams-extraction} można zauważyć niskie wartości dropoutu zaaplikowanego do warstw ReNet. Dla wyższych wartości odnotowano znaczący spadek wartości metryk. W przypadku warstw konwolucyjnych zastosowano Batch Normalization zamiast dropoutu. Normalizacja ta występowała w sieci bezpośrednio po zaaplikowaniu nieliniowości (funkcji aktywacji) do aktywacji warstwy konwolucyjnej lub po zaaplikowaniu nieliniowości i MaxPoolingu. Zaaplikowanie Bartch Normalization do sieci ReNet skutkowało znacznym obniżeniem wartości obserwowanych metryk. 
+Dodatkowo można porównać wysokie współczynniki regularyzacji dropout dla sieci konwolucyjnych w tabeli \ref{tab:hyperparams-classification} z niskimi wartościami dla sieci ReNet. Na podstawie danych z tabeli \ref{tab:hyperparams-classification} można zauważyć, że ReNet wymagało znacznie większej liczby neuronów w warstwie w pełni połączonej niż inne architektury.
 
-Dla zbioru Natural Images wykorzystano znacznie głębszą architekturę modelu zmodyfikowanej sieci ReNet niż dla dwóch pozostałych modeli. Sieć ta miała problemy z nauczeniem się tego datasetu. Nie udało się ustalić powodu tego problemu.
+Powodem uzyskania takich wartości jest różna zdolność modeli do uczenia się. W procesie uczenia na tych samych danych sieci ReNet znajdowały się często w reżimie niedouczenia. W przypadku sieci konwolucyjnych zastosowane techniki regularyzacji pozwalały uniknąć przeuczenia sieci. Można wnioskować, że dla wykorzystanych datasetów modele ReNet wykazują mniejsze capacity niż sieci konwolucyjne.
 
-Na podstawie danych z tabeli \ref{tab:hyperparams-classification} można zauważyć, że ReNet wymagało znacznie większej liczby neuronów w warstwie w pełni połączonej niż inne architektury.
+Dla zbioru Natural Images wykorzystano znacznie głębszą architekturę modelu sieci ReNet z modyfikacją niż dla dwóch pozostałych modeli. Sieć ta miała problemy z nauczeniem się tego datasetu. Nie udało się ustalić powodu tego problemu.
 
 \section{Porównanie skuteczności modeli}
 
@@ -967,9 +965,9 @@ Na podstawie danych z tabeli \ref{tab:hyperparams-classification} można zauważ
     \label{table:posthoc}
 \end{table}
 
-W pierwotnym projekcie eksperymentów zakładano wykorzystanie testu Friedmanna z testami post-hoc Nemenyiego. Test Friedmana wymaga zebrania wyników dla co najmniej 6 datasetów. Ze względu na ograniczenia czasowe nie udało się zebrać tylu wyników. Podjęto decyzję o przeanalizowaniu efektywności modeli dla każdego datasetu osobno. Testy na normalność rozkładu tracą moc wraz ze spadkiem liczby próbek. Po sprawdzianie krzyżowym 5-cio foldowym dysponowano pięcioma próbkami w obrębie jednego datasetu dla każdego algorytmu. Określenie czy uzyskane wyniki należą do rozkładu normalnego byłoby mało wiarygodne. Biorąc pod uwagę wszystkie czynniki podjęto decyzję o wykorzystanie nieparametrycznego testu Kruskala–Wallisa z testami post-hoc Conovera. 
+W pierwotnym projekcie eksperymentów zakładano wykorzystanie testu Friedmanna z testami post-hoc Nemenyiego. Test Friedmana wymaga zebrania wyników dla co najmniej 6 datasetów. Ze względu na ograniczenia czasowe nie udało się zebrać tylu wyników. Podjęto decyzję o przeanalizowaniu efektywności modeli dla każdego datasetu osobno. Testy na normalność rozkładu tracą moc wraz ze spadkiem liczby próbek. Po sprawdzianie krzyżowym 5-cio foldowym dysponowano pięcioma próbkami w obrębie jednego datasetu dla każdego algorytmu. Określenie czy uzyskane wyniki należą do rozkładu normalnego byłoby mało wiarygodne. Biorąc pod uwagę wszystkie czynniki podjęto decyzję o wykorzystaniu nieparametrycznego testu Kruskala–Wallisa z testami post-hoc Conovera. 
 
-Wyniki przedstawiono w tabelach \ref{table:kruskal} oraz \ref{table:posthoc}. Na podstawie testu Kruskala z poziomem istotności $\alpha = 0.05$ można odrzucić hipotezę zerową i przyjąć, że w uzyskanych wynikach występują istotne różnice efektywności modeli. Na podstawie testów post hoc z poziomem istotności $\alpha = 0.05$ znaleziono istotne różnice między wszystkimi stosowanymi sieciami, poza różnicą między ReNet a ReNet z modyfikacją dla datasetów Flowers Recognition oraz Fashion Mnist. Z otrzymanych wyników można wywnioskować, że sieci konwolucyjne osiągają najlepsze rezultaty dla wszystkich zbadanych zastosowań. Modele ReNet i ReNet z modyfikacją osiągają bardzo zbliżone rezultaty. Dla zbioru Chest X-Ray wykryto istotną statystycznie różnice między ReNet a ReNet z modyfikacją i jednocześnie dla drugiego modelu osiągnięto lepsze wyniki. Dla zbioru Flowers Recognition wszystkie sieci osiagały gorsze wyniki niż dla pozostałych datasetów. W trakcie dobierania hiperparametrów uzyskiwano zadowalające wyniki, ale podczas wykonywania algorytmu sprawdzianu krzyżowego accuracy dla zbioru testowego znacznie spadła. Wylosowanie innego splitu do doboru hiperparametrów nie poprawiło wyników sprawdzianu krzyżowego. Nie udało się ustalić przyczyny spadku jakości klasyfikacji dla tego datasetu. Dla zbioru Natural Images wyniki dla ReNet z modyfikacją w znaczący sposób są gorsze od wyników dla ReNet. Jest dataset dla którego w modelu wykorzystującym ReNet z modyfikacją wymagane było zastosowanie siedmiu warstw ekstrakcji cech. Można na tej podstawie wnioskować, że w pewnych zastosowaniach modyfikacja proponowana w tej pracy pogarsza jakość klasyfikacji.
+Wyniki przedstawiono w tabelach \ref{table:kruskal} oraz \ref{table:posthoc}. Na podstawie testu Kruskala z poziomem istotności $\alpha = 0.05$ można odrzucić hipotezę zerową i przyjąć, że w uzyskanych wynikach występują istotne różnice efektywności modeli. Na podstawie testów post hoc z poziomem istotności $\alpha = 0.05$ znaleziono istotne różnice między wszystkimi stosowanymi sieciami, z wyjątkiem różnic między ReNet a ReNet z modyfikacją dla datasetów Flowers Recognition oraz Fashion Mnist. Z otrzymanych wyników można wywnioskować, że sieci konwolucyjne osiągają najlepsze rezultaty dla wszystkich zbadanych zastosowań. Modele ReNet i ReNet z modyfikacją osiągają bardzo zbliżone rezultaty. Dla zbioru Chest X-Ray wykryto istotną statystycznie różnice między ReNet a ReNet z modyfikacją i jednocześnie dla drugiego modelu osiągnięto lepsze wyniki. Dla zbioru Flowers Recognition wszystkie sieci osiagały gorsze wyniki niż dla pozostałych datasetów. W trakcie dobierania hiperparametrów uzyskiwano zadowalające wyniki, ale podczas wykonywania algorytmu sprawdzianu krzyżowego accuracy dla zbioru testowego znacznie spadła. Wylosowanie innego splitu podczas doboru hiperparametrów nie poprawiło wyników sprawdzianu krzyżowego. Nie udało się ustalić przyczyny spadku jakości klasyfikacji dla tego datasetu. Dla zbioru Natural Images wyniki dla ReNet z modyfikacją w znaczący sposób są gorsze od wyników dla ReNet. Jest dataset dla którego w modelu wykorzystującym ReNet z modyfikacją wymagane było zastosowanie siedmiu warstw ekstrakcji cech. Można na tej podstawie wnioskować, że w pewnych zastosowaniach modyfikacja proponowana w tej pracy pogarsza jakość klasyfikacji.
 
 \section{Porównanie czasu uczenia}
 
@@ -1010,10 +1008,10 @@ W tabeli \ref{table:time_avrg} przedstawiono zestawienie czasu uczenia sieci ReN
 
 W celu porównania nauczonych reprezentacji zmodyfikowanej i niezmodyfikowanej architektury ReNet przygotowano wizualizacje aktywacji przedostatniej warstwy sieci. Wektor wyjścia dla każdego przykładu ze zbioru testowego poddano redukcji wymiarowości do dwóch wymiarów. Umożliwia to przedstawienie każdego elementu zbioru testowego na płaszczyźnie i zaznaczenie klasy, do której należy przykład. Do redukcji wymiarowości wybrano algorytmy PCA i tSNE \cite{tSNE}. Wyniki dla zbioru testowego Natural Images przedstawiono na rysunkach \ref{fig:tSNE_ReNet}, \ref{fig:tSNE_modif_ReNet} i \ref{fig:tSNE_conv}.
 
-Dla sieci konwolucyjnych przy wizualizacji t-SNE osiągamy niemalże liniowo separowalną reprezentację. Można zaobserwować mieszanie się reprezentacji dla klas kot i pies. Bliskie położenie tych klas w przestrzeni reprezentacji jest uzasadnione biorąc pod uwagę, że inne etykiety w datasetcie to samochód, samolot lub kwiat. Dla sieci ReNet z uzyskanej wizualizacji wynika, że nauczona reprezentacja nie jest liniowo separowalna i wiele przykładów o różnych klasach leży blisko siebie. Istnieją pewne skupiska przykładów dla których jedna z klas dominuje, jednakże skupiska te nie są tak jednolite i zunifikowane jak w przypadku sieci konwolucyjnych.
-Należy zachować szczególną ostrożność przy wyciąganiu wniosków co do geometrycznych zależności występujących w oryginalnej przestrzeni, ponieważ wizualizacje są efektem rzutowania z przestrzeni 4096-wymiarowej do przestrzeni dwuwymiarowej. Algorytm t-SNE jest skonstruowany tak aby zachowywać odległości między punktami z oryginalnej przestrzeni, jednakże nie zawsze jest w stanie oddać wszystkie niuanse występujące w oryginalnej przestrzeni. W tym przypadku geometryczna analiza nauczonej reprezentacji wydaje się być zgodna ze słabymi wynikami klasyfikacji z wykorzystaniem sieci ReNet dla datasetu Natural Images.
+Dla sieci konwolucyjnych przy wizualizacji t-SNE osiągnięto niemalże liniowo separowalną reprezentację. Można zaobserwować mieszanie się reprezentacji dla klas kot i pies. Bliskie położenie tych klas w przestrzeni reprezentacji jest uzasadnione biorąc pod uwagę charakter inne etykiety w datasetcie - przykładowo samochód, samolot lub kwiat. Dla sieci ReNet z uzyskanej wizualizacji wynika, że nauczona reprezentacja nie jest liniowo separowalna i wiele przykładów o różnych klasach leży blisko siebie. Istnieją pewne skupiska przykładów dla których jedna z klas dominuje, jednakże skupiska te nie są tak jednolite i zunifikowane jak w przypadku sieci konwolucyjnych.
+Należy zachować szczególną ostrożność przy wyciąganiu wniosków co do geometrycznych zależności występujących w oryginalnej przestrzeni, ponieważ wizualizacje są efektem rzutowania z przestrzeni 4096-wymiarowej do przestrzeni dwuwymiarowej. Algorytm t-SNE jest skonstruowany tak aby zachowywać odległości między punktami z oryginalnej przestrzeni, jednakże nie zawsze jest w stanie oddać wszystkie niuanse występujące w oryginalnej przestrzeni. W tym przypadku geometryczna analiza nauczonej reprezentacji może podawać jedną z przyczyn słabszych wyników klasyfikacji z wykorzystaniem sieci ReNet dla datasetu Natural Images.
 
-Zastanawiające może być przyjęcie nauczonej reprezentacji jako wyjścia przedostatniej warstwy. Dla wszystkich modeli oznacza to wykorzystanie aktywacji warstwy dropout. W czasie trenowania algorytmu mogłoby to wprowadzić losowy szum do reprezentacji. Jednakże w czasie testowania warstwa dropout skaluje jedynie każdą aktywację przez prawdopodobieństwo maskowania, aby zachować średnią wartość aktywacji przekazywanych do następnej warstwy na poziomie jak dla treningu sieci. Wszystkie podane wizualizacje zostały wykonane w trybie testowania nauczonej sieci na zbiorze testowym, więc nie istnieje ryzyko wprowadzenia losowego szumu z tego powodu.
+Zastanawiające może być przyjęcie nauczonej reprezentacji jako wyjścia przedostatniej warstwy. Dla wszystkich modeli oznacza to wykorzystanie aktywacji warstwy dropout. W czasie trenowania algorytmu mogłoby to wprowadzić losowy szum do reprezentacji. Jednakże w czasie testowania warstwa dropout skaluje jedynie każdą aktywację przez prawdopodobieństwo maskowania. Ma to na celu zachowanie średniej wartości aktywacji przekazywanych do następnej warstwy na tym samym poziomie co przy trenowaniu sieci. Wszystkie podane wizualizacje zostały wykonane w trybie testowania nauczonej sieci na zbiorze testowym, więc nie istnieje ryzyko wprowadzenia losowego szumu z powodu wybrania wyjścia dropout jako reprezentacji nauczonej przez model.
 
 \section{Wizualizacja loss landscape}
 
@@ -1033,29 +1031,27 @@ Zastanawiające może być przyjęcie nauczonej reprezentacji jako wyjścia prze
 	\label{fig:loss_modif_ReNet}
 \end{figure}
 
-Na podstawie wizualizacji z \cite{DBLP:journals/corr/abs-1712-09913} przygotowano wizualizację loss landscape archiektur ReNet i zmodyfikowanej ReNet. Wyniki dla datasetu Flowers Recognition po 20 epokach uczeniach przedstawiono na \ref{fig:loss_ReNet} i \ref{fig:loss_modif_ReNet}. Jeśli przyjąć uzyskane wizualizacje za reprezentatywne to można zauważyć, że w obu przypadkach sieć znajduje się w minimum. Najmniejsze uzyskiwane wartości funkcji strat dla sieci ReNet były większe niż dla sieci konwolucyjnych. W przypadku w którym przyjmiemy, że osiągnięte minimum sieci jest globalne można wnioskować, że sieci ReNet nie są w stanie osiągnąć zadowalająco niskich wyników. W przypadku gdy przyjmiemy, że osiągnięte minimum nie jest globalne należy zbadać jakie metody optymalizacji byłby w stanie doprowadzić do uzyskania lepszych rezultatów. Drugi wariant jest mniej prawdopodobny ze względu na empiryczne wyniki sugerujące, że występowanie globalnych minimum jest częstsze w płytkich sieciach neuronowych niż w głębokich \cite{Goodfellow-et-al-2016}.
+Na podstawie wizualizacji z \cite{DBLP:journals/corr/abs-1712-09913} przygotowano wizualizację loss landscape archiektur ReNet i zmodyfikowanej ReNet. Wyniki dla datasetu Flowers Recognition po 20 epokach uczeniach przedstawiono na \ref{fig:loss_ReNet} i \ref{fig:loss_modif_ReNet}. Jeśli przyjąć uzyskane wizualizacje za reprezentatywne to można zauważyć, że w obu przypadkach sieć znajduje się w minimum. Najmniejsze uzyskiwane wartości funkcji strat dla sieci ReNet były większe niż dla sieci konwolucyjnych. W przypadku w którym przyjmiemy, że osiągnięte minimum sieci jest globalne można wnioskować, że sieci ReNet nie są w stanie osiągnąć zadowalająco niskich wyników. W przypadku gdy przyjmiemy, że osiągnięte minimum nie jest globalne należy zbadać jakie metody optymalizacji byłby w stanie doprowadzić do uzyskania lepszych rezultatów. Drugi wariant jest mniej prawdopodobny ze względu na prace sugerujące, że występowanie globalnych minimum jest częstsze w płytkich sieciach neuronowych niż w głębokich, a nieglobalne minima często osiągają zbliżone wartości funkcji start do minum globalnego \cite{Goodfellow-et-al-2016}. W rozdziale tym przedstawiono i przeanalizowano wyniki uzyskane zgodnie z przyjętą metodologią. W kolejnym rozdziale zostaną przedyskutowane wnioski jakie można wyciągnąć na podstawie osiągniętych wyników.
 
 \chapter{Wnioski}
 
-W niniejszym rozdziale przeprowadzono dyskusję uzyskanych wyników oraz zamieszczono podziękowania dla osób i instytucji, które w znaczący sposób przyczyniły się do powstania tej pracy.
+W niniejszym rozdziale przeprowadzono dyskusję uzyskanych wyników, wskazano możliwe kierunki przyszłych badań oraz zamieszczono podziękowania dla osób, które w znaczący sposób przyczyniły się do powstania tej pracy.
 
 \section{Podsumowanie}
 
-Z uzyskanych wyników można wnioskować, że wprowadzenie modyfikacji zapewniło przyśpieszenie działania ReNet przy zachowaniu zbliżonej skuteczności. Umożliwia to na stosowanie głębszych modeli. Oczywiście samo stosowanie głębszych modeli nie jest zaletą samą w sobie, ale pozwala na zwiększenie elastyczności pracy z modelem. Wykorzystanie mniejszej liczby sieci LSTM na warstwę umożliwia bardziej precyzyjnie dobranie liczby stosowanych warstw do rozwiązywanego problemu. Tym samym wyniki potwierdziły przypuszczenia ze wstępu pracy i ze wprowadzenia teoretycznych podstaw modyfikacji ReNet.
+Z uzyskanych wyników można wnioskować, że wprowadzenie modyfikacji zapewniło przyśpieszenie działania ReNet przy zachowaniu zbliżonej skuteczności. Umożliwia to na stosowanie głębszych modeli. Oczywiście samo stosowanie głębszych modeli nie jest zaletą samą w sobie, ale pozwala na zwiększenie elastyczności pracy z modelem. Wykorzystanie mniejszej liczby sieci LSTM na warstwę ReNet umożliwia bardziej precyzyjnie dobranie liczby stosowanych warstw ReNet do rozwiązywanego problemu. Tym samym wyniki potwierdziły przypuszczenia ze wstępu pracy i z wprowadzenia teoretycznych podstaw modyfikacji ReNet.
 
-Na zakończenie pracy można zastanowić się czy wprowadzone usprawnienia są wystarczające aby ReNet zyskało na praktycznym znaczeniu? Wyniki wskazują na to, że nie jest to prawdopodobne. Mimo redukcji czasu uczenia nadal wymagane są znaczące nakłady mocy obliczeniowej i osiągane wyniki są gorsze niż dla sieci konwolucyjnych. Wymagane są więc dalsze usprawnienia w zakresie poprawy osiągów i wydajności sieci. 
+Na zakończenie pracy można zastanowić się czy wprowadzone usprawnienia są wystarczające aby ReNet zyskało na praktycznym znaczeniu? Wyniki wskazują na to, że nie jest to prawdopodobne. Mimo redukcji czasu uczenia nadal wymagane są znaczące nakłady mocy obliczeniowej, a osiągane wyniki są gorsze niż dla sieci konwolucyjnych. Zastosowane wizualizacje wskazują dodatkowe potencjalne przyczyny osiągania gorszych wyników sieci ReNet. Wymagane są dalsze usprawnienia w zakresie poprawy osiągów i wydajności. 
 
-Jednym z możliwych powodem wydłużonego czasu uczenia sieci rekurencyjnych może być ich struktura grafu obliczeniowego. Jest on sekwencyjny, co przekłada się na sposób przeprowadzania obliczeń i możliwe optymalizacje. Obecny sprzęt wykorzystywany do obliczeń przy głębokich sieciach neuronowych jest przystosowany do wykonywania wielu prostych i powtarzających obliczeń jednocześnie, co doskonale sprawdza się w przypadku sieci konwolucyjnych. Dla obliczeń z sekwencyjnym grafem zależności takim jak dla sieci rekurencyjnych wykonanie obliczeń dla danego kroku czasowego może nastąpić po wyznaczeniu potrzebnych wartości z poprzedniego kroku czasowego, co może powodować częstsze korzystanie z pamięci oraz wydłużenie czasu obliczeń. Dlatego momentami możliwe jest szybsze nauczenie małej sieci rekurencyjnej na CPU niż na GPU. 
+Jednym z możliwych powodów wydłużonego czasu uczenia sieci rekurencyjnych może być ich struktura grafu obliczeniowego. Jest on sekwencyjny, co przekłada się na sposób przeprowadzania obliczeń i możliwe optymalizacje. Obecny sprzęt wykorzystywany do obliczeń przy głębokich sieciach neuronowych jest przystosowany do wykonywania wielu prostych i powtarzających obliczeń jednocześnie, co doskonale sprawdza się w przypadku sieci konwolucyjnych. Dla obliczeń z sekwencyjnym grafem zależności takim jak dla sieci rekurencyjnych wykonanie obliczeń dla danego kroku czasowego może nastąpić po wyznaczeniu potrzebnych wartości z poprzedniego kroku czasowego, co może powodować częstsze korzystanie z pamięci oraz wydłużenie czasu obliczeń. Dlatego momentami możliwe jest szybsze nauczenie małej sieci rekurencyjnej na CPU niż na GPU. 
 
-Wyniki tSNE i PCA cech stanowiących reprezentację nauczoną przez sieć: Wygląda na to, że wprowadzona modyfikacja wpływa w nieznaczny sposób na sposób uczenia reprezentacji.
+Przez duże koszty obliczeniowe zakres zastosowań ReNet jest ograniczony do obrazów o małym rozmiarze. Ograniczenia te redukują liczbę cech dostępnych na wejściu sieci tym samym utrudniają uczenie. Mimo zastosowania tych ograniczeń sieci konwolucyjne nadal radzą sobie lepiej z uczeniem datasetów przedstawionych w tej pracy. Możliwe jest wykorzystanie sieci residualnych do zadań machine vision, jednakże nie było potrzeby stosowania tak skomplikowanych modeli w tej pracy.
 
-Przez duże koszty obliczeniowe zakres zastosowań ReNet jest mocno ograniczony do obrazów o małym rozmiarze. Ograniczenia te redukują liczbę cech dostępnych na wejściu sieci tym samym utrudniają uczenie. Mimo tych ograniczeń modele takie jak sieci konwolucyjne lepiej sobie radzą z nauczeniem datasetów przedstawionych w tej pracy. Możliwe jest wykorzystanie sieci residualnych do zadań machine vision, jednakże nie było potrzeby stosowania tak skomplikowanych modeli w tej pracy.
-
-\section{Możliwe usprawnienia}
+\section{Możliwe usprawnienia i dalsze kierunki badań}
 
 Dalsze badania w zakresie sieci ReNet mogą obejmować zbadanie zastosowania tej architektury do zbiorów zawierających dużo klas i mało przykładów uczących na klasę. W trakcie pracy odnotowano, że stosowane modele osiągają skuteczność na poziome klasyfikatora losowego, podczas gdy sieci konwolucyjne na tych samych danych osiągały wyższą skuteczność. Ciekawym eksperymentem może być zredukowanie rozmiaru patrzy do rozmiaru pojedynczego piksela i zastosowanie warstw Batch Normalisation. Dodatkowo można zbadać jak zachowa się sieć ReNet przy stosowaniu zwiększającej się liczby neurownów w kolejnych warstwach, tak jak ma to miejsce w sieciach konwolucyjnych.
 
-W przypadku zmodyfikowanej sieci ReNet właściowści krzywej Hilberta mogą pozwolić na zmianę rozmiarów obrazów i sprawdzenia jak sieć nauczona dla mniejszych obrazów poradzi sobie z większymi obrazami. Tego typu manipulacje są ograniczone przez ścisłe wymagania struktury sieci, można je jednak obejść przez zastosowanie dodatkowej warstwy ReNet lub MaxPooling.
+W przypadku zmodyfikowanej sieci ReNet właściowści krzywej Hilberta mogą pozwolić na zmianę rozmiarów obrazów i sprawdzenia jak sieć nauczona dla mniejszych obrazów poradzi sobie z większymi obrazami. Tego typu manipulacje są ograniczone przez ścisłe wymagania odnośnie struktury sieci i kształtu tensorów, ale można je obejść przez zastosowanie dodatkowej warstwy ReNet lub MaxPooling.
 
 W początkowym projekcie eksperymentu zakładano przeprowadzenie badań wpływu zastosowanej sieci rekurencyjnej na wyniki klasyfikacji ReNet z modyfikacją. Jednakże ograniczenia czasowe nie pozwoliły na zrealizowanie tego celu i pozostaje on otwartym problemem badawczym.
 
