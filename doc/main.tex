@@ -46,6 +46,11 @@
 
 \maketitle
 
+\section*{Podziękowania}
+
+Chciałbym podziękować Michałowi Lesiowi za udostępnienie nakładów mocy obliczeniowej niezbędnej do przeprowadzenia badań, oraz za jego cierpliwość i wyrozumiałość, bez których ta praca by nie powstała.
+
+\setcounter{tocdepth}{1}
 \tableofcontents
 
 \newpage
@@ -122,7 +127,7 @@ Sekcja ta zawiera wprowadzenie podstawowych zagadnień, wykorzystywanych w pracy
 	\label{feedforward-NN}
 \end{figure}
 
-Sieci neuronowe to szeroka klasa modeli wykorzystywana najczęściej do zadania uczenia nadzorowanego. W podstawowej formie sieć składa się z wielu warstw neuronów połączonych ze sobą (zob rys. \ref{feedforward-NN}). Warstwa wejściowa sieci odpowiada za przyjmowanie wektorów wejściowych. Neurony w warstwie ukrytej realizują funkcję nieliniową opisaną równaniem:
+Sieci neuronowe to szeroka klasa modeli wykorzystywana najczęściej do zadania uczenia nadzorowanego. W podstawowej formie sieć składa się z wielu warstw neuronów połączonych ze sobą (Rysunek \ref{feedforward-NN}). Warstwa wejściowa sieci odpowiada za przyjmowanie wektorów wejściowych. Neurony w warstwie ukrytej realizują funkcję nieliniową opisaną równaniem:
 
 \begin{equation}
 	x_i = f(w_i u_i)
@@ -130,7 +135,7 @@ Sieci neuronowe to szeroka klasa modeli wykorzystywana najczęściej do zadania 
 
 Gdzie $x_i$ jest wyjściem $i$-tego neuronu w warstwie (nazywanym również aktywacją neuronu), $f$ jest funkcją aktywacji w warstwie do której należy neuron, $w_i$ jest wektorem wag $i$-tego neuronu a $u_i$ jest wektorem wejść $i$-tego neuronu. Nieliniowość całej operacji jest powodowana przez nieliniową funkcję aktywacji. W procesie uczenia definiowana jest funkcja strat (ang. loss function) $L$ opisująca w sposób ilościowy jak bardzo wyjście sieci neuronowej różni się od oczekiwanej wartości. Wartości funkcji strat są wykorzystywane do modyfikacji wag sieci neuronowej (algorytm wstecznej propagacji błędu), najczęściej z wykorzystaniem reguł gradientowych. Dzięki algorytmowi wstecznej propagacji możliwe jest uczenie wielowarstwowych sieci. Wyjście każdej warstwy stanowi zmodyfikowaną reprezentację oryginalnej przestrzeni. Przez nieliniowości i tworzenie reprezentacji przestrzeni cech, wielowarstwowe sieci neuronowe posiadają zdolność do generowania bardzo złożonych granic decyzyjnych.
 
-Sieci neuronowe są stosunkowo starą klasą modeli. Pierwsze prace w zakresie reguł uczenia pojawiły się latach 40 XX wieku \cite{McCulloch-Pitts} \cite{Hebb}. Rosenblat \cite{Rosenblatt} w 1958 roku skonstruował perceptron - maszynę wykazującą zdolność nauki. Uważa się, że publikacja w które zbadano ogarniczenia perpceptoronu i udowodniono, że podejedyncza wartswa sieci nie jest w stanie nauczyć się funkcji XOR \cite{Perceptrons} zaczpoątkowała okres nazwany zimą sztucznej inteligencji (ang. AI Winter). Prawdziwym przełomem okazała się praca \cite{Rumelhart}, w której zaproponowano algorytm wstecznej propagacji błędów. Po publikacji tej zainteresowanie głębokimi sieciami neuronowymi zaczęło wzrastać. W \cite{Conv} zaproponowano warstwy konwolucyjne, które pozwoliły na łatwiejsze przetwarzanie obrazów przez sieci neuronowe. 
+Sieci neuronowe są stosunkowo starą klasą modeli. Pierwsze prace w zakresie reguł uczenia pojawiły się latach 40. XX wieku \cite{McCulloch-Pitts} \cite{Hebb}. Rosenblat \cite{Rosenblatt} w 1958 roku skonstruował perceptron - maszynę wykazującą zdolność nauki. Uważa się, że publikacja w które zbadano ogarniczenia perpceptoronu i udowodniono, że podejedyncza wartswa sieci nie jest w stanie nauczyć się funkcji XOR \cite{Perceptrons} zaczpoątkowała okres nazwany zimą sztucznej inteligencji (ang. AI Winter). Prawdziwym przełomem okazała się praca \cite{Rumelhart}, w której zaproponowano algorytm wstecznej propagacji błędów. Po publikacji tej zainteresowanie głębokimi sieciami neuronowymi zaczęło wzrastać. W \cite{Conv} zaproponowano warstwy konwolucyjne, które pozwoliły na łatwiejsze przetwarzanie obrazów przez sieci neuronowe. 
 Gwałtowny wzrost popularności sieci neuronowych w ostatnich latach można przypisać kilku czynnikom \cite{Goodfellow-et-al-2016}. Pierwszym z nich jest zwiększenie mocy obliczeniowej dostępnej dla praktyków i badaczy uczenia maszynowego, co pozwoliło na zwiększenie rozmiarów modeli i skrócenie czasu uczenia. Drugim czynnikiem jest pojawienie wielu obszernych zbiorów danych, związane z rozpowszechnieniem się internetu i urządzeń elektronicznych w życiu codziennym ludzi. Oba te czynniki pozwalają na skuteczniejsze trenowanie modeli o większych pojemnościach, przeznaczonych do coraz bardziej złożonych zadań. Szczegółowy przegląd historii sieci neuronowych został podany w \cite{DBLP:journals/corr/Schmidhuber14}.
 
 Można dopatrywać się powiązań między sposobem działania ludzkiego mózgu a sieciami neuronowymi. Podobieństwo to może być widoczne w sposobie działania synaps komórki nerowowej. Badacze podkreślają \cite{Goodfellow-et-al-2016}, że związek sieci neuronowych z biologią ma bardziej charakter luźnej inspiracji niż rzeczywistego modelowania zjawisk zachodzących w ludzkim mózgu.
@@ -181,7 +186,7 @@ Można dopatrywać się powiązań między sposobem działania ludzkiego mózgu 
 
 
 Sieci feedforward posiadają stałą liczbę wejść i wyjść, przez co nie radzą sobie dobrze z przetwarzaniem danych występujących w ciągach (takich jak tekst, dźwięki czy ciągi czasowe). Istnieją podejścia umożliwiające przetwarzanie ciągów przez sieci feedforward, ale nie cechują się wysoką skutecznością. W celu zaadresowania tego problemu powstały sieci rekurencyjne (ang. Recurrent Neural Networks - RNN).
-Sieci Rekurencyjne zostały oparte na pracy Rumelharta \cite{RNN}. RNN posiadają ukryty stan, będący wektorem przekazywanym między poszczególnymi krokami czasowymi. Stan jest obliczany przez warstwą ukrytą sieci na podstawie aktualnego wejścia i stanu sieci z poprzedniego kroku czasowego - rys. \ref{fig:rnn}.
+Sieci Rekurencyjne zostały oparte na pracy Rumelharta \cite{RNN}. RNN posiadają ukryty stan, będący wektorem przekazywanym między poszczególnymi krokami czasowymi. Stan jest obliczany przez warstwą ukrytą sieci na podstawie aktualnego wejścia i stanu sieci z poprzedniego kroku czasowego - Rysunek \ref{fig:rnn}.
 Algorytm uczenia RNN - propagacja wsteczna w czasie (ang. Back-Propagation Through Time - BPTT) został przedstawiony w \cite{BPTT}.
 Udowodniono, że przy spełnieniu pewnych założeń RNN są kompletne w sensie Turinga \cite{turing-complete}.
 
@@ -255,7 +260,10 @@ W \cite{DBLP:journals/corr/VisinKCMCB15} wykorzystano sieć rekurencyjną do kla
 
 \section{Cel pracy}
 
-Celem pracy jest zbadanie skuteczności klasyfikacji zmodyfikowanej architektury ReNet. Proponowana modyfikacja polega na zastąpieniu czterech sieci rekurencyjnych dwiema sieciami rekurencyjnymi analizącymi obraz skonwertowany do jednowymiarowego ciągu otrzymanego z wykorzystaniem krzywych wypełniającej przestrzeń (ang. space-filling curves). Wyniki klasyfikacji wybranego zbioru danych zostaną porównane z oryginalną architekturą oraz wynikami osiąganymi dla sieci konwolucyjnych. Wykorzystanie dwóch sieci rekurencyjnych zamiast czterech powinno pozwolić na zmniejszenie liczby parametrów modelu. Mniejsza liczba parametrów może przekładać się na krótszy czas szkolenia i może pozwolić wykorzystanie modelu z większą liczbę neuronów w warstwach ukrytych modelu. Modyfikacja sieci będzie mieć wpływ na zdolność uczenia sieci, co oczywiście jest najciekawszym przedmiotem badań. W zakres eksperymentów będzie wchodziło również zbadanie wpływu różnych architektur sieci rekurencyjnych na uzyskiwane wyniki. Hiperparametry modeli zostaną dobrane z wykorzystaniem podziału zbioru danych na zbiór uczący i zbiór testowy. Do doboru wartości hiperparametrów zostanie wykorzystany algorytm wyszukiwania sieciowego (ang. grid search) z modyfikacją polegającą na zastąpieniu przeszukiwania zupełnego przez przeszukiwanie zachłanne. Dokładność klasyfikacji zostanie zmierzona z wykorzystaniem dokładności na zbiorze testowym (ang. accuracy) i algorytmowi sprawdzianu krzyżowego. Po wprowadzeniu najistotniejszych terminów wykorzystywanych w dalszych częściach pracy oraz nakreśleniu problematyki w następnym rozdziale zostaną dokładniej omówione teoretyczne aspekty wprowadzonych pojęć.
+Celem pracy jest zbadanie skuteczności klasyfikacji zmodyfikowanej architektury ReNet. Proponowana modyfikacja polega na zastąpieniu czterech sieci rekurencyjnych dwiema sieciami rekurencyjnymi analizącymi obraz skonwertowany do jednowymiarowego ciągu otrzymanego z wykorzystaniem krzywych wypełniającej przestrzeń (ang. space-filling curves). Wyniki klasyfikacji wybranego zbioru danych zostaną porównane z oryginalną architekturą oraz wynikami osiąganymi dla sieci konwolucyjnych. Wykorzystanie dwóch sieci rekurencyjnych zamiast czterech powinno pozwolić na zmniejszenie liczby parametrów modelu. Mniejsza liczba parametrów może przekładać się na krótszy czas szkolenia i może pozwolić wykorzystanie modelu z większą liczbę neuronów w warstwach ukrytych modelu. Modyfikacja sieci będzie mieć wpływ na zdolność uczenia sieci, co oczywiście jest najciekawszym przedmiotem badań. 
+
+
+W zakres eksperymentów będzie wchodziło również zbadanie wpływu różnych architektur sieci rekurencyjnych na uzyskiwane wyniki. Hiperparametry modeli zostaną dobrane z wykorzystaniem podziału zbioru danych na zbiór uczący i zbiór testowy. Do doboru wartości hiperparametrów zostanie wykorzystany algorytm wyszukiwania sieciowego (ang. grid search) z modyfikacją polegającą na zastąpieniu przeszukiwania zupełnego przez przeszukiwanie zachłanne. Dokładność klasyfikacji zostanie zmierzona z wykorzystaniem dokładności na zbiorze testowym (ang. accuracy) i algorytmowi sprawdzianu krzyżowego. Po wprowadzeniu najistotniejszych terminów wykorzystywanych w dalszych częściach pracy oraz nakreśleniu problematyki w następnym rozdziale zostaną dokładniej omówione teoretyczne aspekty wprowadzonych pojęć.
 
 
 \chapter{Omówienie wybranych zagadnień teoretycznych}
@@ -310,7 +318,7 @@ W trakcie uczenia sieci dokonuje się rozwinięcia (ang. unfolding) grafu oblicz
 \label{fig:unfolded}
 \end{figure}
 
-Co jest dwukrotnym zastosowaniem równania \ref{eq:basic-rnn} rekurencyjnie. Jako początkowy stan sieci $h_0$ najczęściej stosowany jest wektor zer. Rozwinięcie grafu pozwala na zamianę grafu cyklicznego na acykliczny, bardziej przypominający graf sieci feedforward. Przykładowy rozwinięty graf przedstawiono na rys. \ref{fig:unfolded}. Rozwinięty graf pozwala na zastosowanie reguł propagacji wstecznej i obliczenie gradientów funkcji strat. Jest więc to proces umożliwiający uczenie sieci rekurencyjnej.
+Co jest dwukrotnym zastosowaniem równania \ref{eq:basic-rnn} rekurencyjnie. Jako początkowy stan sieci $h_0$ najczęściej stosowany jest wektor zer. Rozwinięcie grafu pozwala na zamianę grafu cyklicznego na acykliczny, bardziej przypominający graf sieci feedforward. Przykładowy rozwinięty graf przedstawiono na rysunku \ref{fig:unfolded}. Rozwinięty graf pozwala na zastosowanie reguł propagacji wstecznej i obliczenie gradientów funkcji strat. Jest więc to proces umożliwiający uczenie sieci rekurencyjnej.
 
 \begin{figure}
 \centering
@@ -409,7 +417,7 @@ gdzie $outnet_t = Y h_t + b_y$ Wyrażenie $\frac{\partial h_t}{\partial h_k}$ mo
 \label{eq:BPTT_product}
 \end{equation}
 
-gdzie $net_i = W h_i + U x_i + b_u$. Działanie wstecznej propagacji w czasie zostało zilustrowane na rys. \ref{fig:rnn_backprop}. Powyższe rozważania zostały przeprowadzone dla najprostszej jednostki RNN, ale ilustruję ideę działania. Dla bardziej skomplikowanych jednostek idea ta pozostaje niezmienna. Nadal wykorzystywana jest rozwinięta forma grafu obliczeniowego do obliczenia błędu, połączona z faktem współdzielenia parametrów. 
+gdzie $net_i = W h_i + U x_i + b_u$. Działanie wstecznej propagacji w czasie zostało zilustrowane na rysunku \ref{fig:rnn_backprop}. Powyższe rozważania zostały przeprowadzone dla najprostszej jednostki RNN, ale ilustruję ideę działania. Dla bardziej skomplikowanych jednostek idea ta pozostaje niezmienna. Nadal wykorzystywana jest rozwinięta forma grafu obliczeniowego do obliczenia błędu, połączona z faktem współdzielenia parametrów. 
 
 Problemy związane z propagacją wsteczną w czasie zostały omówione w \cite{DBLP:journals/corr/abs-1211-5063}. Najbardziej istotny problem jest związany z iloczynem w równaniu \ref{eq:BPTT_product}. Wielokrotne mnożenie gradientów o module $|\frac{\partial h_i}{\partial h_{i-1}}| < 1$ powoduje problem znikających gradientów. Analogicznie wielokrotne mnożenie gradientów o module $|\frac{\partial h_i}{\partial h_{i-1}}| > 1$ powoduje problem wybuchających gradientów. W równaniu \ref{eq:BPTT_product} różnica $t - k$ oznacza czas pomiędzy aktualną jednostką a jednostką, której wpływ właśnie analizujemy. Wraz ze zwiększającym się $t - k$, liczba kolejnych mnożeń wzrasta. Jest to powodem znacznych trudności w uczeniu się długich zależności czasowych przez sieć.  Dyskusja możliwych rozwiązań została podana w \cite{DBLP:journals/corr/abs-1211-5063}. W pracy tej zastosowano inną definicję $h_t$, przez co część rozważań teoretycznych traci na ważności w kontekście definicji $h_t$ zastosowanej w tej pracy. Niemniej jednak część rozważań można zastosować dla parametryzacji przyjętej w tej pracy.
 
@@ -454,7 +462,7 @@ co oznacza, że przy obliczaniu iloczynu jakobianów w równaniu \ref{eq:BPTT_pr
 	\label{fig:lstm}
 \end{figure}
 
-LSTM jest jedną z popularniejszych architektur RNN. Hochreiter i Schmidhuber zaproponowali architekturę Long Short-Term Memory (LSTM) \cite{LSTM} w 1997. Zwykła sieć RNN składa się jedynie ze stanu sieci $h$, oraz wejścia $x$. Obie te wartości są wejściem warstwy ukrytej sieci. Wyjście warstwy ukrytej jest wyjściem sieci. Struktura komórki LSTM jest bardziej skomplikowana i składa się z wektora stanu sieci $h$, komórki pamięci $C$, oraz czterech ukrytych warstw sieci. Schemat ze strukturą sieci został przedstawiony na rys. \ref{fig:lstm}.
+LSTM jest jedną z popularniejszych architektur RNN. Hochreiter i Schmidhuber zaproponowali architekturę Long Short-Term Memory (LSTM) \cite{LSTM} w 1997. Zwykła sieć RNN składa się jedynie ze stanu sieci $h$, oraz wejścia $x$. Obie te wartości są wejściem warstwy ukrytej sieci. Wyjście warstwy ukrytej jest wyjściem sieci. Struktura komórki LSTM jest bardziej skomplikowana i składa się z wektora stanu sieci $h$, komórki pamięci $C$, oraz czterech ukrytych warstw sieci. Schemat ze strukturą sieci został przedstawiony na rysunku \ref{fig:lstm}.
 
 Warstwy sieci LSTM z sigmoidalnymi funkcjami aktywacji są nazywane bramkami multiplikatywnymi. Sigmoidalna funkcja aktywacji jest opisywana za pomocą wzoru:
 
@@ -507,7 +515,7 @@ Bramka ta służy do określania sposobu w jaki zostanie zaktualizowany stan $h$
 
 Warto zwrócić uwagę, że w powyższym równaniu nie występują wagi ani bias, więc $tanh$ nie jest utożsamiony z warstwą sieci neuronowej.
 
-W swojej pracy \cite{LSTM} Hochreiter i Schmidhuber odnoszą się do wcześniejszej pracy \cite{vanishing_gradient_RNN}, gdzie zostały przeanalizowane źródła problemów związanych ze znikającymi gradientami. Jako główny problem został wskazany gradient względem dowolnej zmiennej $a$ w grafie obliczeniowym $|\frac{\partial L}{\partial a}| > 1.0$ powodujący wybuchanie wag, lub $|\frac{\partial L}{\partial a}| < 1.0$ powodujący znikanie wag. W strukturze LSTM komórka pamięci jest sposobem zapobiegania temu problemowi. Komórka pamięci przy propagacji wstecznej pozwala na swobodniejszą propagację błędu wiele kroków wstecz, dzięki czemu sieć w procesie uczenia jest w stanie uwzględnić długie zależności czasowe (zob rys. \ref{fig:lstm-mem-cell}). Kolejnym problemem związanym z uczeniem zwykłych RNN jest otrzymywanie sprzecznych sygnałów przy aktualizacji wag. W trakcie uczenia ta sama warstwa sieci jest odpowiedzialna za określenie w jakim stopniu stan sieci z poprzedniego kroku jest nadal istotny, oraz w jakim stopniu można wykorzystać aktualną wartość stanu sieci do obliczenia aktywacji komórki. W tym przypadku uczenie sieci może być trudne. W LSTM ten problem został rozwiązany przez wyodrębnienie bramek i warstw odpowiedzialnych za osobne operacje.  
+W swojej pracy \cite{LSTM} Hochreiter i Schmidhuber odnoszą się do wcześniejszej pracy \cite{vanishing_gradient_RNN}, gdzie zostały przeanalizowane źródła problemów związanych ze znikającymi gradientami. Jako główny problem został wskazany gradient względem dowolnej zmiennej $a$ w grafie obliczeniowym $|\frac{\partial L}{\partial a}| > 1.0$ powodujący wybuchanie wag, lub $|\frac{\partial L}{\partial a}| < 1.0$ powodujący znikanie wag. W strukturze LSTM komórka pamięci jest sposobem zapobiegania temu problemowi. Komórka pamięci przy propagacji wstecznej pozwala na swobodniejszą propagację błędu wiele kroków wstecz, dzięki czemu sieć w procesie uczenia jest w stanie uwzględnić długie zależności czasowe (Rysunek \ref{fig:lstm-mem-cell}). Kolejnym problemem związanym z uczeniem zwykłych RNN jest otrzymywanie sprzecznych sygnałów przy aktualizacji wag. W trakcie uczenia ta sama warstwa sieci jest odpowiedzialna za określenie w jakim stopniu stan sieci z poprzedniego kroku jest nadal istotny, oraz w jakim stopniu można wykorzystać aktualną wartość stanu sieci do obliczenia aktywacji komórki. W tym przypadku uczenie sieci może być trudne. W LSTM ten problem został rozwiązany przez wyodrębnienie bramek i warstw odpowiedzialnych za osobne operacje.  
 
 \section{GRU}
 
@@ -547,7 +555,7 @@ gdzie $W_z$ i $U_z$ to wagi skojarzone z update gate. Update gate jest wykorzyst
 \end{equation}
 
 
-Update gate odpowiada za określanie w jakim stopniu stan ukryty sieci z poprzedniego kroku $h_{t-1}$ jest nadal aktualny. Informacja ta jest wykorzystywana również do określenia w jakim stopniu $\tilde{h_t}$ może zastąpić $h_{t-1}$. Jest to znacząca zmiana w porównaniu do LSTM, gdzie do określania aktualności poprzedniego stanu i wyliczonego w aktualnym kroku służyły dwie osobne bramki. Schemat komórki GRU został przedstawiony na rys \ref{fig:gru}. Teoretyczne aspekty podstawowych pojęć omawianych w pracy i wprowadzona notacja posłużą w kolejnym rozdziale do wprowadzenia architektury ReNet wraz ze omówieniem wprowadzonej modyfikacji. 
+Update gate odpowiada za określanie w jakim stopniu stan ukryty sieci z poprzedniego kroku $h_{t-1}$ jest nadal aktualny. Informacja ta jest wykorzystywana również do określenia w jakim stopniu $\tilde{h_t}$ może zastąpić $h_{t-1}$. Jest to znacząca zmiana w porównaniu do LSTM, gdzie do określania aktualności poprzedniego stanu i wyliczonego w aktualnym kroku służyły dwie osobne bramki. Schemat komórki GRU został przedstawiony na rysunku \ref{fig:gru}. Teoretyczne aspekty podstawowych pojęć omawianych w pracy i wprowadzona notacja posłużą w kolejnym rozdziale do wprowadzenia architektury ReNet wraz ze omówieniem wprowadzonej modyfikacji. 
 
 
 
@@ -566,7 +574,7 @@ W niniejszym rozdziale omówiono architekturę sieci ReNet i modyfikacje jakie z
 
 Sieci ReNet \cite{DBLP:journals/corr/VisinKCMCB15} są alternatywą dla sieci konwolucyjnych w zadaniu rozpoznawania obrazów. Warstwy konwolucyjne realizują operację nakładania filtrów na tensor wejściowy, przez co informacje na wyjściu warstwy mają charakter lokalny. Warstwa konwolucyjna w normalnym przypadku nie jest w stanie wykorzystać informacji zawartej w całym obrazie. ReNet jest sposobem na zaadresowanie tej kwestii poprzez wykorzystanie sieci rekurencyjnej do obliczania aktywacji warstwy sieci z wykorzystaniem informacji zawartej w całym obrazie.
 
-Każda warstwa ReNet składa się z czterech sieci rekurencyjnych, które skanują obraz w czterech kierunkach: z góry na dół, od dołu do góry, z lewej do prawej oraz z prawej do lewej (rys. \ref{fig:ReNet-single-layer}). Wejściem każdej z sieci jest zbiór pikseli o niewielkich rozmiarach rozmiarach (ang. patch). W każdym kroku aktywacja warstwy ReNet jest obliczana na podstawie poprzedniego stanu sieci i aktualnie analizowanego zbioru pikseli. 
+Każda warstwa ReNet składa się z czterech sieci rekurencyjnych, które skanują obraz w czterech kierunkach: z góry na dół, od dołu do góry, z lewej do prawej oraz z prawej do lewej (Rysunek \ref{fig:ReNet-single-layer}). Wejściem każdej z sieci jest zbiór pikseli o niewielkich rozmiarach rozmiarach (ang. patch). W każdym kroku aktywacja warstwy ReNet jest obliczana na podstawie poprzedniego stanu sieci i aktualnie analizowanego zbioru pikseli. 
 
 Obraz wejściowy można zdefiniować jako:
 
@@ -637,11 +645,11 @@ $\kappa$ jest wtedy następującą granicą:
 	\label{fig:hilbert}
 \end{figure}
 
-Krzywa Hilberta $\mathcal{H}$ to krzywa wypełniająca przestrzeń posiadająca fraktalną strukturę. Pierwszy element ciągu tworzącego krzywą jest zdefiniowany jako trzy połączone odcinki rozmieszczone na bokach kwadratu. Kolejny element ciągu można uzyskać poprzez podział przestrzeni na 4 części i umieszczenie w każdej z części odpowiednio rotowanego poprzedniego elementu ciągu. Elementy w lewej górnej i prawej górnej części zostają umieszczone bez rotacji. Element w lewej dolnej części zostaje umieszczony po obrocie o 90$\degree$ w prawo, a element w prawej dolnej części zostaje umieszczony po obrocie o 90$\degree$ w lewo. Proces uzyskiwania kolejnych elementów krzywej został przedstawiony na rys. \ref{fig:hilbert}.
+Krzywa Hilberta $\mathcal{H}$ to krzywa wypełniająca przestrzeń posiadająca fraktalną strukturę. Pierwszy element ciągu tworzącego krzywą jest zdefiniowany jako trzy połączone odcinki rozmieszczone na bokach kwadratu. Kolejny element ciągu można uzyskać poprzez podział przestrzeni na 4 części i umieszczenie w każdej z części odpowiednio rotowanego poprzedniego elementu ciągu. Elementy w lewej górnej i prawej górnej części zostają umieszczone bez rotacji. Element w lewej dolnej części zostaje umieszczony po obrocie o 90$\degree$ w prawo, a element w prawej dolnej części zostaje umieszczony po obrocie o 90$\degree$ w lewo. Proces uzyskiwania kolejnych elementów krzywej został przedstawiony na rysunku \ref{fig:hilbert}.
 
 Każdy z punktów będący końcem odcinka tworzącego krzywą Hilberta można przyjąć jako piksel obrazu. Korzystając z tego założenia krzywa Hilberta definiuje sposób przejścia po obrazie i zamianie współrzędnych dwuwymiarowych na jednowymiarowe.
 
-Dodatkowo fraktalna struktura krzywej Hilberta powoduje, że odpowiednio wybrany fragment krzywej też jest krzywą Hilberta. Ta sama właściwość zachodzi dla elementu ciągu tworzącego krzywą, z tą różnicą, że wybrany fragment będzie poprzednim elementem ciągu. Fraktalna struktura powoduje również, że wraz ze wzrostem stopnia krzywej punkty znajdujące się w określonych częściach obrazu są mapowane do tych samych fragmentów krzywej. Własność ta została zademonstrowana na rys. \ref{fig:hilbert}.
+Dodatkowo fraktalna struktura krzywej Hilberta powoduje, że odpowiednio wybrany fragment krzywej też jest krzywą Hilberta. Ta sama właściwość zachodzi dla elementu ciągu tworzącego krzywą, z tą różnicą, że wybrany fragment będzie poprzednim elementem ciągu. Fraktalna struktura powoduje również, że wraz ze wzrostem stopnia krzywej punkty znajdujące się w określonych częściach obrazu są mapowane do tych samych fragmentów krzywej. Własność ta została zademonstrowana na rysunku \ref{fig:hilbert}.
 
 \section{Proponowana architektura sieci}
 
@@ -826,7 +834,7 @@ Opisana procedura pozwala na zmniejszenie nakładu obliczeniowego potrzebnego do
 	\label{fig:hyperparams}
 \end{figure}
 
-Inne dostępne rozwiązania problemu doboru hiperametrów to wykorzystanie algorytmów Grid Search lub Random Search. Grid Search nie jest zalecaną metodą. Często hiperparametry mają różny wpływ na wyniki procesu uczenia. Maksimum optymalizowanej metryki może występować pomiędzy punktami tworzonej siatki, jak to zostało przedstawione na rys. \ref{fig:hyperparams}. W przypadku w którym jeden z hiperparametrów ma większy wpływ na osiągane wyniki należy zwiększyć liczbę przeszukiwanych punktów. Random Search unika tego problemu przez wybieranie losowych punktów z przestrzeni, przez co hiperparametry mające większy wpływ na proces uczenia są próbkowane w większej liczbie punktów i istnieje większa szansa na znalezienie efektywniejszej wartości. Wadą obu algorytmów jest duża liczba iteracji potrzebnych do przeszukania przestrzeni, rosnąca wraz ze wzrostem liczby hiperparametrów i brak wykorzystywania wcześniej zdobytych informacji do poprawy osiągniętego wyniku. W rozdziale tym przedstawiono stosowaną metodykę oraz narzędzia wykorzystane w przeprowadzonych eksperymentach. W kolejnym rozdziale zostaną przedstawione wyniki uzyskane zgodnie z metodyką opisaną w tym rozdziale.
+Inne dostępne rozwiązania problemu doboru hiperametrów to wykorzystanie algorytmów Grid Search lub Random Search. Grid Search nie jest zalecaną metodą. Często hiperparametry mają różny wpływ na wyniki procesu uczenia. Maksimum optymalizowanej metryki może występować pomiędzy punktami tworzonej siatki, jak to zostało przedstawione na rysunku \ref{fig:hyperparams}. W przypadku w którym jeden z hiperparametrów ma większy wpływ na osiągane wyniki należy zwiększyć liczbę przeszukiwanych punktów. Random Search unika tego problemu przez wybieranie losowych punktów z przestrzeni, przez co hiperparametry mające większy wpływ na proces uczenia są próbkowane w większej liczbie punktów i istnieje większa szansa na znalezienie efektywniejszej wartości. Wadą obu algorytmów jest duża liczba iteracji potrzebnych do przeszukania przestrzeni, rosnąca wraz ze wzrostem liczby hiperparametrów i brak wykorzystywania wcześniej zdobytych informacji do poprawy osiągniętego wyniku. W rozdziale tym przedstawiono stosowaną metodykę oraz narzędzia wykorzystane w przeprowadzonych eksperymentach. W kolejnym rozdziale zostaną przedstawione wyniki uzyskane zgodnie z metodyką opisaną w tym rozdziale.
 
 
 \chapter{Wyniki}
@@ -1017,16 +1025,16 @@ Zastanawiające może być przyjęcie nauczonej reprezentacji jako wyjścia prze
 
 \begin{figure}
 \centering
-	\includegraphics[width=1.0\textwidth]{img/loss_ReNet.png}
-	\includegraphics[width=1.0\textwidth]{img/loss_3d_ReNet.png}
+	\includegraphics[width=0.49\textwidth]{img/loss_ReNet.png}
+	\includegraphics[width=0.49\textwidth]{img/loss_3d_ReNet.png}
 	\caption{Wizualizacja loss landscape zbioru testowego nauczonej sieci ReNet.}
 	\label{fig:loss_ReNet}
 \end{figure}
 
 \begin{figure}
 \centering
-	\includegraphics[width=1.0\textwidth]{img/loss_modif_ReNet.png}
-	\includegraphics[width=1.0\textwidth]{img/loss_3d_modif_ReNet.png}
+	\includegraphics[width=0.49\textwidth]{img/loss_modif_ReNet.png}
+	\includegraphics[width=0.49\textwidth]{img/loss_3d_modif_ReNet.png}
 	\caption{Wizualizacja loss landscape zbioru testowego nauczonej zmodyfikowanej sieci ReNet.}
 	\label{fig:loss_modif_ReNet}
 \end{figure}
@@ -1054,10 +1062,6 @@ Dalsze badania w zakresie sieci ReNet mogą obejmować zbadanie zastosowania tej
 W przypadku zmodyfikowanej sieci ReNet właściowści krzywej Hilberta mogą pozwolić na zmianę rozmiarów obrazów i sprawdzenia jak sieć nauczona dla mniejszych obrazów poradzi sobie z większymi obrazami. Tego typu manipulacje są ograniczone przez ścisłe wymagania odnośnie struktury sieci i kształtu tensorów, ale można je obejść przez zastosowanie dodatkowej warstwy ReNet lub MaxPooling.
 
 W początkowym projekcie eksperymentu zakładano przeprowadzenie badań wpływu zastosowanej sieci rekurencyjnej na wyniki klasyfikacji ReNet z modyfikacją. Jednakże ograniczenia czasowe nie pozwoliły na zrealizowanie tego celu i pozostaje on otwartym problemem badawczym.
-
-\section{Podziękowania}
-
-Twórca pracy chciałby podziękować Michałowi Lesiowi za udostępnienie nakładów mocy obliczeniowej niezbędnej do przeprowadzenia badań, oraz za jego cierpliwość i wyrozumiałość, bez których ta praca by nie powstała.
 
 \bibliography{bibliography}
 
