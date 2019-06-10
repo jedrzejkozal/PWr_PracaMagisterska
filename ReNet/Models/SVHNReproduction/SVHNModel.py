@@ -1,6 +1,6 @@
 from keras.models import Sequential
 
-from Models.ReNetLayer import *
+from ReNet.Models.ReNetLayer import *
 
 
 def get_svhn_model():
