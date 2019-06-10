@@ -1,7 +1,7 @@
 import pytest
 import numpy as np
 
-from Utils.ImageGeneratorWithMasking import *
+from ImageGeneratorWithMasking import *
 
 class TestImageGeneratorWithMasking(object):
 
