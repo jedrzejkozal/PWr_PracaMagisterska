@@ -10,7 +10,7 @@ from sklearn.decomposition import PCA
 from shutil import rmtree
 from os import makedirs
 
-from Models.Cifar10Reproduction.Cifar10Model import *
+from ReNet.Models.Cifar10Reproduction.Cifar10Model import *
 from Utils.InputNormalization import *
 from Utils.Masking import *
 

@@ -6,7 +6,7 @@ from keras.callbacks import EarlyStopping, TensorBoard, LambdaCallback
 from keras.optimizers import Adam
 from keras.models import Sequential
 
-from Models.ReNetLayer import *
+from ReNet.Models.ReNetLayer import *
 from Utils.ReduceImbalance import *
 
 model = Sequential()

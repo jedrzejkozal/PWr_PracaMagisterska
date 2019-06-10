@@ -10,7 +10,7 @@ from os import makedirs
 from os.path import exists, join
 from shutil import rmtree
 
-from Models.MnistReproduction.MnistModel import *
+from ReNet.Models.MnistReproduction.MnistModel import *
 from Utils.Masking import *
 
 

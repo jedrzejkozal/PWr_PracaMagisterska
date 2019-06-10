@@ -7,7 +7,7 @@ from keras.preprocessing.image import ImageDataGenerator
 from keras.callbacks import EarlyStopping, TensorBoard, LambdaCallback
 from keras.optimizers import Adam
 
-from Models.SVHNReproduction.SVHNModel import *
+from ReNet.Models.SVHNReproduction.SVHNModel import *
 from Utils.InputNormalization import *
 from Utils.LoadSVHN import *
 from Utils.Masking import *
