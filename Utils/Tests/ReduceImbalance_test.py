@@ -1,7 +1,7 @@
 import pytest
 import numpy as np
 
-from Utils.ReduceImbalance import *
+from ReduceImbalance import *
 
 
 @pytest.fixture

@@ -1,7 +1,7 @@
 import pytest
 import numpy as np
 
-from Utils.InputNormalization import *
+from InputNormalization import *
 
 
 def test_normalize_uniform():
