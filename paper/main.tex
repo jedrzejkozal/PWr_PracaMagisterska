@@ -73,6 +73,19 @@ Recurrent Neural Networks are class of models designed to process sequences. Mos
 
 \section{RELATED WORK}
 
+In \cite{DBLP:journals/corr/VisinKCMCB15} ReNet architecture was introduced. It is alternative to convolutional networks, that enables to learn representation of an image, that can be used for classification purpose. Convolutional network computes activation based on the filters applied locally to part of an image. ReNet by using 4 recurrent neural networks can incorporate information scattered across whole image.
+
+For convenience from now on we will refer to input as an image, but it can be also output of previous layer. We can describe inputs as tensor $X = \{x_{i,j}\}, X \in \mathbb{R}^{w \textrm{x} h \textrm{x} c}$, where $w, h$ are size of an image and $c$ is a number of channels. Image is divided into block of pixels called patches. Every patch is of size: $w_p$, $h_p$, therefore there are $(I \times J),I=\frac{w}{w_p}, J=\frac{h}{h_p}$ patches in the whole image. Set of all patches in image $X$ is defined as $P = \{p_{i,j}\}, P \in \mathbb{R}^{w_p \textrm{x} h_p \textrm{x} c}$. In first part of ReNet algorithm we take each columns of patches and feed it to 2 recurrent neural networks: 
+
+\begin{gather}
+	v_{i,j}^{F} = f_{VFWD} (v_{i,j-1}^F, p_{i,j}), \\
+    v_{i,j}^{R} = f_{VREV} (v_{i,j+1}^R, p_{i,j}),
+\end{gather}
+
+where $f_{VFWD} (v_{i,j-1}^F, p_{i,j})$ can be activation of plain RNN, LSTM or GRU.
+
+
+
 \section{METHODS}
 
 \section{EXPERIMENT SETUP}
