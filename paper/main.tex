@@ -172,6 +172,129 @@ To choose best model structure and hyperparameters modified version of Grid Sear
 
 \section{RESULTS}
 
+\subsection{Quantitative results}
+
+\begin{table}[ht]
+    \centering
+    \caption{Average accuracy for 5-fold cross validation}
+\begin{tabular}{|c|l|l|l|}
+  \hline
+  dataset & ReNet & modif ReNet & conv \\
+  \hline
+  \makecell{Chest X-Ray\\ Images (Pneumonia)} & 0.919 & 0.931 & 0.949 \\
+  \hline
+  \makecell{Flowers Recognition} & 0.538 & 0.553 & 0.657 \\
+  \hline
+  \makecell{Fashion MNIST} & 0.869 & 0.861 & 0.927 \\
+  \hline
+  \makecell{Natural Images} & 0.842 & 0.756 & 0.935 \\
+  \hline
+\end{tabular}
+    \label{table:cross_validation}
+\end{table}
+
+\begin{table}[ht]
+    \centering
+    \caption{Comparison of p-values and H-values of Kruskal-Wallis test}
+    \begin{tabular}{|c|l|l|}
+  \hline
+  dataset & wartość statystyki H & p-wartość \\
+  \hline
+  \makecell{Chest X-Ray\\ Images (Pneumonia)} & 11.579 & 0.003 \\
+  \hline
+  \makecell{Flowers Recognition} & 10.220 & 0.006 \\
+  \hline
+  \makecell{Fashion MNIST} & 10.820 & 0.004 \\
+  \hline
+  \makecell{Natural Images} & 12.5 & 0.001 \\
+  \hline
+\end{tabular}
+    \label{table:kruskal}
+\end{table}
+
+\begin{table}[ht]
+    \centering
+    \caption{Comparison of p-values for Conover post-hoc tests}
+    \begin{tabular}{|c|l|l|l|}
+  \hline
+  dataset & \makecell{ReNet\\ modif ReNet} & \makecell{ReNet\\ conv} & \makecell{modif ReNet\\ conv} \\
+  \hline
+  \makecell{Chest X-Ray\\ Images (Pneumonia)} & 0.016 & 0.001 & 0.001 \\
+  \hline
+  \makecell{Flowers Recognition} & 0.189 & 0.001 & 0.001 \\
+  \hline
+  \makecell{Fashion MNIST} & 0.071 & 0.001 & 0.001 \\
+  \hline
+  \makecell{Natural Images} & 0.001 & 0.001 & 0.001 \\
+  \hline
+\end{tabular}
+    \label{table:posthoc}
+\end{table}
+
+\begin{table}[ht]
+    \centering
+    \caption{Comparison of average epoch training time for first 100 samples of each dataset}
+    \begin{tabular}{|c|l|l|}
+  \hline
+  dataset & ReNet & modif ReNet \\
+  \hline
+  \makecell{Chest X-Ray\\ Images (Pneumonia)} & 1.170 & 0.603 \\
+  \hline
+  \makecell{Flowers Recognition} & 0.324 & 0.157 \\
+  \hline
+  \makecell{Fashion MNIST} & 0.392 & 0.155 \\
+  \hline
+  \makecell{Natural Images} & 0.332 & 0.321 \\
+  \hline
+\end{tabular}
+    \label{table:time_avrg}
+\end{table}
+
+In order to provide valid comparison of previously described method accuracy of ReNet, ReNet with modifcation and convolutional neural network was measured. Average results for a cross validation are presented in a table \ref{table:cross_validation}, results of statistical tests in tables \ref{table:kruskal} and \ref{table:posthoc}. Comparison of a training time is given in a table \ref{table:time_avrg}. Based on a Kruskal-Wallis test with statistical significance level 0.05 one can say that results obtained for all algorithms are significantly different. Based on the post-hoc tests with the same significance level one cane say, that results obtained for ReNet and ReNet with modification are not significantly different for datasets Flowers Recognition and Fashion MNIST.
+
+\subsection{Qualitative results}
+
+\begin{figure*}
+\centering
+	\includegraphics[width=1.0\textwidth]{img/tSNE_ReNet.png}
+	\caption{Visualization of representation learned by ReNet network after applying tSNE}
+	\label{fig:tSNE_ReNet}
+\end{figure*}
+
+\begin{figure*}
+\centering
+	\includegraphics[width=1.0\textwidth]{img/tSNE_modif_ReNet.png}
+	\caption{Visualization of representation learned by modified ReNet network after applying tSNE}
+	\label{fig:tSNE_modif_ReNet}
+\end{figure*}
+
+\begin{figure*}
+\centering
+	\includegraphics[width=1.0\textwidth]{img/tSNE_conv.png}
+	\caption{Visualization of representation learned by convolutional neural network after applying tSNE}
+	\label{fig:tSNE_conv}
+\end{figure*}
+
+Based on \cite{tSNE} visualization of features learned by network were computed. Here features learned by network are understood as outputs of layer before fully connected layer with softmax activation function. Results are presented in figures \ref{fig:tSNE_ReNet}, \ref{fig:tSNE_modif_ReNet} and \ref{fig:tSNE_conv}.
+
+\begin{figure*}
+\centering
+	\includegraphics[width=0.49\textwidth]{img/loss_ReNet.png}
+	\includegraphics[width=0.49\textwidth]{img/loss_3d_ReNet.png}
+	\caption{Visualization of loss landscape of ReNet network}
+	\label{fig:loss_ReNet}
+\end{figure*}
+
+\begin{figure*}
+\centering
+	\includegraphics[width=0.49\textwidth]{img/loss_modif_ReNet.png}
+	\includegraphics[width=0.49\textwidth]{img/loss_3d_modif_ReNet.png}
+	\caption{Visualization of loss landscape of modified ReNet network}
+	\label{fig:loss_modif_ReNet}
+\end{figure*}
+
+Also based on the loss landscape visualization method introduced in \cite{DBLP:journals/corr/abs-1712-09913} plot of loss value around learned network parameters were prepared. Results are shown in figures \ref{fig:loss_ReNet} and \ref{fig:loss_modif_ReNet}.
+
 \section{CONCLUSIONS}
 
 
