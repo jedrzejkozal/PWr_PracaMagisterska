@@ -39,6 +39,7 @@
 \usepackage{amsmath} % assumes amsmath package installed
 \usepackage{amssymb}  % assumes amsmath package installed
 \usepackage{tikz}
+\usetikzlibrary{positioning} 
 
 \title{\LARGE \bf
 Analysis of the effectiveness of recursive
@@ -82,11 +83,43 @@ For convenience from now on we will refer to input as an image, but it can be al
     v_{i,j}^{R} = f_{VREV} (v_{i,j+1}^R, p_{i,j}),
 \end{gather}
 
-where $f_{VFWD} (v_{i,j-1}^F, p_{i,j})$ can be activation of plain RNN, LSTM or GRU.
+where $f_{VFWD} (v_{i,j-1}^F, p_{i,j})$ can be activation of plain RNN, LSTM cell or GRU cell. Concatenated activation can be described as $V = \{v_{i,j}\}_{i=1,...,I}^{j=1,...,J}$. Tensor $V$ is input of another two recurrent layer networks, swapping rows from left to right, and right to left. Operation is analogues to vertical swap, with $f_{HFWD}, f_{HREV}$ computing activations $H = \{h_{i,j}\}$. Transformation $\Phi$ of each layer can be described with introduced designation as:
 
+\begin{equation}
+	\Phi: X \rightarrow V \rightarrow H
+\end{equation}
 
+Output of layer can be feed to another ReNet layer, or can flatted and feed to fully connected layer.
 
 \section{METHODS}
+
+\subsection{Hilbert curve}
+
+\begin{figure}
+	\centering
+	\begin{tikzpicture}
+	\node (h1) {$ $};
+	\node (h2) [right=1.5cm of h1] {$ $};
+	\node (h3) [above=1.5cm of h1] {$ $};
+	\node (h4) [right=1.5cm of h3] {$ $};
+		\draw (h1) -- (h3);
+		\draw[-] (h3) edge node {$ $} (h4);
+		\draw[-] (h4) edge node {$ $} (h2);
+	\end{tikzpicture}
+\caption{First 3 elements of sequence creating Hilbert Curve.}
+	\label{fig:hilbert}
+\end{figure}
+
+Hilbert Curve $\mathcal{H}$ is space filling curve with fractal structure. It is defined by sequence of curves defined recursively, what be described as $k(n+1) = f(k(n))$. In this case transformation $f$ compounds of duplicating and rotating of $n$-th degree curve. First 3 elements of sequence creating Hilbert Cureve are presented in \ref{fig:hilbert}.
+
+We can obtain Hilbert Curve in limit:
+
+\begin{equation}
+	\mathcal{H} = \lim_{n \rightarrow + \infty } k(n)
+\end{equation}
+
+By doing so, we can fill every point of unit square, hence name of this mathematical object - space filling curve. Hilbert Curve have other interesting quantities. $N$-th curve from sequence defining Hilbert Curve provides method of traversing image with side of length $2^{N}$. This can be utilized to define mapping from 2D to 1D and inverse. This mapping have one useful property. The same regions of an image are mapped to similar segments of line, regardless what the degree of this curve is. This is showed in \ref{fig:hilbert} above each curve.
+
 
 \section{EXPERIMENT SETUP}
 
@@ -94,6 +127,8 @@ where $f_{VFWD} (v_{i,j-1}^F, p_{i,j})$ can be activation of plain RNN, LSTM or 
 
 \section{CONCLUSIONS}
 
+
+Code used for perforing studies is avaliable online in \cite{repo}.
 
 
 \bibliographystyle{unsrt}
