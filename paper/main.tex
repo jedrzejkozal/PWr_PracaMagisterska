@@ -73,7 +73,7 @@ Recurrent Neural Networks are class of models designed to process sequences. Mos
 
 \section{INTRODUCTION}
 
-\cite{Goodfellow-et-al-2016}
+
 
  
 
@@ -138,6 +138,8 @@ To further speedup the computations, subsequent modified ReNet layers use activa
 By using Hilbert Curve we mean to hold some spatial information while reducing image size. By aplaying image size reduction introduced by patches, segments of activations sequence still correspond to fragments of image. This should reduce impact of reducing dimensionality of the data.
 
 \section{EXPERIMENT SETUP}
+
+In order to provide valid comparison of previously described method accuracy of ReNet, ReNet with modifcation and convolutional neural network was measured. For traning of all networks Adam optimization method was emplyed. 
 
 \subsection{Datasets}
 
@@ -250,7 +252,7 @@ To choose best model structure and hyperparameters modified version of Grid Sear
     \label{table:time_avrg}
 \end{table}
 
-In order to provide valid comparison of previously described method accuracy of ReNet, ReNet with modifcation and convolutional neural network was measured. Average results for a cross validation are presented in a table \ref{table:cross_validation}, results of statistical tests in tables \ref{table:kruskal} and \ref{table:posthoc}. Comparison of a training time is given in a table \ref{table:time_avrg}. Based on a Kruskal-Wallis test with statistical significance level 0.05 one can say that results obtained for all algorithms are significantly different. Based on the post-hoc tests with the same significance level one cane say, that results obtained for ReNet and ReNet with modification are not significantly different for datasets Flowers Recognition and Fashion MNIST.
+Average results for a cross validation are presented in a table \ref{table:cross_validation}, results of statistical tests in tables \ref{table:kruskal} and \ref{table:posthoc}. Comparison of a training time is given in a table \ref{table:time_avrg}. Based on a Kruskal-Wallis test with statistical significance level 0.05 one can say that results obtained for all algorithms are significantly different. Based on the post-hoc tests with the same significance level one cane say, that results obtained for ReNet and ReNet with modification are not significantly different for datasets Flowers Recognition and Fashion MNIST.
 
 \subsection{Qualitative results}
 
@@ -275,7 +277,7 @@ In order to provide valid comparison of previously described method accuracy of 
 	\label{fig:tSNE_conv}
 \end{figure*}
 
-Based on \cite{tSNE} visualization of features learned by network were computed. Here features learned by network are understood as outputs of layer before fully connected layer with softmax activation function. Results are presented in figures \ref{fig:tSNE_ReNet}, \ref{fig:tSNE_modif_ReNet} and \ref{fig:tSNE_conv}.
+Based on \cite{tSNE} visualization of features learned by network were computed. Here features learned by network are understood as outputs of layer before fully connected layer with softmax activation function. All of this outputs were computed for test set of Natural Images dataset. Results are presented in figures \ref{fig:tSNE_ReNet}, \ref{fig:tSNE_modif_ReNet} and \ref{fig:tSNE_conv}.
 
 \begin{figure*}
 \centering
@@ -293,10 +295,17 @@ Based on \cite{tSNE} visualization of features learned by network were computed.
 	\label{fig:loss_modif_ReNet}
 \end{figure*}
 
-Also based on the loss landscape visualization method introduced in \cite{DBLP:journals/corr/abs-1712-09913} plot of loss value around learned network parameters were prepared. Results are shown in figures \ref{fig:loss_ReNet} and \ref{fig:loss_modif_ReNet}.
+Also based on the loss landscape visualization method introduced in \cite{DBLP:journals/corr/abs-1712-09913} plot of loss value around learned network parameters were prepared. Loss was evaluated based on test set of flowers dataset. Results are shown in figures \ref{fig:loss_ReNet} and \ref{fig:loss_modif_ReNet}.
 
 \section{CONCLUSIONS}
 
+Based on the qualitative results one can say, that convulutional neural networks achieve better accuracy then ReNet and ReNet with modfication. In 3 out of 4 used datasets modified ReNet obtained similar or better results then ReNet. In for Natural Images dataset ReNet outperformes ReNet with modification. For the last dataset some issues were observed and 7 layers of ReNet with modification were need. This shows, that modification introduced in this paper is applicable to all datasets. Introducing modification yielded in substantial speedup for the same datasets, where no performance decrease was noted.
+
+In the tSNE visualization for convolutional network each class forms unified cluster with the exception of few outliers. Based on provided plot one can assume, that each class is easily linearly separable from another. Only mixed classes are 2 and 3. This classes correspond to dog and cat, while other are for example flower, car or airplane. In given situation it is reasonable why cat and dog classes are perceived as similar compared to other classes. The same cannot be found for ReNet networks. Learned representation for both ReNet and ReNet with modification are not linearly separable. There are some Fragments of representation, where one of classes is dominant, but all labels are mixed up. This may be reason why classification task is difficult for ReNet networks.
+
+Assuming that the loss landscape visualization plots are representative one may assume, that ReNet networks have obtained minimum. This minimum can be global or local. If minimum is global, then ReNet networks are not able of achieving minimums with low value that is close to loss obtained by convolutional networks. However results discussed in \cite{Goodfellow-et-al-2016} provide, that deep networks rarely obtain global minimum. Most of the times achived minimum is local, but the value of loss is sufficiently low. One of possibilities is that ReNet networks require some special optimization techniques.
+
+One may ask if speedup obtained is sufficient to provide more practical use for ReNet networks. In case of this studies convolutional networks still obtain better results. Further research in order to improve accuracy and reduce training time of ReNet are required.
 
 Code used for perforing tests is avaliable online in \cite{repo}.
 
