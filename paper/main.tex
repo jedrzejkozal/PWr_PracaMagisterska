@@ -116,7 +116,7 @@ Output $H$ of whole layer can be feed to another ReNet layer, or can flatted and
 	\label{fig:hilbert}
 \end{figure}
 
-Hilbert Curve $\mathcal{H}$ is space filling curve with fractal structure. It is defined by sequence of curves defined recursively, what be described as $k(n+1) = f(k(n))$. In this case transformation $f$ compounds of duplicating and rotating of $n$-th degree curve. First 3 elements of sequence creating Hilbert Cureve are shown in figure \ref{fig:hilbert}.
+Hilbert Curve $\mathcal{H}$ is a space filling curve with fractal structure. It is defined by sequence of curves defined recursively, what be described as $k(n+1) = f(k(n))$. In this case transformation $f$ compounds of duplicating and rotating of $n$-th degree curve. First 3 elements of sequence creating Hilbert Cureve are shown in figure \ref{fig:hilbert}.
 
 We can obtain Hilbert Curve in limit:
 
@@ -124,20 +124,20 @@ We can obtain Hilbert Curve in limit:
 	\mathcal{H} = \lim_{n \rightarrow + \infty } k(n)
 \end{equation}
 
-By doing so, we can fill every point of unit square, hence name of this mathematical object - space filling curve. Hilbert Curve have other interesting quantities. $N$-th curve from sequence defining Hilbert Curve provides method of traversing image with side of length $2^{N}$. This can be utilized to define mapping from 2D to 1D and inverse. This mapping have one useful property. The same regions of an image are mapped to similar segments of line, regardless what the degree of this curve is. For graphical demonstration see lines above each curve in figure \ref{fig:hilbert}.
+By doing so we can fill every point of unit square, hence name of this mathematical object - the space filling curve. Hilbert Curve have other interesting quantities. The $N$-th curve from sequence defining Hilbert Curve provides method of traversing an image with side length $2^{N}$. This can be utilized to define a mapping from the 2D image to a 1D line and inverse. Introduced mapping have one useful property. The same regions of the image are mapped to similar segments of the line, regardless what degree of the curve is. For graphical demonstration see lines above each curve in figure \ref{fig:hilbert}.
 
 \subsection{ReNet modification}
 
-We can utilize mapping defined by Hilbert Curve to reduce dimensionality of image. By doing so we reduce number of recurrent neural networks in each ReNet layer. Instead of 4 RNN swapping image columns and rows we can introduce 2 RNN swaping image converted to 1D sequence with Hilbert Curve.
+We can utilize mapping defined by Hilbert Curve to reduce dimensionality of image. By doing so we reduce number of recurrent neural networks in each ReNet layer. Instead of 4 RNNs swapping image columns and rows we can use 2 RNNs swapping image converted to 1D sequence with Hilbert Curve.
 
-We can define image after mapping to 1D as: $x^{h} = \mathcal{H}(x)$. To keep reduction of activation dimensions after each modified ReNet layer we introduce patches as in original ReNet. In this case patch is defined as set of subsequent pixels: $P^{h} = \{ p_{i}^h \}$, $P^{h} \in \mathbb{R}^{w_p \textrm{x} c}$. As in original ReNet pixels from same patch are one input of recurrent neural network. If patch size is 1, then RNN in modified ReNet layer works as bidirectional recurrent neural network. Activations of whole layers are concatenation of 2 RNN activations:
+We can define image after mapping to 1D as: $x^{h} = \mathcal{H}(x)$. To keep integrity with provided ReNet definition we introduce patches. In this case patch is defined as set of subsequent pixels: $P^{h} = \{ p_{i}^h \}$, $P^{h} \in \mathbb{R}^{w_p \textrm{x} c}$. As in original ReNet pixels from same patch are one input of recurrent neural network. If patch size is 1, then RNN in modified ReNet layer works as bidirectional recurrent neural network. Activations of whole layers are concatenation of 2 RNN activations:
 
 \begin{gather}
 	v_{i}^{F} = f_{FWD}(v_{i-1}^{F}, p_{i}^{h}) \\
 	v_{i}^{R} = f_{REV}(v_{i+1}^{F}, p_{i}^{h})
 \end{gather}
 
-To further speedup the computations, subsequent modified ReNet layers use activation provided by previous layer. No mapping or inverse mapping is needed.
+To further speedup the computations, subsequent modified ReNet layers use activation provided by previous layer. No 2D-1D mapping or inverse mapping is necessary.
 
 By using Hilbert Curve we mean to hold some spatial information while reducing image size. By aplaying image size reduction introduced by patches, segments of activations sequence still correspond to fragments of image. This should reduce impact of reducing dimensionality of the data.
 
