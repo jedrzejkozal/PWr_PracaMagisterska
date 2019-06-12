@@ -70,12 +70,16 @@ Recurrent Neural Networks are class of models designed to process sequences. Mos
 
 \end{abstract}
 
+\begin{keywords}
+Neural networks, image recognition, image classification, recurrent neural networks.
+\end{keywords}
+%\articleinfobox
 
 \section{INTRODUCTION}
 
+Feedforward neural networks have fix amount of inputs and outputs. This can be quite challenging limitation when processing sequences. For example sentence can have 5 words or it can have 9 words. For processing sequences with neural models Recurrent Neural Networks (RNN) \cite{RNN} were developed. In this models a hidden state was introduced, so the network could update state at each time step based on previous state and actual input. RNNs are learned with backpropagation in time algorithm \cite{BPTT}. Two most noticable modification of basic RNN structure are Long Short-Term Memory (LSTM) \cite{LSTM} and Gated Recurrent Unit (GRU) \cite{DBLP:journals/corr/ChoMGBSB14}. Both of them are able to learn long term dependencies in data across many timesteps.
 
-
- 
+Most common areas of application of RNNs are natural language processing, recognition of handwriting and generation of text, music or images. In this work we will focus on ReNet architecture \cite{DBLP:journals/corr/VisinKCMCB15}, that tackles image classification task with RNNs. Modification to ReNet layer was introduced, aimed at reducing traning time. Also comparison of ReNet networks with convolutional networks was performed.
 
 \section{RELATED WORK}
 
@@ -124,7 +128,7 @@ By doing so, we can fill every point of unit square, hence name of this mathemat
 
 \subsection{ReNet modification}
 
-We can utilize mapping defined by Hilbert Curve to reduce dimensionality of image. Then we can reduce number of recurrent neural networks in each ReNet layer. Instead of 4 RNN swapping image columns and rows we can introduce 2 RNN swaping image converted to 1D sequence with Hilbert Curve.
+We can utilize mapping defined by Hilbert Curve to reduce dimensionality of image. By doing so we reduce number of recurrent neural networks in each ReNet layer. Instead of 4 RNN swapping image columns and rows we can introduce 2 RNN swaping image converted to 1D sequence with Hilbert Curve.
 
 We can define image after mapping to 1D as: $x^{h} = \mathcal{H}(x)$. To keep reduction of activation dimensions after each modified ReNet layer we introduce patches as in original ReNet. In this case patch is defined as set of subsequent pixels: $P^{h} = \{ p_{i}^h \}$, $P^{h} \in \mathbb{R}^{w_p \textrm{x} c}$. As in original ReNet pixels from same patch are one input of recurrent neural network. If patch size is 1, then RNN in modified ReNet layer works as bidirectional recurrent neural network. Activations of whole layers are concatenation of 2 RNN activations:
 
@@ -299,15 +303,15 @@ Also based on the loss landscape visualization method introduced in \cite{DBLP:j
 
 \section{CONCLUSIONS}
 
-Based on the qualitative results one can say, that convulutional neural networks achieve better accuracy then ReNet and ReNet with modfication. In 3 out of 4 used datasets modified ReNet obtained similar or better results then ReNet. In for Natural Images dataset ReNet outperformes ReNet with modification. For the last dataset some issues were observed and 7 layers of ReNet with modification were need. This shows, that modification introduced in this paper is applicable to all datasets. Introducing modification yielded in substantial speedup for the same datasets, where no performance decrease was noted.
+Based on the qualitative results one can say, that convulutional neural networks achieve better accuracy then ReNet and ReNet with modfication. In 3 out of 4 used datasets modified ReNet obtained similar or better results then ReNet. For Natural Images dataset ReNet outperformes ReNet with modification. For the last dataset some issues were observed and 7 layers of ReNet with modification were need. This shows, that modification introduced in this paper is applicable to all datasets. Introducing modification yielded in substantial speedup for the same datasets, where no performance decrease was noted.
 
 In the tSNE visualization for convolutional network each class forms unified cluster with the exception of few outliers. Based on provided plot one can assume, that each class is easily linearly separable from another. Only mixed classes are 2 and 3. This classes correspond to dog and cat, while other are for example flower, car or airplane. In given situation it is reasonable why cat and dog classes are perceived as similar compared to other classes. The same cannot be found for ReNet networks. Learned representation for both ReNet and ReNet with modification are not linearly separable. There are some Fragments of representation, where one of classes is dominant, but all labels are mixed up. This may be reason why classification task is difficult for ReNet networks.
 
 Assuming that the loss landscape visualization plots are representative one may assume, that ReNet networks have obtained minimum. This minimum can be global or local. If minimum is global, then ReNet networks are not able of achieving minimums with low value that is close to loss obtained by convolutional networks. However results discussed in \cite{Goodfellow-et-al-2016} provide, that deep networks rarely obtain global minimum. Most of the times achived minimum is local, but the value of loss is sufficiently low. One of possibilities is that ReNet networks require some special optimization techniques.
 
-One may ask if speedup obtained is sufficient to provide more practical use for ReNet networks. In case of this studies convolutional networks still obtain better results. Further research in order to improve accuracy and reduce training time of ReNet are required.
+One may ask if obtained speedup is sufficient to provide more practical use for ReNet networks. Is ReNet really a valid alternative to convolutional networks for practitioners and researchers? Based on results of this study we can say, that convolutional networks still obtain better accuracy and lower training time. Further research in order to improve accuracy and reduce training time of ReNet are required.
 
-Code used for perforing tests is avaliable online in \cite{repo}.
+Code with models used for performnig tests is avaliable online in \cite{repo}.
 
 
 \bibliographystyle{unsrt}
