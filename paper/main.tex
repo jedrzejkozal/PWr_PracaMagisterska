@@ -73,32 +73,31 @@ Recurrent Neural Networks are class of models designed to process sequences. Mos
 \begin{keywords}
 Neural networks, recurrent neural networks, image recognition, image classification.
 \end{keywords}
-%\articleinfobox
 
 \section{INTRODUCTION}
 
-Feedforward neural networks have fix amount of inputs and outputs. This can be quite challenging limitation when processing sequences. For example sentence can have 5 words or it can have 9 words. For processing sequences with neural models Recurrent Neural Networks (RNN) \cite{RNN} were developed. In this models a hidden state was introduced, so the network could update state at each time step based on previous state and actual input. RNNs are learned with backpropagation in time algorithm \cite{BPTT}. Two most noticable modification of basic RNN structure are Long Short-Term Memory (LSTM) \cite{LSTM} and Gated Recurrent Unit (GRU) \cite{DBLP:journals/corr/ChoMGBSB14}. Both of them are able to learn long term dependencies in data across many timesteps.
+Feedforward neural networks have fixed amount of inputs and outputs. This can be quite challenging limitation when processing sequences. For example a sentence can have 5 words or it can have 9 words. For processing sequences with neural models Recurrent Neural Networks (RNN) \cite{RNN} were developed. In this models a hidden state was introduced, so the network could update state at each time step based on previous state and actual input. RNNs are learned with backpropagation in time algorithm \cite{BPTT}. Two most noticeable modifications of basic RNN structure are Long Short-Term Memory (LSTM) \cite{LSTM} and Gated Recurrent Unit (GRU) \cite{DBLP:journals/corr/ChoMGBSB14}. Both of them are able to learn long term dependencies in data across many timesteps.
 
-Most common areas of application of RNNs are natural language processing, recognition of handwriting and generation of text, music or images. In this work we will focus on ReNet architecture \cite{DBLP:journals/corr/VisinKCMCB15}, that tackles image classification task with RNNs. Modification to ReNet layer was introduced, aimed at reducing traning time. Also comparison of ReNet networks with convolutional networks was performed.
+Most common areas of RNNs applications are natural language processing, recognition of handwriting and generation of text, music or images. In this work we will focus on a ReNet architecture \cite{DBLP:journals/corr/VisinKCMCB15}, that tackles an image classification task with RNNs. Modification to the ReNet layer was introduced, aimed at reducing a traning time. Also comparison of ReNet networks with convolutional neural networks (CNNs) was performed.
 
 \section{RELATED WORK}
 
-In \cite{DBLP:journals/corr/VisinKCMCB15} ReNet architecture was introduced, that is an alternative to convolutional networks. It is able to learn representation of an image, that can be used for classification purpose. Convolutional network computes activation based on the filters applied locally to part of an image. ReNet by using 4 recurrent neural networks can incorporate information scattered across whole image.
+In \cite{DBLP:journals/corr/VisinKCMCB15} the ReNet architecture was introduced, that is an alternative to convolutional networks. It is able to learn a representation of an image, that can be used for a classification purpose. CNN computes an activation based on filters applied locally to a part of an image. ReNet by using 4 RNNs can incorporate an information scattered across the whole image.
 
-For convenience from now on we will refer to an input of ReNet layer as an image, but the input can be output of previous layer as well. We can describe inputs as tensor $X = \{x_{i,j}\}, X \in \mathbb{R}^{w \textrm{x} h \textrm{x} c}$, where $w, h$ are size of an image and $c$ is a number of channels. Image is divided into blocks of pixels called patches. Every patch is of size $w_p$, $h_p$, therefore there are $(I \times J),I=\frac{w}{w_p}, J=\frac{h}{h_p}$ patches in the whole image. Set of all patches in image $X$ is defined as $P = \{p_{i,j}\}, P \in \mathbb{R}^{w_p \textrm{x} h_p \textrm{x} c}$. In first part of ReNet layer computations we take each columns of patches and feed it into 2 recurrent neural networks: 
+For convenience from now on we will refer to an input of the ReNet layer as an image, but it can be as well an output of the previous layer. We can describe inputs as tensor $X = \{x_{i,j}\}, X \in \mathbb{R}^{w \textrm{x} h \textrm{x} c}$, where $w, h$ are size of the image and $c$ is a number of channels. The image is divided into blocks of pixels called patches. Every patch is of size $w_p$, $h_p$, therefore there are $(I \times J),I=\frac{w}{w_p}, J=\frac{h}{h_p}$ patches in the whole image. Set of all patches in the image $X$ is defined as $P = \{p_{i,j}\}, P \in \mathbb{R}^{w_p \textrm{x} h_p \textrm{x} c}$. In first part of the ReNet layer computations we take patches forming an each column and feed it into 2 recurrent neural networks: 
 
 \begin{gather}
 	v_{i,j}^{F} = f_{VFWD} (v_{i,j-1}^F, p_{i,j}), \\
     v_{i,j}^{R} = f_{VREV} (v_{i,j+1}^R, p_{i,j}),
 \end{gather}
 
-where $f_{VFWD} (v_{i,j-1}^F, p_{i,j})$ can be activations computed by plain RNN, LSTM cell or GRU cell. Concatenated activation can be described as $V = \{v_{i,j}\}_{i=1,...,I}^{j=1,...,J}$. Tensor $V$ is input of another two recurrent layer networks, swapping rows from left to right, and right to left. Operation is analogues to vertical swap, with $f_{HFWD}, f_{HREV}$ computing activations $H = \{h_{i,j}\}$. Transformation $\Phi$ of each layer can be described with introduced formalism as:
+where $f_{VFWD} (v_{i,j-1}^F, p_{i,j})$ can be activations computed by plain RNN, the LSTM cell or the GRU cell. Concatenated activations can be described as $V = \{v_{i,j}\}_{i=1,...,I}^{j=1,...,J}$ tensor. $V$ is an input of another two recurrent layer networks, swapping rows from left to right, and right to left. Operation is analogues to the vertical swap, with $f_{HFWD}, f_{HREV}$ computing activations $H = \{h_{i,j}\}$. Transformation $\Phi$ of each layer can be described with introduced formalism as:
 
 \begin{equation}
 	\Phi: X \rightarrow V \rightarrow H
 \end{equation}
 
-Output $H$ of whole layer can be feed to another ReNet layer, or can flatted and feed to fully connected layer.
+The output $H$ of the whole layer can be feed to the another ReNet layer, or it can be flatted and feed to a fully connected layer.
 
 \section{METHODS}
 
@@ -107,43 +106,130 @@ Output $H$ of whole layer can be feed to another ReNet layer, or can flatted and
 \begin{figure}
 	\centering
 	\begin{tikzpicture}
-	\draw (0,0) node[below] {1} -- (0,2) node[above] {2} -- (2,2) node[above] {3} -- (2,0) node[below] {4};
-	\draw (0,2.5) node[above] {1} -- (0.66,2.5) node[above] {2} -- (1.32,2.5) node[above] {3} -- (2,2.5) node[above] {4};
-	\draw (3,0) node[below] {1} -- (3.75,0) node[below] {2} -- (3.75,0.75) -- (3,0.75) -- (3,1.5) -- (3,2.25) -- (3.75,2.25) -- (3.75,1.5) -- (4.5,1.5) -- (4.5,2.25) -- (5.25,2.25) -- (5.25,1.5)  -- (5.25,0.75) -- (4.5,0.75) -- (4.5,0) -- (5.25,0);
-	\draw (6.25,0) -- (6.25,0.4);
+	\draw (0,0) node[below] {1}
+	-- (0,2.1) node[above] {2} 
+	-- (2.1,2.1) node[above] {3} 
+	-- (2.1,0) node[below] {4};
+	\draw (0,3.0) node[above] {1} 
+	-- (0.66,3.0) node[below] {2} 
+	-- (1.32,3.0) node[above] {3} 
+	-- (2,3.0) node[below] {4};
+	\draw (3,0) node[below] {1} 
+	-- (3+0.7,0) node[below] {2} 
+	-- (3+0.7,0+0.7) 
+	-- (3,0+0.7) 
+	-- (3,0+0.7+0.7) 
+	-- (3,0+0.7+0.7+0.7) 
+	-- (3+0.7,0+0.7+0.7+0.7) 
+	-- (3+0.7,0+0.7+0.7) 
+	-- (3+0.7+0.7,0+0.7+0.7) 
+	-- (3+0.7+0.7,0+0.7+0.7+0.7) 
+	-- (3+0.7+0.7+0.7,0+0.7+0.7+0.7) 
+	-- (3+0.7+0.7+0.7,0+0.7+0.7)  
+	-- (3+0.7+0.7+0.7,0+0.7) 
+	-- (3+0.7+0.7,0+0.7) 
+	-- (3+0.7+0.7,0) 
+	-- (3+0.7+0.7+0.7,0);
+	\draw (3,3) node[above] {1}
+	-- (5.1,3) node[above] {2};
+	\draw (6.25,0) 
+	-- (6.25,0+0.3) 
+	-- (6.25+0.3,0+0.3)
+	-- (6.25+0.3,0)
+	-- (6.25+0.3+0.3,0)
+	-- (6.25+0.3+0.3+0.3,0)
+	-- (6.25+0.3+0.3+0.3,0+0.3)
+	-- (6.25+0.3+0.3,0+0.3)
+	-- (6.25+0.3+0.3,0+0.3+0.3)
+	-- (6.25+0.3+0.3+0.3,0+0.3+0.3)
+	-- (6.25+0.3+0.3+0.3,0+0.3+0.3+0.3)
+	-- (6.25+0.3+0.3,0+0.3+0.3+0.3)
+	-- (6.25+0.3,0+0.3+0.3+0.3)
+	-- (6.25+0.3,0+0.3+0.3)
+	-- (6.25,0+0.3+0.3)
+	-- (6.25,0+0.3+0.3+0.3)
+	-- (6.25,0+0.3+0.3+0.3+0.3)
+	-- (6.25+0.3,0+0.3+0.3+0.3+0.3)
+	-- (6.25+0.3,0+0.3+0.3+0.3+0.3+0.3)
+	-- (6.25,0+0.3+0.3+0.3+0.3+0.3)
+	-- (6.25,0+0.3+0.3+0.3+0.3+0.3+0.3)
+	-- (6.25,0+0.3+0.3+0.3+0.3+0.3+0.3+0.3)
+	-- (6.25+0.3,0+0.3+0.3+0.3+0.3+0.3+0.3+0.3)
+	-- (6.25+0.3,0+0.3+0.3+0.3+0.3+0.3+0.3)
+	-- (6.25+0.3+0.3,0+0.3+0.3+0.3+0.3+0.3+0.3)
+	-- (6.25+0.3+0.3,0+0.3+0.3+0.3+0.3+0.3+0.3+0.3)
+	-- (6.25+0.3+0.3+0.3,0+0.3+0.3+0.3+0.3+0.3+0.3+0.3)
+	-- (6.25+0.3+0.3+0.3,0+0.3+0.3+0.3+0.3+0.3+0.3)
+	-- (6.25+0.3+0.3+0.3,0+0.3+0.3+0.3+0.3+0.3)
+	-- (6.25+0.3+0.3,0+0.3+0.3+0.3+0.3+0.3)
+	-- (6.25+0.3+0.3,0+0.3+0.3+0.3+0.3)
+	-- (6.25+0.3+0.3+0.3,0+0.3+0.3+0.3+0.3)
+	-- (6.25+0.3+0.3+0.3+0.3,0+0.3+0.3+0.3+0.3)
+	-- (6.25+0.3+0.3+0.3+0.3+0.3,0+0.3+0.3+0.3+0.3)
+	-- (6.25+0.3+0.3+0.3+0.3+0.3,0+0.3+0.3+0.3+0.3+0.3)
+	-- (6.25+0.3+0.3+0.3+0.3,0+0.3+0.3+0.3+0.3+0.3)
+	-- (6.25+0.3+0.3+0.3+0.3,0+0.3+0.3+0.3+0.3+0.3+0.3)
+	-- (6.25+0.3+0.3+0.3+0.3,0+0.3+0.3+0.3+0.3+0.3+0.3+0.3)
+	-- (6.25+0.3+0.3+0.3+0.3+0.3,0+0.3+0.3+0.3+0.3+0.3+0.3+0.3)
+	-- (6.25+0.3+0.3+0.3+0.3+0.3,0+0.3+0.3+0.3+0.3+0.3+0.3)
+	-- (6.25+0.3+0.3+0.3+0.3+0.3+0.3,0+0.3+0.3+0.3+0.3+0.3+0.3)
+	-- (6.25+0.3+0.3+0.3+0.3+0.3+0.3,0+0.3+0.3+0.3+0.3+0.3+0.3+0.3)
+	-- (6.25+0.3+0.3+0.3+0.3+0.3+0.3+0.3,0+0.3+0.3+0.3+0.3+0.3+0.3+0.3)
+	-- (6.25+0.3+0.3+0.3+0.3+0.3+0.3+0.3,0+0.3+0.3+0.3+0.3+0.3+0.3)
+	-- (6.25+0.3+0.3+0.3+0.3+0.3+0.3+0.3,0+0.3+0.3+0.3+0.3+0.3)
+	-- (6.25+0.3+0.3+0.3+0.3+0.3+0.3,0+0.3+0.3+0.3+0.3+0.3)
+	-- (6.25+0.3+0.3+0.3+0.3+0.3+0.3,0+0.3+0.3+0.3+0.3)
+	-- (6.25+0.3+0.3+0.3+0.3+0.3+0.3+0.3,0+0.3+0.3+0.3+0.3)
+	-- (6.25+0.3+0.3+0.3+0.3+0.3+0.3+0.3,0+0.3+0.3+0.3)
+	-- (6.25+0.3+0.3+0.3+0.3+0.3+0.3+0.3,0+0.3+0.3)
+	-- (6.25+0.3+0.3+0.3+0.3+0.3+0.3,0+0.3+0.3)
+	-- (6.25+0.3+0.3+0.3+0.3+0.3+0.3,0+0.3+0.3+0.3)
+	-- (6.25+0.3+0.3+0.3+0.3+0.3,0+0.3+0.3+0.3)
+	-- (6.25+0.3+0.3+0.3+0.3,0+0.3+0.3+0.3)
+	-- (6.25+0.3+0.3+0.3+0.3,0+0.3+0.3)
+	-- (6.25+0.3+0.3+0.3+0.3+0.3,0+0.3+0.3)
+	-- (6.25+0.3+0.3+0.3+0.3+0.3,0+0.3)
+	-- (6.25+0.3+0.3+0.3+0.3,0+0.3)
+	-- (6.25+0.3+0.3+0.3+0.3,0)
+	-- (6.25+0.3+0.3+0.3+0.3+0.3,0)
+	-- (6.25+0.3+0.3+0.3+0.3+0.3+0.3,0)
+	-- (6.25+0.3+0.3+0.3+0.3+0.3+0.3,0+0.3)
+	-- (6.25+0.3+0.3+0.3+0.3+0.3+0.3+0.3,0+0.3)
+	-- (6.25+0.3+0.3+0.3+0.3+0.3+0.3+0.3,0)
+	;
 	\end{tikzpicture}
 \caption{First 3 elements of sequence creating Hilbert Curve.}
 	\label{fig:hilbert}
 \end{figure}
 
-Hilbert Curve $\mathcal{H}$ is a space filling curve with fractal structure. It is defined by sequence of curves defined recursively, what be described as $k(n+1) = f(k(n))$. In this case transformation $f$ compounds of duplicating and rotating of $n$-th degree curve. First 3 elements of sequence creating Hilbert Cureve are shown in figure \ref{fig:hilbert}.
+A Hilbert Curve $\mathcal{H}$ is a space filling curve with fractal structure. It is defined by a sequence of curves defined recursively, what be described as $k(n+1) = f(k(n))$. In this case the transformation $f$ compounds of duplicating and rotating of the $n$-th degree curve. First 3 elements of the sequence creating the Hilbert Curve are shown in figure \ref{fig:hilbert}.
 
-We can obtain Hilbert Curve in limit:
+We can obtain the Hilbert Curve in a limit:
 
 \begin{equation}
 	\mathcal{H} = \lim_{n \rightarrow + \infty } k(n)
 \end{equation}
 
-By doing so we can fill every point of unit square, hence name of this mathematical object - the space filling curve. Hilbert Curve have other interesting quantities. The $N$-th curve from sequence defining Hilbert Curve provides method of traversing an image with side length $2^{N}$. This can be utilized to define a mapping from the 2D image to a 1D line and inverse. Introduced mapping have one useful property. The same regions of the image are mapped to similar segments of the line, regardless what degree of the curve is. For graphical demonstration see lines above each curve in figure \ref{fig:hilbert}.
+By doing so we can fill every point of an unit square, hence name of this mathematical object - a space filling curve. The Hilbert Curve have other interesting quantities. The $N$-th curve from the sequence defining the Hilbert Curve provides a method of traversing an image with a side length $2^{N}$. This can be utilized to define a mapping from an 2D image to a 1D line and inverse. Introduced mapping have one useful property. The same regions of the image are mapped to similar segments of the line, regardless what the degree of the curve is. For a graphical demonstration see lines above each curve in figure \ref{fig:hilbert}.
 
 \subsection{ReNet modification}
 
-We can utilize mapping defined by Hilbert Curve to reduce dimensionality of image. By doing so we reduce number of recurrent neural networks in each ReNet layer. Instead of 4 RNNs swapping image columns and rows we can use 2 RNNs swapping image converted to 1D sequence with Hilbert Curve.
+We can utilize the mapping defined by the Hilbert Curve to reduce dimensionality of the image. By doing so we reduce a number of recurrent neural networks in each ReNet layer. Instead of 4 RNNs swapping the image columns and rows we can use 2 RNNs swapping the image converted to 1D sequence with the Hilbert Curve.
 
-We can define image after mapping to 1D as: $x^{h} = \mathcal{H}(x)$. To keep integrity with provided ReNet definition we introduce patches. In this case patch is defined as set of subsequent pixels: $P^{h} = \{ p_{i}^h \}$, $P^{h} \in \mathbb{R}^{w_p \textrm{x} c}$. As in original ReNet pixels from same patch are one input of recurrent neural network. If patch size is 1, then RNN in modified ReNet layer works as bidirectional recurrent neural network. Activations of whole layers are concatenation of 2 RNN activations:
+We can define an image after mapping to 1D as: $x^{h} = \mathcal{H}(x)$. To keep integrity with the provided ReNet definition we introduce patches. In this case the patch is defined as a set of subsequent pixels: $P^{h} = \{ p_{i}^h \}$, $P^{h} \in \mathbb{R}^{w_p \textrm{x} c}$. As in the original ReNet pixels from the same patch form one input of the recurrent neural network. If the patch size is 1, then the RNN in the modified ReNet layer works as a bidirectional recurrent neural network. Activations of whole layer are concatenation of 2 RNN activations:
 
 \begin{gather}
 	v_{i}^{F} = f_{FWD}(v_{i-1}^{F}, p_{i}^{h}) \\
 	v_{i}^{R} = f_{REV}(v_{i+1}^{F}, p_{i}^{h})
 \end{gather}
 
-To further speedup the computations, subsequent modified ReNet layers use activation provided by previous layer. No 2D-1D mapping or inverse mapping is necessary.
+To further speedup the computations, the subsequent modified ReNet layers use activations provided by the previous layer. No 2D-1D mapping or inverse mapping is necessary.
 
-By using Hilbert Curve we mean to hold some spatial information while reducing image size. By applying image size reduction introduced by patches, segments of activations sequence still correspond to fragments of image. This should limit an impact of reducing dimensionality of the data.
+By using the Hilbert Curve we mean to hold some spatial information while reducing the image size. By applying the image size reduction introduced by patches, segments of the activations sequence still correspond to fragments of the image. This should limit an impact of reducing dimensionality of the data.
 
 \section{EXPERIMENT SETUP}
 
-Accuracy of ReNet, ReNet with modification and convolutional neural network was measured. In order to reduce impact of classifiers variance 5-fold cross validation was performed. For optimization of networks parameters Adam algorithm was employed. All results are reported for networks trained for 50 epochs with 32 batch size and cross-entropy as loss function. During training early stopping and learning rate reduction were applied based on the value of loss function for test set.
+Accuracy of ReNet, ReNet with modification and CNN was measured. In order to reduce an impact of a classifiers variance 5-fold cross validation was performed. For optimization of networks parameters Adam algorithm was employed. All results are reported for networks trained for 50 epochs with 32 batch size and a cross-entropy as a loss function. During training early stopping and  learning rate reduction were applied based on the value of the loss function for a test set.
 
 \subsection{Datasets}
 
@@ -166,15 +252,15 @@ Accuracy of ReNet, ReNet with modification and convolutional neural network was 
 \end{tabular}
 \end{table}
 
-Comparison of used datasets is given in table \ref{tab:dataset}. Chest X-Ray, Flowers Recognition and Natural Images datasets were downloaded with usage of kaggle public API in version respectively 2, 2 and 1. Fashion MNIST dataset was downloaded using keras library. In case of x-ray dataset conversion to greyscale was applied. All images were resized to (64,64) or (32,32) size due to issues with to running out of GPU memory when using ReNet networks on larger images. This limits the field of application of ReNet to small images only.
+Comparison of used datasets is given in table \ref{tab:dataset}. Chest X-Ray, Flowers Recognition and Natural Images datasets were downloaded with usage of kaggle public API in versions respectively 2, 2 and 1. Fashion MNIST dataset was downloaded using keras library. In case of Chest X-Ray dataset conversion to greyscale was applied. All images were resized to (64,64) or (32,32) size due to issues with running out of a GPU memory when using ReNet networks on larger images. This limits the field of applications of the ReNet to small images only.
 
 \subsection{Used tools and hardware}
 
-Experiments were performed using Google Colab, Google Clound Platform with usage of AI Platform and local PC with IntelCore i7 8700 processor and graphic card GTX 1070Ti. All models were implemented using keras library with tensorflow backend. Scikit-learn and numpy were also used.
+Experiments were performed using Google Colab, Google Clound Platform with usage of AI Platform and the local PC with IntelCore i7 8700 processor and graphic card GTX 1070Ti. All models were implemented using keras library with tensorflow backend. Scikit-learn and numpy were also used.
 
 \subsection{Hyperparameters finetuning}
 
-To choose best model structure and hyperparameters modified version of Grid Search was utilized. In normal setup Grid Search is complete search of defined hyperparameters space. Instead of complete search greedy search was used. Each value of hyperparameter was chosen separately. Order of choosing hyperparams was as follows: learning rates and regularization terms, then number of ReNet or convolutional layers with dropout probability, number of neurons in ReNet or convolutional layers and finally number of neurons in fully conected layers with dropout probability. This is a naive approach because we assume independent influence of controlled factors on process of learning. 
+To choose the best model structure and hyperparameters modified version of Grid Search was utilized. In normal setup Grid Search is a complete search of a defined hyperparameters space. Instead of the complete search greedy search was used. Each value of the hyperparameter was chosen separately. Order of choosing hyperparams was as follows: learning rates and regularization terms, then number of the ReNet or convolutional layers with the dropout probability, number of neurons in ReNet or convolutional layers and finally number of neurons in fully conected layers with the dropout probability. This is a naive approach because we assume an independent influence of a controlled factors on a process of learning. 
 
 \section{RESULTS}
 
@@ -204,7 +290,7 @@ To choose best model structure and hyperparameters modified version of Grid Sear
     \caption{Comparison of p-values and H-values of Kruskal-Wallis test}
     \begin{tabular}{|c|l|l|}
   \hline
-  dataset & wartość statystyki H & p-wartość \\
+  dataset & H statistic value & p-value \\
   \hline
   \makecell{Chest X-Ray\\ Images (Pneumonia)} & 11.579 & 0.003 \\
   \hline
@@ -256,7 +342,7 @@ To choose best model structure and hyperparameters modified version of Grid Sear
     \label{table:time_avrg}
 \end{table}
 
-Average results for a cross validation are presented in a table \ref{table:cross_validation}, results of statistical tests in tables \ref{table:kruskal} and \ref{table:posthoc}. Comparison of a training time is given in a table \ref{table:time_avrg}. Based on a Kruskal-Wallis test with statistical significance level 0.05 we can find that results obtained for all algorithms are significantly different. Based on the post-hoc tests with the same significance level we can find, that results obtained for ReNet and ReNet with modification are significantly different for all datasets, except for Flowers Recognition and Fashion MNIST.
+Average results for a the cross validation are presented in table \ref{table:cross_validation} and results of statistical tests in tables \ref{table:kruskal} and \ref{table:posthoc}. Comparison of a training time is given in table \ref{table:time_avrg}. Based on a Kruskal-Wallis test with a statistical significance level 0.05 we can find that results obtained for all algorithms are significantly different. Based on post-hoc tests with the same significance level we can find, that all results are significantly different except for the ReNet and the ReNet with modification results for Flowers Recognition and Fashion MNIST datasets.
 
 \subsection{Qualitative results}
 
@@ -281,7 +367,7 @@ Average results for a cross validation are presented in a table \ref{table:cross
 	\label{fig:tSNE_conv}
 \end{figure*}
 
-Based on method introduced in \cite{tSNE} visualization of representation learned by network was computed. Here representation learned by network is understood as outputs of layer before fully connected layer with softmax activation function (the last layer of each model). All of this outputs were computed for test set of Natural Images dataset. Results are presented in figures \ref{fig:tSNE_ReNet}, \ref{fig:tSNE_modif_ReNet} and \ref{fig:tSNE_conv}.
+Based on a method introduced in \cite{tSNE} a visualization of a representation learned by network was computed. Here the representation learned by network is understood as outputs of the layer before the fully connected layer with the softmax activation function (the last layer of each model). All of this outputs were computed for the test set of Natural Images dataset. Results are presented in figures \ref{fig:tSNE_ReNet}, \ref{fig:tSNE_modif_ReNet} and \ref{fig:tSNE_conv}.
 
 \begin{figure*}
 \centering
@@ -299,17 +385,17 @@ Based on method introduced in \cite{tSNE} visualization of representation learne
 	\label{fig:loss_modif_ReNet}
 \end{figure*}
 
-The novel loss landscape visualization method was introduced in \cite{DBLP:journals/corr/abs-1712-09913}. Using this technique plot of loss value around learned network parameters was prepared. Loss value was computed using test set of flowers dataset. Results are shown in figures \ref{fig:loss_ReNet} and \ref{fig:loss_modif_ReNet}.
+The novel loss landscape visualization method was introduced in \cite{DBLP:journals/corr/abs-1712-09913}. With usage of this technique the plot of the loss value around learned network parameters was prepared. The loss value was computed using the test set of flowers dataset. Results are shown in figures \ref{fig:loss_ReNet} and \ref{fig:loss_modif_ReNet}.
 
 \section{CONCLUSIONS}
 
-Based on the qualitative results we can conclude, that convulutional neural networks achieve a better accuracy then the ReNet and the ReNet with modfication. In 3 out of 4 datasets the modified ReNet obtained similar or better results then the original ReNet. For the Natural Images dataset the ReNet outperformes the ReNet with modification. In case of the last dataset some issues were observed. 7 layers of the ReNet with modification were needed to obtain reported results. This shows, that the modification introduced in this paper is not applicable to all datasets without the accuracy decrease. Introducing modification yielded in substantial speedup for the same datasets, where no performance decrease was noted.
+Based on the qualitative results we can conclude, that convulutional neural networks achieve better accuracy then the ReNet and the ReNet with modfication. In 3 out of 4 datasets the modified ReNet obtained similar or better results then the original ReNet. For the Natural Images dataset the ReNet outperformes the ReNet with modification. In case of the last dataset some issues were observed. 7 layers of the ReNet with modification were needed to obtain reported results. This shows, that the modification introduced in this paper is not applicable to all datasets without the accuracy decrease. Introducing modification yielded in a substantial speedup for the same datasets, where no performance decrease was noted.
 
-In the tSNE visualization for the convolutional network each class forms an unified cluster with the exception of few outliers. Based on provided plot we can assume, that each class can be easily linearly separated from another. Only mixed classes are 2 and 3. This classes correspond to dog and cat, while other in this dataset are flower, car or airplane. In given situation it is reasonable that cat and dog classes are perceived as similar compared to other classes. Learned representation for both ReNet and ReNet with modification are not linearly separable. There are some fragments of representation where one of classes is dominant, but all labels are mixed up. This may be reason why classification task is difficult for ReNet networks.
+In the tSNE visualization for the CNN each class forms an unified cluster with the exception of few outliers. Based on the provided plot we can assume, that each class can be easily linearly separated from another. Only mixed classes are 2 and 3. This classes correspond to dog and cat, while other in this dataset are for example flower, car or airplane. In a given situation it is reasonable that cat and dog classes are perceived as similar compared to other classes. Learned representations for ReNet and ReNet with modification are not linearly separable. There are some fragments of the representation where one of classes is dominant, but all labels are mixed up. This may be reason why the classification task is difficult for ReNet networks.
 
-Assuming that the loss landscape visualization plots are representative one may assume, that ReNet networks have obtained minimum. This minimum can be global or local. If it is global, then ReNet networks are not able of achieving loss values as low as ones obtained for convolutional networks. However results discussed in \cite{Goodfellow-et-al-2016} provide, that deep networks rarely obtain global minimum. Most of the times achived minimum is local, but the value of loss is sufficiently low. One of possibilities is that ReNet networks require some special optimization techniques.
+Assuming that the loss landscape visualization plots are representative we can deduce, that ReNet networks have obtained minimum. This minimum can be either global or local. If it is global, then ReNet networks are not able of achieving loss values as low as ones obtained for CNNs. However results discussed in \cite{Goodfellow-et-al-2016} provide, that deep networks rarely obtain global minimum. Most of the times achieved minimum is local, but the value of loss is sufficiently low. In this case one of possibilities is that ReNet networks require some special optimization techniques.
 
-One may ask if obtained speedup is sufficient to provide more practical use for ReNet networks. Is ReNet really a valid alternative to convolutional networks for practitioners and researchers? Based on results of this study we can say, that convolutional networks still obtain better accuracy and lower training time. Further research in order to improve accuracy and reduce training time of ReNet are required.
+One may ask if the obtained speedup is sufficient enough to provide more practical use for ReNet networks. Is ReNet really a valid alternative to convolutional networks for practitioners and researchers? Based on results of this study we can state, that CNNs still obtain better accuracy and lower training time. A further research in order to improve the accuracy and reduce the training time of ReNet is required.
 
 Code with models used for performnig tests is avaliable online in \cite{repo}.
 
