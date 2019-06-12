@@ -1,4 +1,4 @@
-\documentclass[a4paper, 10 pt, conference]{ieeeconf}
+\documentclass[a4paper, 10 pt, journal]{ieeeconf}
 \overrideIEEEmargins
 \usepackage{polski}
 \usepackage{amsmath}
@@ -71,7 +71,7 @@ Recurrent Neural Networks are class of models designed to process sequences. Mos
 \end{abstract}
 
 \begin{keywords}
-Neural networks, image recognition, image classification, recurrent neural networks.
+Neural networks, recurrent neural networks, image recognition, image classification.
 \end{keywords}
 %\articleinfobox
 
@@ -83,22 +83,22 @@ Most common areas of application of RNNs are natural language processing, recogn
 
 \section{RELATED WORK}
 
-In \cite{DBLP:journals/corr/VisinKCMCB15} ReNet architecture was introduced. It is alternative to convolutional networks, that enables to learn representation of an image, that can be used for classification purpose. Convolutional network computes activation based on the filters applied locally to part of an image. ReNet by using 4 recurrent neural networks can incorporate information scattered across whole image.
+In \cite{DBLP:journals/corr/VisinKCMCB15} ReNet architecture was introduced, that is an alternative to convolutional networks. It is able to learn representation of an image, that can be used for classification purpose. Convolutional network computes activation based on the filters applied locally to part of an image. ReNet by using 4 recurrent neural networks can incorporate information scattered across whole image.
 
-For convenience from now on we will refer to input as an image, but it can be also output of previous layer. We can describe inputs as tensor $X = \{x_{i,j}\}, X \in \mathbb{R}^{w \textrm{x} h \textrm{x} c}$, where $w, h$ are size of an image and $c$ is a number of channels. Image is divided into block of pixels called patches. Every patch is of size: $w_p$, $h_p$, therefore there are $(I \times J),I=\frac{w}{w_p}, J=\frac{h}{h_p}$ patches in the whole image. Set of all patches in image $X$ is defined as $P = \{p_{i,j}\}, P \in \mathbb{R}^{w_p \textrm{x} h_p \textrm{x} c}$. In first part of ReNet algorithm we take each columns of patches and feed it to 2 recurrent neural networks: 
+For convenience from now on we will refer to an input of ReNet layer as an image, but the input can be output of previous layer as well. We can describe inputs as tensor $X = \{x_{i,j}\}, X \in \mathbb{R}^{w \textrm{x} h \textrm{x} c}$, where $w, h$ are size of an image and $c$ is a number of channels. Image is divided into blocks of pixels called patches. Every patch is of size $w_p$, $h_p$, therefore there are $(I \times J),I=\frac{w}{w_p}, J=\frac{h}{h_p}$ patches in the whole image. Set of all patches in image $X$ is defined as $P = \{p_{i,j}\}, P \in \mathbb{R}^{w_p \textrm{x} h_p \textrm{x} c}$. In first part of ReNet layer computations we take each columns of patches and feed it into 2 recurrent neural networks: 
 
 \begin{gather}
 	v_{i,j}^{F} = f_{VFWD} (v_{i,j-1}^F, p_{i,j}), \\
     v_{i,j}^{R} = f_{VREV} (v_{i,j+1}^R, p_{i,j}),
 \end{gather}
 
-where $f_{VFWD} (v_{i,j-1}^F, p_{i,j})$ can be activation of plain RNN, LSTM cell or GRU cell. Concatenated activation can be described as $V = \{v_{i,j}\}_{i=1,...,I}^{j=1,...,J}$. Tensor $V$ is input of another two recurrent layer networks, swapping rows from left to right, and right to left. Operation is analogues to vertical swap, with $f_{HFWD}, f_{HREV}$ computing activations $H = \{h_{i,j}\}$. Transformation $\Phi$ of each layer can be described with introduced designation as:
+where $f_{VFWD} (v_{i,j-1}^F, p_{i,j})$ can be activations computed by plain RNN, LSTM cell or GRU cell. Concatenated activation can be described as $V = \{v_{i,j}\}_{i=1,...,I}^{j=1,...,J}$. Tensor $V$ is input of another two recurrent layer networks, swapping rows from left to right, and right to left. Operation is analogues to vertical swap, with $f_{HFWD}, f_{HREV}$ computing activations $H = \{h_{i,j}\}$. Transformation $\Phi$ of each layer can be described with introduced formalism as:
 
 \begin{equation}
 	\Phi: X \rightarrow V \rightarrow H
 \end{equation}
 
-Output of layer can be feed to another ReNet layer, or can flatted and feed to fully connected layer.
+Output $H$ of whole layer can be feed to another ReNet layer, or can flatted and feed to fully connected layer.
 
 \section{METHODS}
 
