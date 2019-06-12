@@ -256,7 +256,7 @@ To choose best model structure and hyperparameters modified version of Grid Sear
     \label{table:time_avrg}
 \end{table}
 
-Average results for a cross validation are presented in a table \ref{table:cross_validation}, results of statistical tests in tables \ref{table:kruskal} and \ref{table:posthoc}. Comparison of a training time is given in a table \ref{table:time_avrg}. Based on a Kruskal-Wallis test with statistical significance level 0.05 one can say that results obtained for all algorithms are significantly different. Based on the post-hoc tests with the same significance level one cane say, that results obtained for ReNet and ReNet with modification are not significantly different for datasets Flowers Recognition and Fashion MNIST.
+Average results for a cross validation are presented in a table \ref{table:cross_validation}, results of statistical tests in tables \ref{table:kruskal} and \ref{table:posthoc}. Comparison of a training time is given in a table \ref{table:time_avrg}. Based on a Kruskal-Wallis test with statistical significance level 0.05 we can find that results obtained for all algorithms are significantly different. Based on the post-hoc tests with the same significance level we can find, that results obtained for ReNet and ReNet with modification are significantly different for all datasets, except for Flowers Recognition and Fashion MNIST.
 
 \subsection{Qualitative results}
 
@@ -281,7 +281,7 @@ Average results for a cross validation are presented in a table \ref{table:cross
 	\label{fig:tSNE_conv}
 \end{figure*}
 
-Based on \cite{tSNE} visualization of features learned by network were computed. Here features learned by network are understood as outputs of layer before fully connected layer with softmax activation function. All of this outputs were computed for test set of Natural Images dataset. Results are presented in figures \ref{fig:tSNE_ReNet}, \ref{fig:tSNE_modif_ReNet} and \ref{fig:tSNE_conv}.
+Based on method introduced in \cite{tSNE} visualization of representation learned by network was computed. Here representation learned by network is understood as outputs of layer before fully connected layer with softmax activation function (the last layer of each model). All of this outputs were computed for test set of Natural Images dataset. Results are presented in figures \ref{fig:tSNE_ReNet}, \ref{fig:tSNE_modif_ReNet} and \ref{fig:tSNE_conv}.
 
 \begin{figure*}
 \centering
@@ -299,7 +299,7 @@ Based on \cite{tSNE} visualization of features learned by network were computed.
 	\label{fig:loss_modif_ReNet}
 \end{figure*}
 
-Also based on the loss landscape visualization method introduced in \cite{DBLP:journals/corr/abs-1712-09913} plot of loss value around learned network parameters were prepared. Loss was evaluated based on test set of flowers dataset. Results are shown in figures \ref{fig:loss_ReNet} and \ref{fig:loss_modif_ReNet}.
+The novel loss landscape visualization method was introduced in \cite{DBLP:journals/corr/abs-1712-09913}. Using this technique plot of loss value around learned network parameters was prepared. Loss value was computed using test set of flowers dataset. Results are shown in figures \ref{fig:loss_ReNet} and \ref{fig:loss_modif_ReNet}.
 
 \section{CONCLUSIONS}
 
