@@ -139,11 +139,11 @@ We can define image after mapping to 1D as: $x^{h} = \mathcal{H}(x)$. To keep in
 
 To further speedup the computations, subsequent modified ReNet layers use activation provided by previous layer. No 2D-1D mapping or inverse mapping is necessary.
 
-By using Hilbert Curve we mean to hold some spatial information while reducing image size. By aplaying image size reduction introduced by patches, segments of activations sequence still correspond to fragments of image. This should reduce impact of reducing dimensionality of the data.
+By using Hilbert Curve we mean to hold some spatial information while reducing image size. By applying image size reduction introduced by patches, segments of activations sequence still correspond to fragments of image. This should limit an impact of reducing dimensionality of the data.
 
 \section{EXPERIMENT SETUP}
 
-In order to provide valid comparison of previously described method accuracy of ReNet, ReNet with modifcation and convolutional neural network was measured. For traning of all networks Adam optimization method was emplyed. 
+Accuracy of ReNet, ReNet with modification and convolutional neural network was measured. In order to reduce impact of classifiers variance 5-fold cross validation was performed. For optimization of networks parameters Adam algorithm was employed. All results are reported for networks trained for 50 epochs with 32 batch size and cross-entropy as loss function. During training early stopping and learning rate reduction were applied based on the value of loss function for test set.
 
 \subsection{Datasets}
 
@@ -166,15 +166,15 @@ In order to provide valid comparison of previously described method accuracy of 
 \end{tabular}
 \end{table}
 
-Comparison of used datasets is given in table \ref{tab:dataset}. Chest X-Ray, Flowers Recognition and Natural Images datasets were downloaded with usage of kaggle public API in version respectively 2, 2 and 1. Fashion MNIST dataset was downloaded using keras library. In case of x-ray dataset conversion to greyscale was applied. All images were resized to (64,64) or (32,32) size, due to issues with to low GPU memory when using ReNet networks on larger images. This limits the field of application of ReNet to small images only.
+Comparison of used datasets is given in table \ref{tab:dataset}. Chest X-Ray, Flowers Recognition and Natural Images datasets were downloaded with usage of kaggle public API in version respectively 2, 2 and 1. Fashion MNIST dataset was downloaded using keras library. In case of x-ray dataset conversion to greyscale was applied. All images were resized to (64,64) or (32,32) size due to issues with to running out of GPU memory when using ReNet networks on larger images. This limits the field of application of ReNet to small images only.
 
 \subsection{Used tools and hardware}
 
-Experiments were performed using Google Colab, Google Clound Platform with usage of AI Platform and local PC with IntelCore i7 8700 processor and graphic card GTX 1070Ti. Code was implemented using keras library with tensorflow backend. Scikit-learn and numpy were also used.
+Experiments were performed using Google Colab, Google Clound Platform with usage of AI Platform and local PC with IntelCore i7 8700 processor and graphic card GTX 1070Ti. All models were implemented using keras library with tensorflow backend. Scikit-learn and numpy were also used.
 
 \subsection{Hyperparameters finetuning}
 
-To choose best model structure and hyperparameters modified version of Grid Search was applied. In normal setup Grid Search is complete search of defined hyperparameters space. Instead of complete search greedy search was introduced. Each value of hyperparameter was chosen separately. Order of choosing hyperparams was as follows: learning rates and regularization terms, then number of ReNet or convolutional layers with dropout probability, number of neurons in ReNet or convolutional layers and finally number of neurons in fully conected layers with dropout probability. This is a naive approach because we assume independent influence of controlled factors on process of learning. 
+To choose best model structure and hyperparameters modified version of Grid Search was utilized. In normal setup Grid Search is complete search of defined hyperparameters space. Instead of complete search greedy search was used. Each value of hyperparameter was chosen separately. Order of choosing hyperparams was as follows: learning rates and regularization terms, then number of ReNet or convolutional layers with dropout probability, number of neurons in ReNet or convolutional layers and finally number of neurons in fully conected layers with dropout probability. This is a naive approach because we assume independent influence of controlled factors on process of learning. 
 
 \section{RESULTS}
 
