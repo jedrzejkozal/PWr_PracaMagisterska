@@ -1,3 +1,0 @@
-file '/home/jkozal/Dokumenty/PWr/magisterka/magisterka/animations/manimlib/media/video/demo/SquareToCircle/1440p60/partial_movie_files/SquareToCircle/00000.mp4'
-file '/home/jkozal/Dokumenty/PWr/magisterka/magisterka/animations/manimlib/media/video/demo/SquareToCircle/1440p60/partial_movie_files/SquareToCircle/00001.mp4'
-file '/home/jkozal/Dokumenty/PWr/magisterka/magisterka/animations/manimlib/media/video/demo/SquareToCircle/1440p60/partial_movie_files/SquareToCircle/00002.mp4'
