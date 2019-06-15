@@ -30,18 +30,19 @@ h1_base = (135,160)
 line1_3_base = (120,170)
 y1_base = (113,70)
 
-trajectories = [constant_position((10,200-10), num_frames=1000),]
+num_frames=400
+trajectories = [constant_position((10,200-10), num_frames=num_frames),]
 
 translation_base = (130,0)
 translation_vec = (0,0)
 for i in range(sequence_len+1):
-    trajectories.append(constant_position(move_point_by_vector(line1_1_base, translation_vec), num_frames=1000))
-    trajectories.append(constant_position(move_point_by_vector(line1_2_base, translation_vec), num_frames=1000))
-    trajectories.append(constant_position(move_point_by_vector(circle1_base, translation_vec), num_frames=1000))
-    trajectories.append(constant_position(move_point_by_vector(x1_base, translation_vec), num_frames=1000))
-    trajectories.append(constant_position(move_point_by_vector(h1_base, translation_vec), num_frames=1000))
-    trajectories.append(constant_position(move_point_by_vector(line1_3_base, translation_vec), num_frames=1000))
-    trajectories.append(constant_position(move_point_by_vector(y1_base, translation_vec), num_frames=1000))
+    trajectories.append(constant_position(move_point_by_vector(line1_1_base, translation_vec), num_frames=num_frames))
+    trajectories.append(constant_position(move_point_by_vector(line1_2_base, translation_vec), num_frames=num_frames))
+    trajectories.append(constant_position(move_point_by_vector(circle1_base, translation_vec), num_frames=num_frames))
+    trajectories.append(constant_position(move_point_by_vector(x1_base, translation_vec), num_frames=num_frames))
+    trajectories.append(constant_position(move_point_by_vector(h1_base, translation_vec), num_frames=num_frames))
+    trajectories.append(constant_position(move_point_by_vector(line1_3_base, translation_vec), num_frames=num_frames))
+    trajectories.append(constant_position(move_point_by_vector(y1_base, translation_vec), num_frames=num_frames))
     translation_vec = move_point_by_vector(translation_vec, translation_base)
 
 generate_gif(objects_list, trajectories, filename='samples/rnn.gif', size=(820, 400))

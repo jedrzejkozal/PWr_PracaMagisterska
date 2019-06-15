@@ -19,7 +19,7 @@ def generate_gif(objects_list, trajectories, filename='samples/sample.gif', size
         __apply_transformations(objects_list, frame_number)
         frames.append(img)
 
-    frames[0].save(filename, format='GIF', append_images=frames[1:], save_all=True, duration=2, loop=0)
+    frames[0].save(filename, format='GIF', append_images=frames[1:], save_all=True, duration=1, loop=0)
 
 
 def __check_trajectories_contents_types(trajectories):
