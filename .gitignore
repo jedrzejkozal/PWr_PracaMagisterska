@@ -34,3 +34,4 @@ paper/main.synctex.gz
 paper/texput.log
 animations/manimlib/files
 animations/manimlib/media/Tex
+animations/manimlib/media/video/*/*/*/partial_movie_files
