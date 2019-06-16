@@ -116,7 +116,7 @@ class ReNetColumns(ReNetScene):
         rnn_activations = 2
         activation_patch0 = self.get_pixels_columns(1, 1, rnn_activations, np.array([-0.5,5,-0.5]), color_palete=[YELLOW, PURPLE])
         activation_patch1 = self.get_pixels_columns(1, 1, rnn_activations, np.array([3.5,5,-0.5]), color_palete=[YELLOW, PURPLE])
-        activation_patch2 = self.get_pixels_columns(1, 1, rnn_activations, np.array([7.5,5,-0.5]), color_palete=[YELLOW, PURPLE])
+        activation_patch2 = self.get_pixels_columns(1, 1, rnn_activations, np.array([7,5,-0.5]), color_palete=[YELLOW, PURPLE])
 
         arrows = (arrow_in0, arrow_in1, arrow_in2, arrow_out0, arrow_out1, arrow_out2, arrow_rec1, arrow_rec2)
         patches = (patch0, patch1, patch2)
@@ -133,7 +133,7 @@ class ReNetColumns(ReNetScene):
 
         activation_patch0 = self.get_pixels_columns(1, 1, rnn_activations, np.array([-0.5,5,-0.5]), color_palete=[ORANGE, PINK])
         activation_patch1 = self.get_pixels_columns(1, 1, rnn_activations, np.array([3.5,5,-0.5]), color_palete=[ORANGE, PINK])
-        activation_patch2 = self.get_pixels_columns(1, 1, rnn_activations, np.array([7.5,5,-0.5]), color_palete=[ORANGE, PINK])
+        activation_patch2 = self.get_pixels_columns(1, 1, rnn_activations, np.array([7,5,-0.5]), color_palete=[ORANGE, PINK])
 
         arrows = (arrow_in2, arrow_in1, arrow_in0, arrow_out2, arrow_out1, arrow_out0, arrow_rec2, arrow_rec1)
         patches = (patch2_copy, patch1_copy, patch0_copy)
@@ -170,7 +170,7 @@ class ReNetColumns(ReNetScene):
         else:
             z = -1
 
-        animations = self.simultaneous_movement_animations(activation_patch2, PhaseFlow, lambda x: np.array([3+col,0,z]))
+        animations = self.simultaneous_movement_animations(activation_patch2, PhaseFlow, lambda x: np.array([3.5+col,0,z]))
         self.play(*animations)
         animations = self.simultaneous_movement_animations(activation_patch1, PhaseFlow, lambda x: np.array([7+col,0,z])) + self.simultaneous_movement_animations(activation_patch2, PhaseFlow, lambda x: np.array([0,-6,0]))
         self.play(*animations)
@@ -187,7 +187,7 @@ class ReNetColumns(ReNetScene):
         return columns
 
 
-    def get_pixels_columns(self, column_len, columns_width, channels, starting_positon, color_palete=[YELLOW, PURPLE, ORANGE, PINK]):
+    def get_pixels_columns(self, column_len, columns_width, channels, starting_positon, color_palete=[RED, GREEN, BLUE]):
         pixels = []
         for i in range(column_len):
             for w in range(columns_width):
