@@ -178,3 +178,23 @@ class ReNetColumns(ReNetScene):
         self.play(*animations)
         animations = self.simultaneous_movement_animations(activation_patch0, PhaseFlow, lambda x: np.array([0,-4,0]))
         self.play(*animations)
+
+
+    def get_img(self, postion, img_width, img_height, channels, patch_width):
+        columns = []
+        for i in range(0, img_width, patch_width):
+            columns.append(self.get_pixels_columns(img_height, patch_width, channels, postion+np.array([i,0,0])))
+        return columns
+
+
+    def get_pixels_columns(self, column_len, columns_width, channels, starting_positon, color_palete=[YELLOW, PURPLE, ORANGE, PINK]):
+        pixels = []
+        for i in range(column_len):
+            for w in range(columns_width):
+                for channel in range(channels):
+                    p = self.get_pixel_at(starting_positon[0]+w,
+                                            starting_positon[1]-i,
+                                            starting_positon[2]-channel,
+                                            color=color_palete[channel])
+                    pixels.append(p)
+        return pixels
