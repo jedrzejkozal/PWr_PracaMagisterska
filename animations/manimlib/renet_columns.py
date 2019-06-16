@@ -178,14 +178,3 @@ class ReNetColumns(ReNetScene):
         self.play(*animations)
         animations = self.simultaneous_movement_animations(activation_patch0, PhaseFlow, lambda x: np.array([0,-4,0]))
         self.play(*animations)
-
-
-    def get_patch_pixels(self, column, i, patch_size):
-        return column[i*patch_size:i*patch_size+patch_size]
-
-
-    def get_circle_at(self, x, y, z, color=BLACK):
-        c = Circle(color=BLACK)
-        c.set_x(x)
-        c.set_y(y)
-        return c

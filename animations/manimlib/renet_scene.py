@@ -58,3 +58,14 @@ class ReNetScene(ThreeDScene):
     #most movement animations have some argument before object
     def simultaneous_movement_animations(self, objects_list, animation, arg):
         return tuple([animation(arg, object) for object in objects_list])
+
+
+    def get_patch_pixels(self, column, i, patch_size):
+        return column[i*patch_size:i*patch_size+patch_size]
+
+
+    def get_circle_at(self, x, y, z, color=BLACK):
+        c = Circle(color=BLACK)
+        c.set_x(x)
+        c.set_y(y)
+        return c
