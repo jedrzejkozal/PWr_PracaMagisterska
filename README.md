@@ -55,11 +55,11 @@ Then we concatenate each activation for forward and backward sweep and get tenso
 
 ![](ReadmeFiles/generated/ReNetColumns.gif)
 
-V will be an input to next two recurrent neural networks. Analogous to the vertical sweep we compute f_HFWD, f_HREV activations, but this time we will use rows of an image. One network sweeps from left to right, second from right to left. 
+V will be an input to next two recurrent neural networks. Analogous to the vertical sweep we compute f_HFWD, f_HREV activations, but this time we will use rows of an image. One network sweeps from left to right, second from right to left.
 
 ![](ReadmeFiles/generated/ReNetRows.gif)
 
-The result of this operation is tensor $H = \{h_{i,j}\}$. H is the output of the whole ReNet layer.
+The result of this operation is tensor ![](ReadmeFiles/equations/CodeCogsEqn(7).gif). H is the output of the whole ReNet layer.
 
 ## Hilbert Curve
 Hilbert Curve is a space filling curve with a fractal-like structure. It's defined by sequence of curves. Each element of this sequence is computed based on previous elements:
