@@ -35,10 +35,10 @@ class HilbertTraversing(Scene):
         animations = animations + self.simultaneous_animations([line0, line1, line2, line3], ShowIncreasingSubsets)
         self.play(*animations)
 
-        self.create_dots_and_traverse(h0, line_begin0, line_step0, 4**2 - 1)
-        self.create_dots_and_traverse(h1, line_begin1, line_step1, 4**3 - 1)
-        #self.create_dots_and_traverse(h2, line_begin2, line_step2, 4**4 - 1)
-        #self.create_dots_and_traverse(h3, line_begin3, line_step3, 4**5 - 1)
+        self.create_dots_and_traverse(h0, line_begin0, line_step0, 4**2 - 1, mark_at=[2, 7, 10, 99999999])
+        self.create_dots_and_traverse(h1, line_begin1, line_step1, 4**3 - 1, mark_at=[10, 31, 42, 99999999])
+        #self.create_dots_and_traverse(h2, line_begin2, line_step2, 4**4 - 1, mark_at=[37, 99999999])
+        #self.create_dots_and_traverse(h3, line_begin3, line_step3, 4**5 - 1, mark_at=[])
 
 
     def get_curve_at(self, curve_side_length, point):
@@ -82,8 +82,6 @@ class HilbertTraversing(Scene):
         return points * (new_side_length/old_side_length)
 
 
-
-
     def get_line_for_curve(self, curve, number_of_sections):
         line_begin = np.array([curve.get_x(), curve.get_y(), 0]) + np.array([4,0,0])
         line_end = line_begin + np.array([5,0,0])
@@ -95,11 +93,12 @@ class HilbertTraversing(Scene):
         return tuple([animation(object) for object in objects_list])
 
 
-    def create_dots_and_traverse(self, curve, line_begin, line_step, degree):
+    def create_dots_and_traverse(self, curve, line_begin, line_step, number_of_sections, mark_at=[]):
         dot_curve, curve_movement = self.get_curve_dot_and_movement(curve)
-        dot_line, line_movement = self.get_line_dot_and_movement(line_begin, line_step, degree)
+        dot_line, line_movement = self.get_line_dot_and_movement(line_begin, line_step, number_of_sections)
         self.play(ShowCreation(dot_curve), ShowCreation(dot_line))
-        self.traverse(dot_curve, curve_movement, dot_line, line_movement)
+        self.traverse(dot_curve, curve_movement, dot_line, line_movement, runtime=1.0/number_of_sections, mark_at=mark_at)
+        self.play(Uncreate(dot_curve), Uncreate(dot_line))
 
 
     def get_curve_dot_and_movement(self, curve):
@@ -115,10 +114,19 @@ class HilbertTraversing(Scene):
         return dot_line, line_movement
 
 
-    def traverse(self, dot_curve, curve_movement, dot_line, line_movement):
+    def traverse(self, dot_curve, curve_movement, dot_line, line_movement, runtime=1, mark_at=[]):
+        i = 0
         for vec_curve, vec_line in zip(curve_movement, line_movement):
-            self.play(PhaseFlow(lambda x: vec_curve, dot_curve),
-                        PhaseFlow(lambda x: vec_line, dot_line))
+            if i == mark_at[0]:
+                mark_at.pop(0)
+                self.add(dot_curve.deepcopy())
+                self.add(dot_line.deepcopy())
+            p1 = PhaseFlow(lambda x: vec_curve, dot_curve)
+            p2 = PhaseFlow(lambda x: vec_line, dot_line)
+            p1.set_run_time(runtime)
+            p1.set_run_time(runtime)
+            self.play(p1, p2)
+            i += 1
 
 
     def points_to_vectors(self, points):
