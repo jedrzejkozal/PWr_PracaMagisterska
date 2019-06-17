@@ -13,6 +13,7 @@ class HilbertTraversing(Scene):
 
         self.camera.reset_pixel_shape(2000, 1440)
 
+
     def construct(self):
         base_position = np.array([-4,8,0])
         vec_to_next_curve = np.array([0,-5, 0])
@@ -35,18 +36,9 @@ class HilbertTraversing(Scene):
         self.play(ShowCreation(dot_curve))
 
         curve_movement = self.points_to_vectors(curve.get_points())
-
-
-
         line_begin = np.array([curve.get_x(), curve.get_y(), 0]) + np.array([4,0,0])
-        #line_step = (curve.get_points()[-2] - curve.get_points()[-1]) / degree / degree * 4
-        #if line_step[0] == 0:
-        #    line_step[0] = line_step[1]
-        #    line_step[1] = 0
 
-        #number_of_sections = 4**degree - 1
-        number_of_sections = len(curve_movement) # workaround for using the same vector to traverse two lines with same direction
-        #line_end = line_begin + number_of_sections*line_step
+        number_of_sections = 4**degree - 1
         line_end = line_begin + np.array([5,0,0])
         self.play(ShowIncreasingSubsets(Line(line_begin, line_end, color=BLACK)))
         line_step = (line_end - line_begin) / number_of_sections
@@ -112,7 +104,7 @@ class HilbertTraversing(Scene):
 
     def points_to_vectors(self, points):
         vectors = [points[len(points)-2] - points[len(points)-1]]
-        previous_vec = points[len(points)-2] - points[len(points)-1]
+        self.vec_with_same_direction_count = 0
         for i in range(len(points)-3, -1, -1):
             vec = points[i] - points[i+1]
             self.add_non_zero_vec(vectors, vec)
@@ -121,10 +113,12 @@ class HilbertTraversing(Scene):
 
     def add_non_zero_vec(self, vectors, vec):
         if not self.is_zero_vector(vec):
-            if self.directions_are_the_same(vec, vectors[-1]):
+            if self.vec_with_same_direction_count < 2:
                 vectors[-1] = vectors[-1] + vec
+                self.vec_with_same_direction_count += 1
             else:
                 vectors.append(vec)
+                self.vec_with_same_direction_count = 0
 
 
     def is_zero_vector(self, vec):
