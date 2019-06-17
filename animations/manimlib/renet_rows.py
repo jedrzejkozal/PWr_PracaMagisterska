@@ -161,26 +161,6 @@ class ReNetRows(ReNetScene):
         self.transport_activations(tuple(reversed(activation_patches)), col, move_froward=False)
 
 
-    def show_rnn_sweep(self, arrows, patches, activation_patches):
-        arrow_in0, arrow_in1, arrow_in2, arrow_out0, arrow_out1, arrow_out2, arrow_rec1, arrow_rec2 = arrows
-        patch0, patch1, patch2 = patches
-        activation_patch0, activation_patch1, activation_patch2 = activation_patches
-
-        animations = (ShowCreation(arrow_in0),) + self.simultaneous_animations(patch0, VFadeOut)
-        self.play(*animations)
-        animations = (ShowCreation(arrow_in1), ShowCreation(arrow_out0), ShowCreation(arrow_rec1),
-                        FadeOut(arrow_in0)) + self.simultaneous_animations(patch1, VFadeOut) + self.simultaneous_animations(activation_patch0, VFadeIn)
-        self.play(*animations)
-        animations = (FadeOut(arrow_in1), FadeOut(arrow_out0), FadeOut(arrow_rec1),
-                        ShowCreation(arrow_in2), ShowCreation(arrow_out1),
-                        ShowCreation(arrow_rec2)) + self.simultaneous_animations(patch2, VFadeOut) + self.simultaneous_animations(activation_patch1, VFadeIn)
-        self.play(*animations)
-        animations = (FadeOut(arrow_in2), FadeOut(arrow_out1), FadeOut(arrow_rec2), ShowCreation(arrow_out2)) + self.simultaneous_animations(activation_patch2, VFadeIn)
-        self.play(*animations)
-        animations = (FadeOut(arrow_out2),)
-        self.play(*animations)
-
-
     def transport_activations(self, activation_patches, row, move_froward=True):
         activation_patch0, activation_patch1, activation_patch2 = activation_patches
         if move_froward:
