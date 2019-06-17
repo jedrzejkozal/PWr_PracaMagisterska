@@ -1,5 +1,5 @@
 import sys
-sys.path.insert(0,'/home/jkozal/Dokumenty/PWr/magisterka/magisterka/animations/manimlib/')
+sys.path.insert(0,'/home/jkozal/Dokumenty/PWr/magisterka/magisterka/ReadmeFiles/manimlib/')
 from HilbertCurve import *
 
 from manimlib.imports import *
@@ -10,7 +10,6 @@ class Hilbert(Scene):
     def setup(self):
         self.camera.set_frame_width(self.camera.get_frame_width()+46)
         self.camera.set_frame_height(self.camera.get_frame_height()+25)
-
 
     def construct(self):
         base_position = np.array([-26,-14,0])

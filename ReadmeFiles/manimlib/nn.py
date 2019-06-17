@@ -42,6 +42,7 @@ class NN(Scene):
     def get_ith_neuron_pos(self, start, i):
         return start + np.array([0,-2*i,0])
 
+
     def simultaneous_animations(self, objects_list, animation):
         return tuple([animation(object) for object in objects_list])
 
