@@ -10,7 +10,6 @@ class HilbertTraversing(Scene):
     def setup(self):
         self.camera.set_frame_width(self.camera.get_frame_width()+1)
         self.camera.set_frame_height(self.camera.get_frame_height()+6)
-
         self.camera.reset_pixel_shape(2000, 1440)
 
 
@@ -22,33 +21,24 @@ class HilbertTraversing(Scene):
         h2 = self.get_curve_at(16, base_position+2*vec_to_next_curve)
         h3 = self.get_curve_at(32, base_position+3*vec_to_next_curve)
 
+        line_begin0, line_end0, line_step0 = self.get_line_for_curve(h0, 4**2 - 1)
+        line_begin1, line_end1, line_step1 = self.get_line_for_curve(h1, 4**3 - 1)
+        line_begin2, line_end2, line_step2 = self.get_line_for_curve(h2, 4**4 - 1)
+        line_begin3, line_end3, line_step3 = self.get_line_for_curve(h3, 4**5 - 1)
+
+        line0 = Line(line_begin0, line_end0, color=BLACK)
+        line1 = Line(line_begin1, line_end1, color=BLACK)
+        line2 = Line(line_begin2, line_end2, color=BLACK)
+        line3 = Line(line_begin3, line_end3, color=BLACK)
+
         animations = self.simultaneous_animations([h0, h1, h2, h3], ShowIncreasingSubsets)
+        animations = animations + self.simultaneous_animations([line0, line1, line2, line3], ShowIncreasingSubsets)
         self.play(*animations)
-        self.traversing_point(h0, 2)
-        self.traversing_point(h1, 3)
-        #self.traversing_point(h2, 4)
-        #self.traversing_point(h3, 5)
 
-
-    def traversing_point(self, curve, degree):
-        curve_begin = curve.get_points()[-1]
-        dot_curve = Dot(curve_begin, color=RED)
-        self.play(ShowCreation(dot_curve))
-
-        curve_movement = self.points_to_vectors(curve.get_points())
-        line_begin = np.array([curve.get_x(), curve.get_y(), 0]) + np.array([4,0,0])
-
-        number_of_sections = 4**degree - 1
-        line_end = line_begin + np.array([5,0,0])
-        self.play(ShowIncreasingSubsets(Line(line_begin, line_end, color=BLACK)))
-        line_step = (line_end - line_begin) / number_of_sections
-
-        dot_line = Dot(line_begin, color=RED)
-        self.play(ShowCreation(dot_line))
-
-
-        line_movement = [line_step] * number_of_sections
-        self.traverse(dot_curve, curve_movement, dot_line, line_movement)
+        self.create_dots_and_traverse(h0, line_begin0, line_step0, 4**2 - 1)
+        self.create_dots_and_traverse(h1, line_begin1, line_step1, 4**3 - 1)
+        #self.create_dots_and_traverse(h2, line_begin2, line_step2, 4**4 - 1)
+        #self.create_dots_and_traverse(h3, line_begin3, line_step3, 4**5 - 1)
 
 
     def get_curve_at(self, curve_side_length, point):
@@ -92,8 +82,37 @@ class HilbertTraversing(Scene):
         return points * (new_side_length/old_side_length)
 
 
+
+
+    def get_line_for_curve(self, curve, number_of_sections):
+        line_begin = np.array([curve.get_x(), curve.get_y(), 0]) + np.array([4,0,0])
+        line_end = line_begin + np.array([5,0,0])
+        line_step = (line_end - line_begin) / number_of_sections
+        return line_begin, line_end, line_step
+
+
     def simultaneous_animations(self, objects_list, animation):
         return tuple([animation(object) for object in objects_list])
+
+
+    def create_dots_and_traverse(self, curve, line_begin, line_step, degree):
+        dot_curve, curve_movement = self.get_curve_dot_and_movement(curve)
+        dot_line, line_movement = self.get_line_dot_and_movement(line_begin, line_step, degree)
+        self.play(ShowCreation(dot_curve), ShowCreation(dot_line))
+        self.traverse(dot_curve, curve_movement, dot_line, line_movement)
+
+
+    def get_curve_dot_and_movement(self, curve):
+        curve_begin = curve.get_points()[-1]
+        dot_curve = Dot(curve_begin, color=RED)
+        curve_movement = self.points_to_vectors(curve.get_points())
+        return dot_curve, curve_movement
+
+
+    def get_line_dot_and_movement(self, line_begin, line_step, number_of_sections):
+        dot_line = Dot(line_begin, color=RED)
+        line_movement = [line_step] * number_of_sections
+        return dot_line, line_movement
 
 
     def traverse(self, dot_curve, curve_movement, dot_line, line_movement):
