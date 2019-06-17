@@ -4,7 +4,11 @@ This repo contains code of my master thesis: *Analysis of the effectiveness of r
 networks in the classification task*. Most of the experiments were made on Google Colab, so code used for experiments is in jupyter notebooks stored in colab folder. The implementation of ReNet networks is in ReNet folder and all models used in experiments are in Models. Below is a brief desribtion of what I've done in my thesis.
 
 ## Recurrent Neural Networks
-Recurrent Neural Netowrks (RNNs) are a special type of Networks made for processing sequences. In normal neural network like MLP, we got a fixed amount of inputs and fixed amount of outputs. This can be very limiting when processing sequences like text, sound or any time-based signals. For that purpose the we can use RNNs. Each RNN have hidden state h. When we compute the activation for each timestep we base on the actual input and state of the network from previous timestep:
+Recurrent Neural Netowrks (RNNs) are a special type of Networks made for processing sequences. In normal neural network like MLP, we got a fixed amount of inputs and fixed amount of outputs: 
+
+![](ReadmeFiles/generated/NN.gif)
+
+This can be very limiting when processing sequences like text, sound or any time-based signals. For that purpose the we can use RNNs. Each RNN have hidden state h. When we compute the activation for each timestep we base on the actual input and state of the network from previous timestep:
 
 <p align="center">
   <img src="https://github.com/jedrzejkozal/PWr_PracaMagisterska/blob/master/ReadmeFiles/equations/CodeCogsEqn.gif?raw=true" alt=" "/>
