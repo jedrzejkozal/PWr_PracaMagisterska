@@ -10,33 +10,27 @@ class NN(Scene):
 
 
     def construct(self):
-
         layer1 = self.get_layer(3, np.array([-5,2,0]))
-        self.play(*self.simultaneous_animations(layer1, ShowCreation))
-
         layer2 = self.get_layer(4, np.array([-2,3,0]))
-        self.play(*self.simultaneous_animations(layer2, ShowCreation))
-
         layer3 = self.get_layer(5, np.array([1,4,0]))
-        self.play(*self.simultaneous_animations(layer3, ShowCreation))
-
         layer4 = self.get_layer(4, np.array([4,3,0]))
+
+        self.play(*self.simultaneous_animations(layer1, ShowCreation))
+        self.play(*self.simultaneous_animations(layer2, ShowCreation))
+        self.play(*self.simultaneous_animations(layer3, ShowCreation))
         self.play(*self.simultaneous_animations(layer4, ShowCreation))
 
         inputs = self.get_inputs(3, np.array([-5,2,0]))
         self.play(*self.simultaneous_animations(inputs, ShowCreation))
-
-        activations = self.get_activations_for_layers(3, np.array([-5,2,0]), 4, np.array([-2,3,0]))
-        self.play(*self.simultaneous_animations(activations, ShowCreation))
-
-        activations = self.get_activations_for_layers(4, np.array([-2,3,0]), 5, np.array([1,4,0]))
-        self.play(*self.simultaneous_animations(activations, ShowCreation))
-
-        activations = self.get_activations_for_layers(5, np.array([1,4,0]), 4, np.array([4,3,0]))
-        self.play(*self.simultaneous_animations(activations, ShowCreation))
-
+        activations1 = self.get_activations_for_layers(3, np.array([-5,2,0]), 4, np.array([-2,3,0]))
+        self.play(*self.simultaneous_animations(activations1, ShowCreation))
+        activations2 = self.get_activations_for_layers(4, np.array([-2,3,0]), 5, np.array([1,4,0]))
+        self.play(*self.simultaneous_animations(activations2, ShowCreation))
+        activations3 = self.get_activations_for_layers(5, np.array([1,4,0]), 4, np.array([4,3,0]))
+        self.play(*self.simultaneous_animations(activations3, ShowCreation))
         outputs = self.get_outputs(4, np.array([4,3,0]))
         self.play(*self.simultaneous_animations(outputs, ShowCreation))
+
 
     def get_layer(self, num_neurons, start_position):
         neurons = []
@@ -67,7 +61,9 @@ class NN(Scene):
             for j in range(num_neurons2):
                 start = self.get_ith_neuron_pos(start_position1, i) + np.array([0.5,0,0])
                 end = self.get_ith_neuron_pos(start_position2, j) + np.array([-0.5,0,0])
-                activations.append(Line(start, end, color=BLACK))
+                a = Line(start, end, color=BLACK)
+                self.bring_to_back(a)
+                activations.append(a)
         return activations
 
 
