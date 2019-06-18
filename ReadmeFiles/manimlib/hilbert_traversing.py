@@ -35,10 +35,17 @@ class HilbertTraversing(Scene):
         animations = animations + self.simultaneous_animations([line0, line1, line2, line3], ShowIncreasingSubsets)
         self.play(*animations)
 
+        begin = np.array([1,10,0])+np.array([-0.15,0,0])
+        self.add(Line(begin, begin+np.array([0,-20,0]), color=RED))
+        begin = np.array([1,10,0])+np.array([1.5,0,0])
+        self.add(Line(begin, begin+np.array([0,-20,0]), color=RED))
+        begin = np.array([1,10,0])+np.array([2.35,0,0])
+        self.add(Line(begin, begin+np.array([0,-20,0]), color=RED))
+
         self.create_dots_and_traverse(h0, line_begin0, line_step0, 4**2 - 1, mark_at=[2, 7, 10, 99999999])
         self.create_dots_and_traverse(h1, line_begin1, line_step1, 4**3 - 1, mark_at=[10, 31, 42, 99999999])
-        #self.create_dots_and_traverse(h2, line_begin2, line_step2, 4**4 - 1, mark_at=[37, 99999999])
-        #self.create_dots_and_traverse(h3, line_begin3, line_step3, 4**5 - 1, mark_at=[])
+        self.create_dots_and_traverse(h2, line_begin2, line_step2, 4**4 - 1, mark_at=[42, 127, 170, 99999999])
+        self.create_dots_and_traverse(h3, line_begin3, line_step3, 4**5 - 1, mark_at=[170, 511, 682, 99999999])
 
 
     def get_curve_at(self, curve_side_length, point):
